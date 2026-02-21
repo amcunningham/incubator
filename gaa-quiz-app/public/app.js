@@ -78,7 +78,12 @@ function toggleCategory(btn, cat) {
 async function startQuiz() {
   if (!selectedCategories.length) return;
 
-  showScreen("loading");
+  const useAI = document.getElementById("use-ai").checked;
+  const endpoint = useAI ? "/api/generate-ai" : "/api/generate";
+
+  if (useAI) {
+    showScreen("loading");
+  }
 
   const body = {
     categories: selectedCategories,
@@ -90,7 +95,7 @@ async function startQuiz() {
   }
 
   try {
-    const res = await fetch("/api/generate", {
+    const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

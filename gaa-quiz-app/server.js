@@ -1,6 +1,6 @@
 const express = require("express");
-const Anthropic = require("@anthropic-ai/sdk").default;
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,61 +8,128 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-const client = new Anthropic();
+// Load question bank
+const questionBank = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "question-bank.json"), "utf-8")
+);
 
-const CATEGORIES = [
-  "Gaelic and Ladies Football",
-  "Hurling and Camogie",
-  "General G.A.A.",
-  "Irish History",
-  "World History and World Geography",
-  "Irish Geography",
-  "Irish Current Affairs",
-  "World Current Affairs",
-  "Irish Culture",
-  "General Knowledge",
-];
+const CATEGORIES = Object.keys(questionBank);
 
-const SYSTEM_PROMPT = `You are a quiz master for GAA Scór Senior Quiz competitions in Ireland. You generate quiz questions in the exact style used at county, provincial and All-Ireland Scór Tráth na gCeist competitions.
+// Shuffle helper
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
-RULES FOR QUESTION STYLE:
-- Each round has exactly 10 questions
-- Questions are short, direct, and factual with a single definitive answer
-- Questions 9 and 10 in every round MUST be written in Irish (as Gaeilge). The answer can be in English or Irish as appropriate.
-- Answers should be concise — typically a name, place, year, or short phrase
-- Do NOT include multiple-choice options — these are open-answer questions
+// Pick N random questions from a category (8 regular + 2 Irish per 10)
+function pickQuestions(category, count) {
+  const bank = questionBank[category];
+  if (!bank) return [];
 
-CATEGORY-SPECIFIC GUIDANCE:
+  const regular = shuffle(bank.questions);
+  const irish = shuffle(bank.irish_questions);
 
-- Gaelic and Ladies Football: Ask about All-Ireland finals (winners, losers, scores, venues), provincial champions, Sam Maguire and Brendan Martin Cup, referees and their home counties, specific grounds and where they are ("Where is Parnell Park?"), player transfers, management appointments and departures, All-Stars, Footballer of the Year, records (top scorers, most titles), Tailteann Cup, congress venues. Link players to counties. Be specific about years.
+  const result = [];
+  let regIdx = 0;
+  let irishIdx = 0;
 
-- Hurling and Camogie: Same depth — Liam MacCarthy Cup, O'Duffy Cup, All-Ireland finals by year, referees and their counties, current managers, all-time top scorers, All-Stars and which counties won them, Christy Ring Cup, Joe McDonagh Cup. Ask "X and Y play for what county", "What county has won the most O'Duffy Cups", "Who is the current X manager". Link players to clubs and counties.
+  for (let i = 0; i < count; i++) {
+    // Questions 9 and 10 of every set of 10 should be Irish
+    const posInRound = (i % 10) + 1;
+    if (posInRound >= 9) {
+      if (irishIdx < irish.length) {
+        result.push({ ...irish[irishIdx], is_irish: true });
+        irishIdx++;
+      } else if (regIdx < regular.length) {
+        result.push({ ...regular[regIdx], is_irish: false });
+        regIdx++;
+      }
+    } else {
+      if (regIdx < regular.length) {
+        result.push({ ...regular[regIdx], is_irish: false });
+        regIdx++;
+      } else if (irishIdx < irish.length) {
+        result.push({ ...irish[irishIdx], is_irish: true });
+        irishIdx++;
+      }
+    }
+  }
 
-- General G.A.A.: Cross-code questions covering football, hurling, camogie, handball, rounders. Ask about: the Poc Fada and where it's held, GAA congress venues, GAA grounds and their locations ("Where would one find McGovern Park?"), how many Sam Maguire cups a county has won, GAA organisational structure, sponsors ("What company sponsors the All-Stars?"), former players' careers outside GAA, the Tailteann Cup, rule changes. Include questions like "What GAA game is similar to baseball?" (rounders).
-
-- Irish History: Cover events, figures, dates, treaties, rebellions, political history, cultural history, War of Independence, Civil War, 1916 Rising, Famine, land wars, Home Rule, partition, notable figures and their roles.
-
-- Irish Geography: Rivers and what towns are built on them ("On what river is Ballina, Co. Mayo?"), Irish-language place name translations ("What is the English for Neidín?"), islands and how they connect to the mainland (cable cars, ferries), ferry routes ("From where in Clare do ferries travel to the Aran Islands?"), county borders ("How many counties border County Laois?"), superlatives (largest lake, highest mountain, longest river), mountain locations, lighthouses, bodies of water terminology (estuary), provinces, county towns. Mix well-known and obscure.
-
-- World History and World Geography: Major world events, leaders, capitals, rivers, landmarks, wars, treaties, empires, revolutions, famous explorers and their achievements.
-
-- Irish Current Affairs: A MIX of recent headline events AND standing knowledge with a current flavour. Include: political events, deaths of notable figures, sporting results, media/arts milestones, appointments to positions, anniversaries. Reference specific years. Some questions can be "who currently holds X position" or "what does X acronym stand for" if topical. Not every question needs to be from the last 12 months — some can be timeless knowledge triggered by recent events.
-
-- World Current Affairs: Same mixed approach — headline events (conflicts, elections, natural disasters, deaths of leaders/figures, major incidents) PLUS standing knowledge questions (heads of international organisations, what acronyms stand for, where regular events are held). Reference specific years for events. Include questions about: international organisations (NATO, UN, EU, COP), geopolitics, conflicts, coups, notable deaths, landmark anniversaries, major sporting events. Some questions can reference older events if they were recently topical (e.g. a film or anniversary bringing attention to a historical figure).
-
-- Irish Culture: Very broad category. Include: theatres and where they are ("Where is the Belltable Theatre?"), authors and their books, poets and their poems, songwriters ("Who wrote 'Ireland's Call'?"), music groups and their members (Chieftains, Dubliners etc.), TV programme creators, film, festivals, horse racing venues (Punchestown, Fairyhouse), show jumping figures, Irish Traveller culture (Shelta/Cant), organisations and their headquarters, cultural figures and their connections ("Nora Barnacle was married to whom?"), national institutions (ICA, Abbey Theatre). Mix historical and recent.
-
-- General Knowledge: Science, pop culture, food, entertainment, sport (non-GAA), literature, music, film, nature, space, inventions, famous quotes and who said them.
-
-DIFFICULTY: Accessible but requiring genuine knowledge. Not pub-quiz easy, not academic-level hard. A well-prepared Scór team should get 7-8 out of 10.
-
-IMPORTANT: Vary the questions each time. Do not repeat questions. Be creative and cover different aspects of each category.`;
+  return result;
+}
 
 app.get("/api/categories", (req, res) => {
   res.json(CATEGORIES);
 });
 
-app.post("/api/generate", async (req, res) => {
+// Question bank endpoint (instant, no API key needed)
+app.post("/api/generate", (req, res) => {
+  const { categories, mode, count } = req.body;
+
+  if (!categories || !categories.length) {
+    return res.status(400).json({ error: "At least one category is required" });
+  }
+
+  if (mode === "practice") {
+    const numQuestions = count || 5;
+    // Spread questions across selected categories
+    const perCategory = Math.ceil(numQuestions / categories.length);
+    let allQuestions = [];
+
+    categories.forEach((cat) => {
+      const qs = pickQuestions(cat, perCategory);
+      qs.forEach((q) => {
+        allQuestions.push({ ...q, category: cat });
+      });
+    });
+
+    // Shuffle and trim to requested count
+    allQuestions = shuffle(allQuestions).slice(0, numQuestions);
+
+    // Number them
+    const data = allQuestions.map((q, i) => ({
+      number: i + 1,
+      category: q.category,
+      question: q.question,
+      answer: q.answer,
+      is_irish: q.is_irish,
+    }));
+
+    return res.json({ mode, data });
+  }
+
+  // Quiz mode — full rounds
+  const roundCategories = categories.slice(0, 10);
+  const rounds = roundCategories.map((cat, idx) => {
+    const qs = pickQuestions(cat, 10);
+    return {
+      number: idx + 1,
+      category: cat,
+      questions: qs.map((q, i) => ({
+        number: i + 1,
+        question: q.question,
+        answer: q.answer,
+        is_irish: q.is_irish,
+      })),
+    };
+  });
+
+  res.json({ mode, data: { rounds } });
+});
+
+// AI-generated questions endpoint (requires ANTHROPIC_API_KEY)
+app.post("/api/generate-ai", async (req, res) => {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return res.status(400).json({ error: "ANTHROPIC_API_KEY not configured. Use the question bank instead." });
+  }
+
+  const Anthropic = require("@anthropic-ai/sdk").default;
+  const client = new Anthropic();
+
   const { categories, mode, count } = req.body;
 
   if (!categories || !categories.length) {
@@ -72,6 +139,19 @@ app.post("/api/generate", async (req, res) => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.toLocaleString("en-IE", { month: "long" });
+
+  const SYSTEM_PROMPT = `You are a quiz master for GAA Scór Senior Quiz competitions in Ireland. You generate quiz questions in the exact style used at county, provincial and All-Ireland Scór Tráth na gCeist competitions.
+
+RULES FOR QUESTION STYLE:
+- Each round has exactly 10 questions
+- Questions are short, direct, and factual with a single definitive answer
+- Questions 9 and 10 in every round MUST be written in Irish (as Gaeilge). The answer can be in English or Irish as appropriate.
+- Answers should be concise — typically a name, place, year, or short phrase
+- Do NOT include multiple-choice options — these are open-answer questions
+
+DIFFICULTY: Accessible but requiring genuine knowledge. Not pub-quiz easy, not academic-level hard. A well-prepared Scór team should get 7-8 out of 10.
+
+IMPORTANT: Vary the questions each time. Do not repeat questions. Be creative and cover different aspects of each category.`;
 
   let userPrompt;
 
@@ -97,7 +177,6 @@ Return your response as a JSON array with this exact structure:
 
 Set "is_irish" to true if the question is written in Irish. For every 10 questions, questions 9 and 10 should be as Gaeilge.`;
   } else {
-    // Quiz mode — full rounds
     const roundCategories = categories.slice(0, 10);
     userPrompt = `Generate a full Scór-style quiz with one round for each of the following categories (in this order):
 ${roundCategories.map((c, i) => `Round ${i + 1}: ${c}`).join("\n")}
@@ -127,11 +206,8 @@ Return your response as a JSON object with this exact structure:
 Set "is_irish" to true for questions written in Irish.`;
   }
 
-  // Use chunked transfer with keepalive spaces to prevent Render's 30s timeout
   res.setHeader("Content-Type", "application/json");
   res.setHeader("Transfer-Encoding", "chunked");
-
-  // Send a space every 5 seconds to keep the connection alive
   const keepAlive = setInterval(() => res.write(" "), 5000);
 
   try {
@@ -155,8 +231,6 @@ Set "is_irish" to true for questions written in Irish.`;
     clearInterval(keepAlive);
 
     const fullText = chunks.join("");
-
-    // Extract JSON from response (may be wrapped in markdown code blocks)
     const jsonMatch = fullText.match(/\[[\s\S]*\]/) || fullText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       res.end(JSON.stringify({ error: "Failed to parse quiz data" }));
