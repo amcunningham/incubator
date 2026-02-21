@@ -95,7 +95,7 @@
       <div class="practice-controls">
         <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
         <button class="btn btn-flag" id="flag-btn" onclick="openFeedbackModal()">Flag</button>
-        <button class="btn btn-danger btn-sm" onclick="removeQuestion()">Remove</button>
+        <a href="/admin" class="btn btn-secondary btn-sm" style="text-decoration: none; font-size: 0.75rem;">Admin</a>
         <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
       </div>
 
@@ -163,7 +163,7 @@
           <button class="btn btn-primary" id="submit-feedback-btn" onclick="submitFeedback()">Submit Feedback</button>
         </div>
         <div class="button-row" style="margin-top: 0.5rem;">
-          <button class="btn btn-danger" onclick="removeFromModal()">Remove from Bank</button>
+          <a href="/admin" class="btn btn-secondary btn-sm" style="text-decoration: none;">Manage in Admin</a>
         </div>
       </div>
     </div>

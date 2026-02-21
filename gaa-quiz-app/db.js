@@ -1,0 +1,111 @@
+const { Pool } = require("pg");
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL?.includes("localhost")
+    ? false
+    : { rejectUnauthorized: false },
+});
+
+async function initDB() {
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS categories (
+        id SERIAL PRIMARY KEY,
+        name TEXT UNIQUE NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS questions (
+        id SERIAL PRIMARY KEY,
+        category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
+        question TEXT NOT NULL,
+        answer TEXT NOT NULL,
+        is_irish BOOLEAN DEFAULT false,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS feedback (
+        id TEXT PRIMARY KEY,
+        question TEXT NOT NULL,
+        answer TEXT DEFAULT '',
+        category TEXT DEFAULT '',
+        feedback_type TEXT NOT NULL,
+        comment TEXT DEFAULT '',
+        suggested_answer TEXT DEFAULT '',
+        is_ai BOOLEAN DEFAULT false,
+        resolved BOOLEAN DEFAULT false,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS ai_questions (
+        id SERIAL PRIMARY KEY,
+        category TEXT NOT NULL,
+        question TEXT NOT NULL,
+        answer TEXT NOT NULL,
+        is_irish BOOLEAN DEFAULT false,
+        rating INTEGER DEFAULT 0,
+        added_to_bank BOOLEAN DEFAULT false,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS admin_sessions (
+        token TEXT PRIMARY KEY,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+    console.log("Database tables initialized");
+  } finally {
+    client.release();
+  }
+}
+
+async function seedFromJSON(questionBank) {
+  const client = await pool.connect();
+  try {
+    // Check if we already have questions
+    const { rows } = await client.query("SELECT COUNT(*) FROM questions");
+    if (parseInt(rows[0].count) > 0) {
+      console.log("Database already seeded, skipping");
+      return;
+    }
+
+    console.log("Seeding database from question bank...");
+    await client.query("BEGIN");
+
+    for (const [categoryName, data] of Object.entries(questionBank)) {
+      // Insert category
+      const catResult = await client.query(
+        "INSERT INTO categories (name) VALUES ($1) ON CONFLICT (name) DO UPDATE SET name = $1 RETURNING id",
+        [categoryName]
+      );
+      const categoryId = catResult.rows[0].id;
+
+      // Insert regular questions
+      for (const q of data.questions) {
+        await client.query(
+          "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, false)",
+          [categoryId, q.question, q.answer]
+        );
+      }
+
+      // Insert irish questions
+      for (const q of data.irish_questions) {
+        await client.query(
+          "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, true)",
+          [categoryId, q.question, q.answer]
+        );
+      }
+    }
+
+    await client.query("COMMIT");
+    console.log("Database seeded successfully");
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+module.exports = { pool, initDB, seedFromJSON };

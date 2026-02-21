@@ -374,7 +374,7 @@ function flagQuizQuestion(roundIdx, qNum) {
   openFeedbackModal(q.question, q.answer, round.category);
 }
 
-// Feedback review screen
+// Feedback review screen (read-only for users, admin actions in /admin)
 async function showFeedbackReview() {
   showScreen("feedback-review");
 
@@ -386,7 +386,7 @@ async function showFeedbackReview() {
     const items = await res.json();
 
     document.getElementById("feedback-count").textContent =
-      items.length === 0 ? "No feedback submitted yet." : items.length + " item(s)";
+      items.length === 0 ? "No feedback submitted yet." : items.length + " item(s) — manage in Admin panel";
 
     if (items.length === 0) {
       list.innerHTML = '<p style="color: var(--gray-500);">No feedback yet. Flag questions during practice or quiz mode.</p>';
@@ -401,10 +401,9 @@ async function showFeedbackReview() {
       other: "Other",
     };
 
-    items.slice().reverse().forEach((item) => {
+    items.forEach((item) => {
       const card = document.createElement("div");
       card.className = "feedback-card" + (item.resolved ? " resolved" : "");
-      const editId = "edit-" + item.id;
 
       card.innerHTML = `
         <div class="feedback-card-header">
@@ -417,67 +416,7 @@ async function showFeedbackReview() {
         <div class="feedback-current-answer">Current answer: ${item.answer}</div>
         ${item.suggestedAnswer ? '<div class="feedback-suggested">Suggested: <strong>' + item.suggestedAnswer + "</strong></div>" : ""}
         ${item.comment ? '<div class="feedback-comment-text">' + item.comment + "</div>" : ""}
-        ${!item.isAI ? '<div id="' + editId + '" class="feedback-edit-form hidden"><label>Question:<textarea class="edit-question-input" rows="2"></textarea></label><label>Answer:<input type="text" class="edit-answer-input" /></label><div class="feedback-edit-actions"><button class="btn btn-primary btn-sm save-edit-btn">Save Changes</button><button class="btn btn-secondary btn-sm cancel-edit-btn">Cancel</button></div></div>' : ""}
-        <div class="feedback-actions">
-          ${!item.isAI ? '<button class="btn btn-primary btn-sm edit-btn">Edit Question</button>' : ""}
-          <button class="btn btn-secondary btn-sm resolve-btn">${item.resolved ? "Unresolve" : "Mark Resolved"}</button>
-          ${!item.isAI ? '<button class="btn btn-danger btn-sm remove-btn">Remove from Bank</button>' : ""}
-          <button class="btn btn-secondary btn-sm btn-danger-text delete-btn">Delete Feedback</button>
-        </div>
       `;
-
-      // Wire up buttons using event listeners (avoids inline onclick escaping issues)
-      const resolveBtn = card.querySelector(".resolve-btn");
-      resolveBtn.addEventListener("click", () => toggleResolved(item.id));
-
-      const deleteBtn = card.querySelector(".delete-btn");
-      deleteBtn.addEventListener("click", () => deleteFeedback(item.id));
-
-      const removeBtn = card.querySelector(".remove-btn");
-      if (removeBtn) removeBtn.addEventListener("click", () => removeFromFeedback(item.id));
-
-      const editBtn = card.querySelector(".edit-btn");
-      const editForm = card.querySelector("#" + editId);
-      if (editBtn && editForm) {
-        const qInput = editForm.querySelector(".edit-question-input");
-        const aInput = editForm.querySelector(".edit-answer-input");
-
-        editBtn.addEventListener("click", () => {
-          qInput.value = item.question;
-          aInput.value = item.suggestedAnswer || item.answer;
-          editForm.classList.toggle("hidden");
-        });
-
-        editForm.querySelector(".cancel-edit-btn").addEventListener("click", () => {
-          editForm.classList.add("hidden");
-        });
-
-        editForm.querySelector(".save-edit-btn").addEventListener("click", async () => {
-          const newQ = qInput.value.trim();
-          const newA = aInput.value.trim();
-          if (!newQ || !newA) { alert("Question and answer cannot be empty."); return; }
-          try {
-            const res = await fetch("/api/questions/edit", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                originalQuestion: item.question,
-                category: item.category,
-                newQuestion: newQ,
-                newAnswer: newA,
-              }),
-            });
-            const data = await res.json();
-            if (res.ok) {
-              showToast("Question updated");
-              await fetch("/api/feedback/" + item.id, { method: "PATCH" }); // auto-resolve
-              showFeedbackReview();
-            } else {
-              alert(data.error || "Failed to update question.");
-            }
-          } catch (e) { alert("Network error."); }
-        });
-      }
 
       list.appendChild(card);
     });
@@ -486,96 +425,18 @@ async function showFeedbackReview() {
   }
 }
 
-async function toggleResolved(id) {
-  await fetch("/api/feedback/" + id, { method: "PATCH" });
-  showFeedbackReview();
+// Remove question from bank — now admin-only, redirect to admin panel
+function removeQuestion() {
+  showToast("Use the Admin panel to manage questions");
 }
 
-async function deleteFeedback(id) {
-  if (!confirm("Delete this feedback?")) return;
-  await fetch("/api/feedback/" + id, { method: "DELETE" });
-  showFeedbackReview();
-}
-
-async function removeFromFeedback(id) {
-  // Fetch the feedback item to get question/category details
-  try {
-    const res = await fetch("/api/feedback");
-    const items = await res.json();
-    const item = items.find((f) => f.id === id);
-    if (!item) {
-      alert("Feedback item not found.");
-      return;
-    }
-
-    if (!confirm("Remove this question from the bank permanently?\n\n\"" + item.question + "\"")) return;
-
-    const removeRes = await fetch("/api/questions/remove", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: item.question, category: item.category }),
-    });
-
-    const data = await removeRes.json();
-    if (removeRes.ok) {
-      showToast("Question removed from bank");
-      // Auto-resolve the feedback
-      await fetch("/api/feedback/" + id, { method: "PATCH" });
-      showFeedbackReview();
-    } else {
-      alert(data.error || "Failed to remove question.");
-    }
-  } catch (e) {
-    alert("Network error.");
-  }
-}
-
-// Remove question from bank
-async function removeQuestion(question, answer, category) {
-  if (!question || !category) {
-    // Fall back to current practice question
-    if (currentMode === "practice" && questions[currentIndex]) {
-      const q = questions[currentIndex];
-      question = q.question;
-      answer = q.answer;
-      category = q.category;
-    } else {
-      return;
-    }
-  }
-
-  if (!confirm("Remove this question from the bank permanently?\n\n\"" + question + "\"")) return;
-
-  try {
-    const res = await fetch("/api/questions/remove", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, category }),
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      showToast("Question removed from bank");
-    } else {
-      alert(data.error || "Failed to remove question.");
-    }
-  } catch (e) {
-    alert("Network error.");
-  }
-}
-
-async function removeFromModal() {
-  if (!feedbackTarget) return;
-  await removeQuestion(feedbackTarget.question, feedbackTarget.answer, feedbackTarget.category);
+function removeFromModal() {
+  showToast("Use the Admin panel to manage questions");
   closeFeedbackModal();
 }
 
-function removeQuizQuestion(roundIdx, qNum) {
-  const round = rounds[roundIdx];
-  if (!round) return;
-  const q = round.questions.find((x) => x.number === qNum);
-  if (!q) return;
-  removeQuestion(q.question, q.answer, round.category);
+function removeQuizQuestion() {
+  showToast("Use the Admin panel to manage questions");
 }
 
 // Keyboard shortcuts
