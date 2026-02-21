@@ -96,14 +96,14 @@ async function startQuiz() {
       body: JSON.stringify(body),
     });
 
-    if (!res.ok) {
-      const err = await res.json();
-      alert(err.error || "Failed to generate questions");
+    const text = await res.text();
+    const result = JSON.parse(text.trim());
+
+    if (!res.ok || result.error) {
+      alert(result.error || "Failed to generate questions");
       showScreen("category-select");
       return;
     }
-
-    const result = await res.json();
 
     if (currentMode === "practice") {
       questions = result.data;

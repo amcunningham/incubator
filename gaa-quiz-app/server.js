@@ -127,6 +127,13 @@ Return your response as a JSON object with this exact structure:
 Set "is_irish" to true for questions written in Irish.`;
   }
 
+  // Use chunked transfer with keepalive spaces to prevent Render's 30s timeout
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Transfer-Encoding", "chunked");
+
+  // Send a space every 5 seconds to keep the connection alive
+  const keepAlive = setInterval(() => res.write(" "), 5000);
+
   try {
     const stream = client.messages.stream({
       model: "claude-sonnet-4-6",
@@ -145,19 +152,23 @@ Set "is_irish" to true for questions written in Irish.`;
       }
     }
 
+    clearInterval(keepAlive);
+
     const fullText = chunks.join("");
 
     // Extract JSON from response (may be wrapped in markdown code blocks)
     const jsonMatch = fullText.match(/\[[\s\S]*\]/) || fullText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      return res.status(500).json({ error: "Failed to parse quiz data" });
+      res.end(JSON.stringify({ error: "Failed to parse quiz data" }));
+      return;
     }
 
     const data = JSON.parse(jsonMatch[0]);
-    res.json({ mode, data });
+    res.end(JSON.stringify({ mode, data }));
   } catch (err) {
+    clearInterval(keepAlive);
     console.error("Claude API error:", err.message);
-    res.status(500).json({ error: "Failed to generate questions. Check your ANTHROPIC_API_KEY." });
+    res.end(JSON.stringify({ error: "Failed to generate questions. Check your ANTHROPIC_API_KEY." }));
   }
 });
 
