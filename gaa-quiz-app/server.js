@@ -37,8 +37,8 @@ CATEGORY-SPECIFIC GUIDANCE:
 - Irish History: Cover events, figures, dates, treaties, rebellions, political history, cultural history
 - Irish Geography: Counties, rivers, lakes, mountains, islands, Irish-language place name translations, provinces, county towns
 - World History and World Geography: Major world events, leaders, capitals, rivers, landmarks, wars, treaties
-- Irish Current Affairs: Events from the past 12 months in Ireland — politics, sport, media, arts, deaths, appointments. Reference the current year.
-- World Current Affairs: Major international events from the past 12 months — politics, conflicts, elections, natural disasters, space, technology
+- Irish Current Affairs: A MIX of recent headline events AND standing knowledge with a current flavour. Include: political events, deaths of notable figures, sporting results, media/arts milestones, appointments to positions, anniversaries. Reference specific years. Some questions can be "who currently holds X position" or "what does X acronym stand for" if topical. Not every question needs to be from the last 12 months — some can be timeless knowledge triggered by recent events.
+- World Current Affairs: Same mixed approach — headline events (conflicts, elections, natural disasters, deaths of leaders/figures, major incidents) PLUS standing knowledge questions (heads of international organisations, what acronyms stand for, where regular events are held). Reference specific years for events. Include questions about: international organisations (NATO, UN, EU, COP), geopolitics, conflicts, coups, notable deaths, landmark anniversaries, major sporting events. Some questions can reference older events if they were recently topical (e.g. a film or anniversary bringing attention to a historical figure).
 - Irish Culture: Theatre, music, literature, festivals, TV, film, Irish language, arts — both historical and recent
 - General Knowledge: Science, pop culture, food, entertainment, sport (non-GAA), literature, music, film, nature
 
