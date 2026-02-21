@@ -1,0 +1,282 @@
+{
+  "Gaelic and Ladies Football": {
+    "questions": [
+      {"question": "Which county won the 2023 All-Ireland Senior Football Championship?", "answer": "Dublin"},
+      {"question": "Where is Páirc Uí Chaoimh?", "answer": "Cork"},
+      {"question": "Who captained Kerry to the 2022 All-Ireland Senior Football title?", "answer": "Seán O'Shea"},
+      {"question": "Which county has won the most Sam Maguire Cups?", "answer": "Kerry"},
+      {"question": "Where is Parnell Park?", "answer": "Dublin (Donnycarney)"},
+      {"question": "Which county won the inaugural Tailteann Cup in 2022?", "answer": "Westmeath"},
+      {"question": "Who managed Dublin to six All-Ireland Senior Football titles in a row?", "answer": "Jim Gavin"},
+      {"question": "The Brendan Martin Cup is awarded to the winners of which competition?", "answer": "All-Ireland Senior Ladies Football Championship"},
+      {"question": "Which county did Pat Spillane play for?", "answer": "Kerry"},
+      {"question": "Where is Healy Park?", "answer": "Omagh, County Tyrone"},
+      {"question": "Who is the all-time top scorer in Championship football?", "answer": "Colm 'Gooch' Cooper"},
+      {"question": "Which county won the 2021 All-Ireland Senior Football Championship?", "answer": "Tyrone"},
+      {"question": "Where is Dr Hyde Park?", "answer": "Roscommon"},
+      {"question": "Which county won the 2024 All-Ireland Senior Ladies Football Championship?", "answer": "Kerry"},
+      {"question": "Who managed Tyrone to the 2021 All-Ireland Senior Football title?", "answer": "Brian Dooher and Feargal Logan"},
+      {"question": "Which county's home ground is MacCumhaill Park?", "answer": "Donegal"},
+      {"question": "How many All-Ireland Senior Football titles has Mayo won?", "answer": "Three"},
+      {"question": "Who won the 2023 Footballer of the Year award?", "answer": "David Clifford"}
+    ],
+    "irish_questions": [
+      {"question": "Cé mhéad Corn Uí Mhaoilmhichíl (Sam Maguire) atá buaite ag Gaillimh?", "answer": "Nine (Naoi gcinn)"},
+      {"question": "Cén contae a bhuaigh Craobh Peile na hÉireann sa bhliain 2020?", "answer": "Dublin (Baile Átha Cliath)"},
+      {"question": "Cá bhfuil Páirc an Chrócaigh?", "answer": "Dublin (Baile Átha Cliath)"},
+      {"question": "Cén contae as a dtáinig Colm 'Gooch' Cooper?", "answer": "Kerry (Ciarraí)"}
+    ]
+  },
+  "Hurling and Camogie": {
+    "questions": [
+      {"question": "Which county won the 2023 All-Ireland Senior Hurling Championship?", "answer": "Limerick"},
+      {"question": "The Liam MacCarthy Cup is awarded to the winners of which competition?", "answer": "All-Ireland Senior Hurling Championship"},
+      {"question": "Who is the all-time top scorer in Championship hurling?", "answer": "TJ Reid"},
+      {"question": "Which county has won the most All-Ireland Senior Hurling titles?", "answer": "Kilkenny"},
+      {"question": "Who managed Limerick to four consecutive All-Ireland Senior Hurling titles?", "answer": "John Kiely"},
+      {"question": "The O'Duffy Cup is awarded to the winners of which competition?", "answer": "All-Ireland Senior Camogie Championship"},
+      {"question": "Where is Semple Stadium?", "answer": "Thurles, County Tipperary"},
+      {"question": "Which county did DJ Carey play for?", "answer": "Kilkenny"},
+      {"question": "How many All-Ireland Senior Hurling medals did Henry Shefflin win?", "answer": "Ten"},
+      {"question": "Where is Walsh Park?", "answer": "Waterford"},
+      {"question": "Which county won the 2023 All-Ireland Senior Camogie Championship?", "answer": "Cork"},
+      {"question": "Which county did Nicky English play for?", "answer": "Tipperary"},
+      {"question": "The Christy Ring Cup is contested by teams in which tier of hurling?", "answer": "Second tier (Tier 2)"},
+      {"question": "Where is Nowlan Park?", "answer": "Kilkenny"},
+      {"question": "Who captained Limerick to the 2023 All-Ireland Senior Hurling title?", "answer": "Declan Hannon"},
+      {"question": "Which county has won the most O'Duffy Cups in camogie?", "answer": "Cork"},
+      {"question": "Which county did Joe Canning play for?", "answer": "Galway"},
+      {"question": "Where is the LIT Gaelic Grounds?", "answer": "Limerick"}
+    ],
+    "irish_questions": [
+      {"question": "Cé mhéad Craobh Iomána Sinsir atá buaite ag Tiobraid Árann?", "answer": "Twenty-eight (28)"},
+      {"question": "Cén contae a bhuaigh Craobh Iomána na hÉireann sa bhliain 2022?", "answer": "Limerick (Luimneach)"},
+      {"question": "Cá bhfuil Páirc Uí Chaoimh?", "answer": "Cork (Corcaigh)"},
+      {"question": "Cén cluiche ina n-úsáidtear camán agus sliotar?", "answer": "Hurling (Iomáint)"}
+    ]
+  },
+  "General G.A.A.": {
+    "questions": [
+      {"question": "Where is the Poc Fada competition held each year?", "answer": "Cooley Mountains, County Louth (Annaverna)"},
+      {"question": "What GAA game is similar to baseball?", "answer": "Rounders"},
+      {"question": "Where would one find McGovern Park?", "answer": "Ruislip, London"},
+      {"question": "What company currently sponsors the GAA All-Stars?", "answer": "PwC"},
+      {"question": "In what year was the GAA founded?", "answer": "1884"},
+      {"question": "In which county was the GAA founded?", "answer": "Tipperary (Thurles)"},
+      {"question": "Who was the first president of the GAA?", "answer": "Maurice Davin"},
+      {"question": "How many players are on a senior GAA football team?", "answer": "Fifteen"},
+      {"question": "What is the name of the GAA's headquarters in Dublin?", "answer": "Croke Park"},
+      {"question": "Which four sports does the GAA officially govern?", "answer": "Gaelic Football, Hurling, Handball and Rounders"},
+      {"question": "Where is Corrigan Park?", "answer": "Belfast, County Antrim"},
+      {"question": "What is the capacity of Croke Park?", "answer": "82,300"},
+      {"question": "Who is credited as a founder of the GAA alongside Maurice Davin?", "answer": "Michael Cusack"},
+      {"question": "Where is Fitzgerald Stadium?", "answer": "Killarney, County Kerry"},
+      {"question": "What is the name of the stand at the Railway End of Croke Park?", "answer": "Davin Stand"},
+      {"question": "Where is Markievicz Park?", "answer": "Sligo"},
+      {"question": "How many counties compete in the All-Ireland Senior Football Championship?", "answer": "Thirty-two (plus London and New York)"},
+      {"question": "Where is Cusack Park in Munster?", "answer": "Ennis, County Clare"}
+    ],
+    "irish_questions": [
+      {"question": "Cén bhliain ar bunaíodh Cumann Lúthchleas Gael?", "answer": "1884"},
+      {"question": "Cá bhfuil Páirc an Chrócaigh?", "answer": "Dublin (Baile Átha Cliath)"},
+      {"question": "Cé mhéad imreoir atá ar fhoireann iomána?", "answer": "Fifteen (Cúig dhuine dhéag)"},
+      {"question": "Cén contae ina bhfuil Staid Semple?", "answer": "Tipperary (Tiobraid Árann)"}
+    ]
+  },
+  "Irish History": {
+    "questions": [
+      {"question": "In what year did the Easter Rising take place?", "answer": "1916"},
+      {"question": "Who read the Proclamation of the Irish Republic outside the GPO in 1916?", "answer": "Patrick Pearse"},
+      {"question": "What treaty ended the Irish War of Independence in 1921?", "answer": "The Anglo-Irish Treaty"},
+      {"question": "Who was the first President of Ireland?", "answer": "Douglas Hyde"},
+      {"question": "In what year did the Great Famine begin in Ireland?", "answer": "1845"},
+      {"question": "Who led the 1798 Rebellion in Wexford?", "answer": "Father John Murphy"},
+      {"question": "What was the name of the Irish parliament established in 1919?", "answer": "Dáil Éireann"},
+      {"question": "Who was the first Taoiseach of Ireland?", "answer": "Éamon de Valera"},
+      {"question": "The Battle of the Boyne took place in what year?", "answer": "1690"},
+      {"question": "Who founded the Irish Volunteers in 1913?", "answer": "Eoin MacNeill"},
+      {"question": "What was the name of the ship that brought the first Famine emigrants to Canada in 1847?", "answer": "The Jeanie Johnston"},
+      {"question": "In what year was the Free State established?", "answer": "1922"},
+      {"question": "Who was executed as the last leader of the 1916 Rising?", "answer": "James Connolly"},
+      {"question": "What Dublin building served as the headquarters of the 1916 Rising?", "answer": "The General Post Office (GPO)"},
+      {"question": "Who was known as 'The Liberator' for his campaign for Catholic Emancipation?", "answer": "Daniel O'Connell"},
+      {"question": "In what year did Ireland join the European Economic Community (EEC)?", "answer": "1973"},
+      {"question": "What agreement was signed on Good Friday 1998?", "answer": "The Belfast Agreement (Good Friday Agreement)"},
+      {"question": "Who was the leader of the Irish Parliamentary Party during the Home Rule crisis?", "answer": "John Redmond"}
+    ],
+    "irish_questions": [
+      {"question": "Cén bhliain ar tharla Éirí Amach na Cásca?", "answer": "1916"},
+      {"question": "Cé a léigh Forógra na Poblachta lasmuigh den GPO?", "answer": "Patrick Pearse (Pádraig Mac Piarais)"},
+      {"question": "Cé a bhí mar chéad Uachtarán na hÉireann?", "answer": "Douglas Hyde (Dubhghlas de hÍde)"},
+      {"question": "Cén bhliain ar thosaigh an Gorta Mór?", "answer": "1845"}
+    ]
+  },
+  "World History and World Geography": {
+    "questions": [
+      {"question": "In what year did World War II end?", "answer": "1945"},
+      {"question": "What is the longest river in the world?", "answer": "The Nile"},
+      {"question": "Who was the first man to walk on the Moon?", "answer": "Neil Armstrong"},
+      {"question": "What is the capital of Australia?", "answer": "Canberra"},
+      {"question": "In what year did the Berlin Wall fall?", "answer": "1989"},
+      {"question": "What is the smallest country in the world by area?", "answer": "Vatican City"},
+      {"question": "Who was the first President of the United States?", "answer": "George Washington"},
+      {"question": "What is the highest mountain in the world?", "answer": "Mount Everest"},
+      {"question": "The French Revolution began in what year?", "answer": "1789"},
+      {"question": "What is the largest desert in the world?", "answer": "The Sahara Desert"},
+      {"question": "In which city was the Titanic built?", "answer": "Belfast"},
+      {"question": "What is the capital of New Zealand?", "answer": "Wellington"},
+      {"question": "Who painted the ceiling of the Sistine Chapel?", "answer": "Michelangelo"},
+      {"question": "What is the largest ocean in the world?", "answer": "The Pacific Ocean"},
+      {"question": "In what country would you find Machu Picchu?", "answer": "Peru"},
+      {"question": "What is the capital of Canada?", "answer": "Ottawa"},
+      {"question": "Who was the British Prime Minister at the end of World War II?", "answer": "Clement Attlee"},
+      {"question": "On which river does Cairo stand?", "answer": "The Nile"}
+    ],
+    "irish_questions": [
+      {"question": "Cén tír is mó ar domhan?", "answer": "Russia (An Rúis)"},
+      {"question": "Cén bhliain ar thosaigh an Chéad Chogadh Domhanda?", "answer": "1914"},
+      {"question": "Cén sliabh is airde ar domhan?", "answer": "Mount Everest"},
+      {"question": "Cén phríomhchathair atá ag an bhFrainc?", "answer": "Paris (Páras)"}
+    ]
+  },
+  "Irish Geography": {
+    "questions": [
+      {"question": "On what river is Ballina, County Mayo?", "answer": "The River Moy"},
+      {"question": "What is the longest river in Ireland?", "answer": "The River Shannon"},
+      {"question": "What is the highest mountain in Ireland?", "answer": "Carrauntoohil"},
+      {"question": "How many counties are there in the province of Connacht?", "answer": "Five"},
+      {"question": "What is the largest lake in Ireland?", "answer": "Lough Neagh"},
+      {"question": "From where in Clare do ferries travel to the Aran Islands?", "answer": "Doolin"},
+      {"question": "How many counties border County Laois?", "answer": "Five (Offaly, Kildare, Carlow, Kilkenny, Tipperary)"},
+      {"question": "What is the English translation of the Irish place name Cill Dara?", "answer": "Church of the Oak (Kildare)"},
+      {"question": "On what river is Kilkenny city built?", "answer": "The River Nore"},
+      {"question": "In which county are the Cliffs of Moher?", "answer": "Clare"},
+      {"question": "What island is connected to the mainland by a cable car at Dursey?", "answer": "Dursey Island, County Cork"},
+      {"question": "What is the county town of Leitrim?", "answer": "Carrick-on-Shannon"},
+      {"question": "In which county is Croagh Patrick?", "answer": "Mayo"},
+      {"question": "What is the English for Neidín?", "answer": "Kenmare"},
+      {"question": "On what river is the city of Limerick built?", "answer": "The River Shannon"},
+      {"question": "How many counties are in the province of Ulster?", "answer": "Nine"},
+      {"question": "What is the most northerly county in Ireland?", "answer": "Donegal"},
+      {"question": "In which county is the Hook Head Lighthouse?", "answer": "Wexford"}
+    ],
+    "irish_questions": [
+      {"question": "Cén t-ainm Béarla atá ar Corcaigh?", "answer": "Cork"},
+      {"question": "Cén t-ainm Béarla atá ar Dún na nGall?", "answer": "Donegal"},
+      {"question": "Cén abhainn is faide in Éirinn?", "answer": "The Shannon (An tSionainn)"},
+      {"question": "Cé mhéad contae atá i gCúige Mumhan?", "answer": "Six (Sé cinn)"}
+    ]
+  },
+  "Irish Current Affairs": {
+    "questions": [
+      {"question": "Who is the current Taoiseach of Ireland?", "answer": "Micheál Martin"},
+      {"question": "Who is the current President of Ireland?", "answer": "Michael D. Higgins"},
+      {"question": "What does the acronym RTÉ stand for?", "answer": "Raidió Teilifís Éireann"},
+      {"question": "In which year did Ireland vote to repeal the Eighth Amendment?", "answer": "2018"},
+      {"question": "What does the acronym HSE stand for?", "answer": "Health Service Executive"},
+      {"question": "Who succeeded Leo Varadkar as leader of Fine Gael in 2024?", "answer": "Simon Harris"},
+      {"question": "In which year did Ireland legalise same-sex marriage by popular vote?", "answer": "2015"},
+      {"question": "What is the name of Ireland's national police force?", "answer": "An Garda Síochána"},
+      {"question": "What major infrastructure project is a new children's hospital being built at in Dublin?", "answer": "The National Children's Hospital at St James's"},
+      {"question": "Who is the current Tánaiste?", "answer": "Simon Harris"},
+      {"question": "What does NPHET stand for?", "answer": "National Public Health Emergency Team"},
+      {"question": "In which county is the data centre hub of Ireland primarily located?", "answer": "Dublin"},
+      {"question": "Who won the 2024 Irish General Election forming a coalition government?", "answer": "Fianna Fáil and Fine Gael"},
+      {"question": "What is the name of the Irish language television station?", "answer": "TG4"},
+      {"question": "Who was the first female President of Ireland?", "answer": "Mary Robinson"},
+      {"question": "What sporting event did Ireland host for the first time in 2023 at the Aviva Stadium?", "answer": "UEFA Europa League Final"},
+      {"question": "What is the name of Ireland's sovereign wealth fund established in 2024?", "answer": "The Future Ireland Fund"},
+      {"question": "What does the acronym FAI stand for?", "answer": "Football Association of Ireland"}
+    ],
+    "irish_questions": [
+      {"question": "Cé hé Taoiseach na hÉireann faoi láthair?", "answer": "Micheál Martin"},
+      {"question": "Cé hé Uachtarán na hÉireann faoi láthair?", "answer": "Michael D. Higgins (Mícheál D. Ó hUigínn)"},
+      {"question": "Cén ainm atá ar sheirbhís phóilíneachta na hÉireann?", "answer": "An Garda Síochána"},
+      {"question": "Cén bhliain ar vótáil muintir na hÉireann ar son an phósta chomhghnéis?", "answer": "2015"}
+    ]
+  },
+  "World Current Affairs": {
+    "questions": [
+      {"question": "Who is the current Secretary-General of the United Nations?", "answer": "António Guterres"},
+      {"question": "What does the acronym NATO stand for?", "answer": "North Atlantic Treaty Organization"},
+      {"question": "Who won the 2024 US Presidential Election?", "answer": "Donald Trump"},
+      {"question": "In which country did a devastating earthquake strike in February 2023?", "answer": "Turkey (and Syria)"},
+      {"question": "What does the acronym COP stand for in the context of climate conferences?", "answer": "Conference of the Parties"},
+      {"question": "Which country hosted the 2022 FIFA World Cup?", "answer": "Qatar"},
+      {"question": "Who is the current monarch of the United Kingdom?", "answer": "King Charles III"},
+      {"question": "In what year did Russia invade Ukraine?", "answer": "2022"},
+      {"question": "Which city hosted the 2024 Summer Olympic Games?", "answer": "Paris"},
+      {"question": "Who is the current President of France?", "answer": "Emmanuel Macron"},
+      {"question": "What is the name of the international court based in The Hague?", "answer": "The International Court of Justice (ICJ)"},
+      {"question": "Which country left the European Union in 2020?", "answer": "The United Kingdom"},
+      {"question": "Who is the current Pope?", "answer": "Pope Leo XIV"},
+      {"question": "What does the acronym WHO stand for?", "answer": "World Health Organization"},
+      {"question": "Which country hosted COP28 in 2023?", "answer": "United Arab Emirates (Dubai)"},
+      {"question": "Who is the current Chancellor of Germany?", "answer": "Friedrich Merz"},
+      {"question": "What social media platform was rebranded to 'X' in 2023?", "answer": "Twitter"},
+      {"question": "Which country experienced a coup in 2023, with its military taking power from the elected government in Niger?", "answer": "Niger"}
+    ],
+    "irish_questions": [
+      {"question": "Cén tír a bhuaigh Corn an Domhain FIFA sa bhliain 2022?", "answer": "Argentina (An Airgintín)"},
+      {"question": "Cé hé Rí na Ríochta Aontaithe faoi láthair?", "answer": "King Charles III (Rí Séarlas III)"},
+      {"question": "Cén cathair a bhí mar óstach na gCluichí Oilimpeacha sa bhliain 2024?", "answer": "Paris (Páras)"},
+      {"question": "Cén eagraíocht idirnáisiúnta a bhfuil a ceanncheathrú i Nua-Eabhrac?", "answer": "The United Nations (Na Náisiúin Aontaithe)"}
+    ]
+  },
+  "Irish Culture": {
+    "questions": [
+      {"question": "Where is the Belltable Theatre?", "answer": "Limerick"},
+      {"question": "Who wrote 'Ireland's Call'?", "answer": "Phil Coulter"},
+      {"question": "Nora Barnacle was married to which famous Irish writer?", "answer": "James Joyce"},
+      {"question": "Where is Punchestown Racecourse?", "answer": "County Kildare"},
+      {"question": "Who wrote the novel 'Normal People'?", "answer": "Sally Rooney"},
+      {"question": "In which city is the Abbey Theatre?", "answer": "Dublin"},
+      {"question": "Which Irish band had members Ronnie Drew, Luke Kelly, Barney McKenna and John Sheahan?", "answer": "The Dubliners"},
+      {"question": "Who wrote the poem 'The Lake Isle of Innisfree'?", "answer": "W.B. Yeats"},
+      {"question": "Where is the Wexford Opera Festival held?", "answer": "Wexford"},
+      {"question": "What is the name of the secret language traditionally spoken by Irish Travellers?", "answer": "Shelta (or Cant)"},
+      {"question": "Which Irishman won the Nobel Prize for Literature in 1995?", "answer": "Seamus Heaney"},
+      {"question": "Where is Fairyhouse Racecourse?", "answer": "County Meath (Ratoath)"},
+      {"question": "Who directed the film 'The Banshees of Inisherin'?", "answer": "Martin McDonagh"},
+      {"question": "What does ICA stand for?", "answer": "Irish Countrywomen's Association"},
+      {"question": "Who wrote 'Angela's Ashes'?", "answer": "Frank McCourt"},
+      {"question": "Which traditional Irish music group featured Paddy Moloney?", "answer": "The Chieftains"},
+      {"question": "In which county is the Fleadh Cheoil na hÉireann traditionally held in various locations?", "answer": "It rotates between different towns and counties"},
+      {"question": "Who created the TV series 'Derry Girls'?", "answer": "Lisa McGee"}
+    ],
+    "irish_questions": [
+      {"question": "Cé a scríobh an dán 'Mise Éire'?", "answer": "Patrick Pearse (Pádraig Mac Piarais)"},
+      {"question": "Cén t-amhráin náisiúnta atá ag Éirinn?", "answer": "Amhrán na bhFiann (The Soldier's Song)"},
+      {"question": "Cá bhfuil Amharclann na Mainistreach (The Abbey Theatre)?", "answer": "Dublin (Baile Átha Cliath)"},
+      {"question": "Cé a scríobh 'Cré na Cille'?", "answer": "Máirtín Ó Cadhain"}
+    ]
+  },
+  "General Knowledge": {
+    "questions": [
+      {"question": "What is the chemical symbol for gold?", "answer": "Au"},
+      {"question": "Who painted the Mona Lisa?", "answer": "Leonardo da Vinci"},
+      {"question": "How many planets are in our solar system?", "answer": "Eight"},
+      {"question": "What is the hardest natural substance on Earth?", "answer": "Diamond"},
+      {"question": "In which sport would you perform a 'slam dunk'?", "answer": "Basketball"},
+      {"question": "What is the largest mammal in the world?", "answer": "The Blue Whale"},
+      {"question": "Who wrote the Harry Potter series?", "answer": "J.K. Rowling"},
+      {"question": "What is the boiling point of water in degrees Celsius?", "answer": "100°C"},
+      {"question": "Which planet is known as the Red Planet?", "answer": "Mars"},
+      {"question": "In which country did the Olympic Games originate?", "answer": "Greece"},
+      {"question": "What is the main ingredient of guacamole?", "answer": "Avocado"},
+      {"question": "Who composed the Four Seasons?", "answer": "Antonio Vivaldi"},
+      {"question": "What is the speed of light approximately in kilometres per second?", "answer": "300,000 km/s"},
+      {"question": "Who wrote 'Romeo and Juliet'?", "answer": "William Shakespeare"},
+      {"question": "What gas do plants absorb from the atmosphere during photosynthesis?", "answer": "Carbon dioxide"},
+      {"question": "In what year was the first iPhone released?", "answer": "2007"},
+      {"question": "What is the largest organ in the human body?", "answer": "The skin"},
+      {"question": "Who holds the record for the most Grand Slam tennis titles in men's singles?", "answer": "Novak Djokovic"}
+    ],
+    "irish_questions": [
+      {"question": "Cé mhéad pláinéad atá sa ghrianchóras?", "answer": "Eight (Ocht gcinn)"},
+      {"question": "Cén t-ainm atá ar an bpláinéad is mó sa ghrianchóras?", "answer": "Jupiter (Iúpatar)"},
+      {"question": "Cén dath atá ag emerald?", "answer": "Green (Glas)"},
+      {"question": "Cén siombal ceimiceach atá ag uisce?", "answer": "H₂O"}
+    ]
+  }
+}

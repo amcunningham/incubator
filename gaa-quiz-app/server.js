@@ -1,0 +1,730 @@
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+const crypto = require("crypto");
+const { pool, initDB, seedFromJSON } = require("./db");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "scor2024";
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+
+// ==================
+// AUTH MIDDLEWARE
+// ==================
+
+async function requireAdmin(req, res, next) {
+  const token = req.headers["x-admin-token"];
+  if (!token) {
+    return res.status(401).json({ error: "Admin authentication required" });
+  }
+  try {
+    const { rows } = await pool.query(
+      "SELECT token FROM admin_sessions WHERE token = $1 AND created_at > NOW() - INTERVAL '24 hours'",
+      [token]
+    );
+    if (rows.length === 0) {
+      return res.status(401).json({ error: "Invalid or expired session" });
+    }
+    next();
+  } catch (err) {
+    res.status(500).json({ error: "Auth check failed" });
+  }
+}
+
+// ==================
+// AUTH ROUTES
+// ==================
+
+app.post("/api/admin/login", async (req, res) => {
+  const { password } = req.body;
+  if (password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Incorrect password" });
+  }
+  const token = crypto.randomBytes(32).toString("hex");
+  await pool.query("INSERT INTO admin_sessions (token) VALUES ($1)", [token]);
+  // Clean up old sessions
+  await pool.query(
+    "DELETE FROM admin_sessions WHERE created_at < NOW() - INTERVAL '24 hours'"
+  );
+  res.json({ token });
+});
+
+app.post("/api/admin/logout", async (req, res) => {
+  const token = req.headers["x-admin-token"];
+  if (token) {
+    await pool.query("DELETE FROM admin_sessions WHERE token = $1", [token]);
+  }
+  res.json({ success: true });
+});
+
+app.get("/api/admin/check", requireAdmin, (req, res) => {
+  res.json({ authenticated: true });
+});
+
+// ==================
+// HELPER FUNCTIONS
+// ==================
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+async function getCategories() {
+  const { rows } = await pool.query(
+    "SELECT id, name FROM categories ORDER BY id"
+  );
+  return rows;
+}
+
+async function pickQuestions(categoryName, count) {
+  const catResult = await pool.query(
+    "SELECT id FROM categories WHERE name = $1",
+    [categoryName]
+  );
+  if (catResult.rows.length === 0) return [];
+  const categoryId = catResult.rows[0].id;
+
+  const regResult = await pool.query(
+    "SELECT question, answer FROM questions WHERE category_id = $1 AND is_irish = false ORDER BY RANDOM()",
+    [categoryId]
+  );
+  const irishResult = await pool.query(
+    "SELECT question, answer FROM questions WHERE category_id = $1 AND is_irish = true ORDER BY RANDOM()",
+    [categoryId]
+  );
+
+  const regular = regResult.rows;
+  const irish = irishResult.rows;
+  const result = [];
+  let regIdx = 0;
+  let irishIdx = 0;
+
+  for (let i = 0; i < count; i++) {
+    const posInRound = (i % 10) + 1;
+    if (posInRound >= 9) {
+      if (irishIdx < irish.length) {
+        result.push({ ...irish[irishIdx], is_irish: true });
+        irishIdx++;
+      } else if (regIdx < regular.length) {
+        result.push({ ...regular[regIdx], is_irish: false });
+        regIdx++;
+      }
+    } else {
+      if (regIdx < regular.length) {
+        result.push({ ...regular[regIdx], is_irish: false });
+        regIdx++;
+      } else if (irishIdx < irish.length) {
+        result.push({ ...irish[irishIdx], is_irish: true });
+        irishIdx++;
+      }
+    }
+  }
+
+  return result;
+}
+
+// ==================
+// PUBLIC API ROUTES
+// ==================
+
+app.get("/api/categories", async (req, res) => {
+  try {
+    const categories = await getCategories();
+    res.json(categories.map((c) => c.name));
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load categories" });
+  }
+});
+
+app.post("/api/generate", async (req, res) => {
+  const { categories, mode, count } = req.body;
+
+  if (!categories || !categories.length) {
+    return res
+      .status(400)
+      .json({ error: "At least one category is required" });
+  }
+
+  try {
+    if (mode === "practice") {
+      const numQuestions = count || 5;
+      const perCategory = Math.ceil(numQuestions / categories.length);
+      let allQuestions = [];
+
+      for (const cat of categories) {
+        const qs = await pickQuestions(cat, perCategory);
+        qs.forEach((q) => {
+          allQuestions.push({ ...q, category: cat });
+        });
+      }
+
+      allQuestions = shuffle(allQuestions).slice(0, numQuestions);
+
+      const data = allQuestions.map((q, i) => ({
+        number: i + 1,
+        category: q.category,
+        question: q.question,
+        answer: q.answer,
+        is_irish: q.is_irish,
+      }));
+
+      return res.json({ mode, data });
+    }
+
+    // Quiz mode
+    const roundCategories = categories.slice(0, 10);
+    const rounds = [];
+
+    for (let idx = 0; idx < roundCategories.length; idx++) {
+      const cat = roundCategories[idx];
+      const qs = await pickQuestions(cat, 10);
+      rounds.push({
+        number: idx + 1,
+        category: cat,
+        questions: qs.map((q, i) => ({
+          number: i + 1,
+          question: q.question,
+          answer: q.answer,
+          is_irish: q.is_irish,
+        })),
+      });
+    }
+
+    res.json({ mode, data: { rounds } });
+  } catch (err) {
+    console.error("Generate error:", err);
+    res.status(500).json({ error: "Failed to generate questions" });
+  }
+});
+
+// ==================
+// FEEDBACK ROUTES
+// ==================
+
+app.post("/api/feedback", async (req, res) => {
+  const {
+    question,
+    answer,
+    category,
+    feedbackType,
+    comment,
+    suggestedAnswer,
+    isAI,
+  } = req.body;
+
+  if (!question || !feedbackType) {
+    return res
+      .status(400)
+      .json({ error: "Question and feedback type are required" });
+  }
+
+  const id =
+    Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+  try {
+    await pool.query(
+      `INSERT INTO feedback (id, question, answer, category, feedback_type, comment, suggested_answer, is_ai)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        id,
+        question,
+        answer || "",
+        category || "",
+        feedbackType,
+        comment || "",
+        suggestedAnswer || "",
+        !!isAI,
+      ]
+    );
+    res.json({ success: true, id });
+  } catch (err) {
+    console.error("Feedback error:", err);
+    res.status(500).json({ error: "Failed to save feedback" });
+  }
+});
+
+app.get("/api/feedback", async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT * FROM feedback ORDER BY created_at DESC"
+    );
+    // Map column names for frontend compatibility
+    const items = rows.map((r) => ({
+      id: r.id,
+      question: r.question,
+      answer: r.answer,
+      category: r.category,
+      feedbackType: r.feedback_type,
+      comment: r.comment,
+      suggestedAnswer: r.suggested_answer,
+      isAI: r.is_ai,
+      resolved: r.resolved,
+      timestamp: r.created_at,
+    }));
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load feedback" });
+  }
+});
+
+app.patch("/api/feedback/:id", requireAdmin, async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "UPDATE feedback SET resolved = NOT resolved WHERE id = $1 RETURNING *",
+      [req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: "Not found" });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update feedback" });
+  }
+});
+
+app.delete("/api/feedback/:id", requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query("DELETE FROM feedback WHERE id = $1", [
+      req.params.id,
+    ]);
+    if (result.rowCount === 0)
+      return res.status(404).json({ error: "Not found" });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete feedback" });
+  }
+});
+
+// ==================
+// ADMIN QUESTION MANAGEMENT
+// ==================
+
+app.post("/api/questions/remove", requireAdmin, async (req, res) => {
+  const { question, category } = req.body;
+
+  if (!question || !category) {
+    return res
+      .status(400)
+      .json({ error: "Question text and category are required" });
+  }
+
+  try {
+    const result = await pool.query(
+      `DELETE FROM questions WHERE question = $1 AND category_id = (SELECT id FROM categories WHERE name = $2)`,
+      [question, category]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Question not found in bank" });
+    }
+
+    const { rows } = await pool.query(
+      "SELECT COUNT(*) FROM questions WHERE category_id = (SELECT id FROM categories WHERE name = $1)",
+      [category]
+    );
+
+    res.json({ success: true, remaining: parseInt(rows[0].count) });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to remove question" });
+  }
+});
+
+app.post("/api/questions/edit", requireAdmin, async (req, res) => {
+  const { originalQuestion, category, newQuestion, newAnswer } = req.body;
+
+  if (!originalQuestion || !category) {
+    return res
+      .status(400)
+      .json({ error: "Original question and category are required" });
+  }
+
+  try {
+    const updates = [];
+    const values = [];
+    let paramIdx = 1;
+
+    if (newQuestion) {
+      updates.push(`question = $${paramIdx++}`);
+      values.push(newQuestion);
+    }
+    if (newAnswer) {
+      updates.push(`answer = $${paramIdx++}`);
+      values.push(newAnswer);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ error: "No changes provided" });
+    }
+
+    values.push(originalQuestion, category);
+
+    const result = await pool.query(
+      `UPDATE questions SET ${updates.join(", ")}
+       WHERE question = $${paramIdx++} AND category_id = (SELECT id FROM categories WHERE name = $${paramIdx})`,
+      values
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Question not found in bank" });
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Edit question error:", err);
+    res.status(500).json({ error: "Failed to edit question" });
+  }
+});
+
+app.post("/api/questions/add", requireAdmin, async (req, res) => {
+  const { question, answer, category, isIrish } = req.body;
+
+  if (!question || !answer || !category) {
+    return res
+      .status(400)
+      .json({ error: "Question, answer and category are required" });
+  }
+
+  try {
+    const catResult = await pool.query(
+      "SELECT id FROM categories WHERE name = $1",
+      [category]
+    );
+    if (catResult.rows.length === 0) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    await pool.query(
+      "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, $4)",
+      [catResult.rows[0].id, question, answer, !!isIrish]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to add question" });
+  }
+});
+
+// Get all questions (admin only)
+app.get("/api/admin/questions", requireAdmin, async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT q.id, q.question, q.answer, q.is_irish, c.name as category
+       FROM questions q
+       JOIN categories c ON q.category_id = c.id
+       ORDER BY c.name, q.is_irish, q.id`
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load questions" });
+  }
+});
+
+// Get question bank stats
+app.get("/api/admin/stats", requireAdmin, async (req, res) => {
+  try {
+    const questions = await pool.query(
+      `SELECT c.name as category, COUNT(*) as total,
+              SUM(CASE WHEN q.is_irish THEN 1 ELSE 0 END) as irish
+       FROM questions q JOIN categories c ON q.category_id = c.id
+       GROUP BY c.name ORDER BY c.name`
+    );
+    const feedback = await pool.query(
+      "SELECT COUNT(*) as total, SUM(CASE WHEN resolved THEN 1 ELSE 0 END) as resolved FROM feedback"
+    );
+    const aiQuestions = await pool.query(
+      "SELECT COUNT(*) as total, SUM(CASE WHEN added_to_bank THEN 1 ELSE 0 END) as added FROM ai_questions"
+    );
+
+    res.json({
+      categories: questions.rows,
+      feedback: feedback.rows[0],
+      aiQuestions: aiQuestions.rows[0],
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load stats" });
+  }
+});
+
+// ==================
+// AI QUESTION ROUTES
+// ==================
+
+app.post("/api/generate-ai", async (req, res) => {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return res
+      .status(400)
+      .json({
+        error: "ANTHROPIC_API_KEY not configured. Use the question bank instead.",
+      });
+  }
+
+  const Anthropic = require("@anthropic-ai/sdk").default;
+  const client = new Anthropic();
+
+  const { categories, mode, count } = req.body;
+
+  if (!categories || !categories.length) {
+    return res
+      .status(400)
+      .json({ error: "At least one category is required" });
+  }
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.toLocaleString("en-IE", { month: "long" });
+
+  const SYSTEM_PROMPT = `You are a quiz master for GAA Scór Senior Quiz competitions in Ireland. You generate quiz questions in the exact style used at county, provincial and All-Ireland Scór Tráth na gCeist competitions.
+
+RULES FOR QUESTION STYLE:
+- Each round has exactly 10 questions
+- Questions are short, direct, and factual with a single definitive answer
+- Questions 9 and 10 in every round MUST be written in Irish (as Gaeilge). The answer can be in English or Irish as appropriate.
+- Answers should be concise — typically a name, place, year, or short phrase
+- Do NOT include multiple-choice options — these are open-answer questions
+
+DIFFICULTY: Accessible but requiring genuine knowledge. Not pub-quiz easy, not academic-level hard. A well-prepared Scór team should get 7-8 out of 10.
+
+IMPORTANT: Vary the questions each time. Do not repeat questions. Be creative and cover different aspects of each category.`;
+
+  let userPrompt;
+
+  if (mode === "practice") {
+    const numQuestions = count || 5;
+    const categoryList = categories.join(", ");
+    userPrompt = `Generate ${numQuestions} practice questions from the following categories: ${categoryList}.
+
+Mix the categories randomly. For each question, provide the category it belongs to.
+
+Today's date is ${currentMonth} ${currentYear}. For current affairs categories, questions should relate to events in the past 12 months.
+
+Return your response as a JSON array with this exact structure:
+[
+  {
+    "number": 1,
+    "category": "Category Name",
+    "question": "The question text",
+    "answer": "The answer",
+    "is_irish": false
+  }
+]
+
+Set "is_irish" to true if the question is written in Irish. For every 10 questions, questions 9 and 10 should be as Gaeilge.`;
+  } else {
+    const roundCategories = categories.slice(0, 10);
+    userPrompt = `Generate a full Scór-style quiz with one round for each of the following categories (in this order):
+${roundCategories.map((c, i) => `Round ${i + 1}: ${c}`).join("\n")}
+
+Each round has exactly 10 questions. Questions 9 and 10 in each round must be as Gaeilge (in Irish).
+
+Today's date is ${currentMonth} ${currentYear}. For current affairs categories, questions should relate to events in the past 12 months.
+
+Return your response as a JSON object with this exact structure:
+{
+  "rounds": [
+    {
+      "number": 1,
+      "category": "Category Name",
+      "questions": [
+        {
+          "number": 1,
+          "question": "The question text",
+          "answer": "The answer",
+          "is_irish": false
+        }
+      ]
+    }
+  ]
+}
+
+Set "is_irish" to true for questions written in Irish.`;
+  }
+
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Transfer-Encoding", "chunked");
+  const keepAlive = setInterval(() => res.write(" "), 5000);
+
+  try {
+    const stream = client.messages.stream({
+      model: "claude-sonnet-4-6",
+      max_tokens: 16000,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: userPrompt }],
+    });
+
+    const chunks = [];
+    for await (const event of stream) {
+      if (
+        event.type === "content_block_delta" &&
+        event.delta.type === "text_delta"
+      ) {
+        chunks.push(event.delta.text);
+      }
+    }
+
+    clearInterval(keepAlive);
+
+    const fullText = chunks.join("");
+    const jsonMatch =
+      fullText.match(/\[[\s\S]*\]/) || fullText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      res.end(JSON.stringify({ error: "Failed to parse quiz data" }));
+      return;
+    }
+
+    const data = JSON.parse(jsonMatch[0]);
+
+    // Store AI-generated questions for rating
+    try {
+      const questionsToStore =
+        mode === "practice" ? data : data.rounds?.flatMap((r) => r.questions.map((q) => ({ ...q, category: r.category }))) || [];
+
+      for (const q of questionsToStore) {
+        await pool.query(
+          "INSERT INTO ai_questions (category, question, answer, is_irish) VALUES ($1, $2, $3, $4)",
+          [q.category || "", q.question, q.answer, !!q.is_irish]
+        );
+      }
+    } catch (storeErr) {
+      console.error("Failed to store AI questions:", storeErr);
+    }
+
+    res.end(JSON.stringify({ mode, data }));
+  } catch (err) {
+    clearInterval(keepAlive);
+    console.error("Claude API error:", err.message);
+    res.end(
+      JSON.stringify({
+        error: "Failed to generate questions. Check your ANTHROPIC_API_KEY.",
+      })
+    );
+  }
+});
+
+// ==================
+// AI QUESTION MANAGEMENT (admin)
+// ==================
+
+app.get("/api/admin/ai-questions", requireAdmin, async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT * FROM ai_questions ORDER BY created_at DESC"
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load AI questions" });
+  }
+});
+
+app.post("/api/admin/ai-questions/:id/rate", requireAdmin, async (req, res) => {
+  const { rating } = req.body;
+  try {
+    const { rows } = await pool.query(
+      "UPDATE ai_questions SET rating = $1 WHERE id = $2 RETURNING *",
+      [rating, req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: "Not found" });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to rate question" });
+  }
+});
+
+app.post("/api/admin/ai-questions/:id/add-to-bank", requireAdmin, async (req, res) => {
+  try {
+    // Get the AI question
+    const { rows } = await pool.query(
+      "SELECT * FROM ai_questions WHERE id = $1",
+      [req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: "Not found" });
+
+    const q = rows[0];
+
+    // Find or create the category
+    let catResult = await pool.query(
+      "SELECT id FROM categories WHERE name = $1",
+      [q.category]
+    );
+    if (catResult.rows.length === 0) {
+      catResult = await pool.query(
+        "INSERT INTO categories (name) VALUES ($1) RETURNING id",
+        [q.category]
+      );
+    }
+
+    // Add to question bank
+    await pool.query(
+      "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, $4)",
+      [catResult.rows[0].id, q.question, q.answer, q.is_irish]
+    );
+
+    // Mark as added
+    await pool.query(
+      "UPDATE ai_questions SET added_to_bank = true WHERE id = $1",
+      [req.params.id]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Add to bank error:", err);
+    res.status(500).json({ error: "Failed to add question to bank" });
+  }
+});
+
+app.delete("/api/admin/ai-questions/:id", requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query("DELETE FROM ai_questions WHERE id = $1", [
+      req.params.id,
+    ]);
+    if (result.rowCount === 0)
+      return res.status(404).json({ error: "Not found" });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete AI question" });
+  }
+});
+
+// Serve admin page
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "admin.html"));
+});
+
+// Fallback: serve index.html for any unmatched route
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ==================
+// STARTUP
+// ==================
+
+async function start() {
+  try {
+    await initDB();
+
+    // Seed from JSON file if database is empty
+    const questionBankPath = path.join(__dirname, "question-bank.json");
+    if (fs.existsSync(questionBankPath)) {
+      const questionBank = JSON.parse(
+        fs.readFileSync(questionBankPath, "utf-8")
+      );
+      await seedFromJSON(questionBank);
+    }
+
+    app.listen(PORT, () => {
+      console.log(`GAA Scór Quiz Prep running at http://localhost:${PORT}`);
+      console.log(`Admin panel: http://localhost:${PORT}/admin`);
+    });
+  } catch (err) {
+    console.error("Failed to start:", err);
+    process.exit(1);
+  }
+}
+
+start();
