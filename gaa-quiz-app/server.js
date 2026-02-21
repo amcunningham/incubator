@@ -9,9 +9,14 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Load question bank
+const questionBankPath = path.join(__dirname, "question-bank.json");
 const questionBank = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "question-bank.json"), "utf-8")
+  fs.readFileSync(questionBankPath, "utf-8")
 );
+
+function saveQuestionBank() {
+  fs.writeFileSync(questionBankPath, JSON.stringify(questionBank, null, 2));
+}
 
 // Load or initialize feedback store
 const feedbackPath = path.join(__dirname, "feedback.json");
@@ -181,6 +186,45 @@ app.delete("/api/feedback/:id", (req, res) => {
   feedbackStore.splice(idx, 1);
   saveFeedback();
   res.json({ success: true });
+});
+
+// Remove a question from the question bank
+app.post("/api/questions/remove", (req, res) => {
+  const { question, category } = req.body;
+
+  if (!question || !category) {
+    return res.status(400).json({ error: "Question text and category are required" });
+  }
+
+  const bank = questionBank[category];
+  if (!bank) {
+    return res.status(404).json({ error: "Category not found" });
+  }
+
+  let removed = false;
+
+  // Check regular questions
+  const regIdx = bank.questions.findIndex((q) => q.question === question);
+  if (regIdx !== -1) {
+    bank.questions.splice(regIdx, 1);
+    removed = true;
+  }
+
+  // Check irish questions
+  if (!removed) {
+    const irishIdx = bank.irish_questions.findIndex((q) => q.question === question);
+    if (irishIdx !== -1) {
+      bank.irish_questions.splice(irishIdx, 1);
+      removed = true;
+    }
+  }
+
+  if (!removed) {
+    return res.status(404).json({ error: "Question not found in bank" });
+  }
+
+  saveQuestionBank();
+  res.json({ success: true, remaining: bank.questions.length + bank.irish_questions.length });
 });
 
 // AI-generated questions endpoint (requires ANTHROPIC_API_KEY)

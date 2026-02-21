@@ -200,7 +200,10 @@ function showRound() {
         <div class="q-text">${q.question}</div>
         <div class="q-answer" id="answer-${currentRound}-${q.number}">${q.answer}</div>
       </div>
-      <button class="btn-flag-small" title="Flag this question" onclick="flagQuizQuestion(${currentRound}, ${q.number})">Flag</button>
+      <div class="q-actions">
+        <button class="btn-flag-small" title="Flag this question" onclick="flagQuizQuestion(${currentRound}, ${q.number})">Flag</button>
+        <button class="btn-remove-small" title="Remove from bank" onclick="removeQuizQuestion(${currentRound}, ${q.number})">Remove</button>
+      </div>
     `;
 
     container.appendChild(row);
@@ -431,6 +434,54 @@ async function deleteFeedback(id) {
   if (!confirm("Delete this feedback?")) return;
   await fetch("/api/feedback/" + id, { method: "DELETE" });
   showFeedbackReview();
+}
+
+// Remove question from bank
+async function removeQuestion(question, answer, category) {
+  if (!question || !category) {
+    // Fall back to current practice question
+    if (currentMode === "practice" && questions[currentIndex]) {
+      const q = questions[currentIndex];
+      question = q.question;
+      answer = q.answer;
+      category = q.category;
+    } else {
+      return;
+    }
+  }
+
+  if (!confirm("Remove this question from the bank permanently?\n\n\"" + question + "\"")) return;
+
+  try {
+    const res = await fetch("/api/questions/remove", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, category }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      showToast("Question removed from bank");
+    } else {
+      alert(data.error || "Failed to remove question.");
+    }
+  } catch (e) {
+    alert("Network error.");
+  }
+}
+
+async function removeFromModal() {
+  if (!feedbackTarget) return;
+  await removeQuestion(feedbackTarget.question, feedbackTarget.answer, feedbackTarget.category);
+  closeFeedbackModal();
+}
+
+function removeQuizQuestion(roundIdx, qNum) {
+  const round = rounds[roundIdx];
+  if (!round) return;
+  const q = round.questions.find((x) => x.number === qNum);
+  if (!q) return;
+  removeQuestion(q.question, q.answer, round.category);
 }
 
 // Keyboard shortcuts

@@ -95,6 +95,7 @@
       <div class="practice-controls">
         <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
         <button class="btn btn-flag" id="flag-btn" onclick="openFeedbackModal()">Flag</button>
+        <button class="btn btn-danger btn-sm" onclick="removeQuestion()">Remove</button>
         <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
       </div>
 
@@ -156,9 +157,14 @@
       <label class="modal-label" for="feedback-comment">Comment (optional)</label>
       <textarea id="feedback-comment" class="modal-input modal-textarea" placeholder="Any extra detail..."></textarea>
 
-      <div class="button-row" style="margin-top: 1rem;">
-        <button class="btn btn-secondary" onclick="closeFeedbackModal()">Cancel</button>
-        <button class="btn btn-primary" id="submit-feedback-btn" onclick="submitFeedback()">Submit</button>
+      <div class="modal-actions" style="margin-top: 1rem;">
+        <div class="button-row">
+          <button class="btn btn-secondary" onclick="closeFeedbackModal()">Cancel</button>
+          <button class="btn btn-primary" id="submit-feedback-btn" onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+        <div class="button-row" style="margin-top: 0.5rem;">
+          <button class="btn btn-danger" onclick="removeFromModal()">Remove from Bank</button>
+        </div>
       </div>
     </div>
   </div>

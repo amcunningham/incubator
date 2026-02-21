@@ -487,6 +487,16 @@ h2 {
   color: #533f03;
 }
 
+.btn-danger {
+  background: #dc3545;
+  color: var(--white);
+  border: none;
+}
+
+.btn-danger:hover {
+  background: #b02a37;
+}
+
 .btn-flag-small {
   background: none;
   border: 1px solid var(--gray-200);
@@ -505,6 +515,33 @@ h2 {
   background: #fff3cd;
   border-color: #ffc107;
   color: #856404;
+}
+
+.btn-remove-small {
+  background: none;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  font-family: inherit;
+  color: var(--gray-500);
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: center;
+  transition: all 0.15s;
+}
+
+.btn-remove-small:hover {
+  background: #f8d7da;
+  border-color: #dc3545;
+  color: #842029;
+}
+
+.q-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex-shrink: 0;
 }
 
 /* MODAL */
