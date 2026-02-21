@@ -33,14 +33,26 @@ RULES FOR QUESTION STYLE:
 - Do NOT include multiple-choice options — these are open-answer questions
 
 CATEGORY-SPECIFIC GUIDANCE:
-- GAA categories (Football, Hurling, Camogie, General GAA): Ask about All-Ireland finals, provincial champions, cup names, referees, venues, rule specifics, famous players, records, and award winners. Be specific about years.
-- Irish History: Cover events, figures, dates, treaties, rebellions, political history, cultural history
-- Irish Geography: Counties, rivers, lakes, mountains, islands, Irish-language place name translations, provinces, county towns
-- World History and World Geography: Major world events, leaders, capitals, rivers, landmarks, wars, treaties
+
+- Gaelic and Ladies Football: Ask about All-Ireland finals (winners, losers, scores, venues), provincial champions, Sam Maguire and Brendan Martin Cup, referees and their home counties, specific grounds and where they are ("Where is Parnell Park?"), player transfers, management appointments and departures, All-Stars, Footballer of the Year, records (top scorers, most titles), Tailteann Cup, congress venues. Link players to counties. Be specific about years.
+
+- Hurling and Camogie: Same depth — Liam MacCarthy Cup, O'Duffy Cup, All-Ireland finals by year, referees and their counties, current managers, all-time top scorers, All-Stars and which counties won them, Christy Ring Cup, Joe McDonagh Cup. Ask "X and Y play for what county", "What county has won the most O'Duffy Cups", "Who is the current X manager". Link players to clubs and counties.
+
+- General G.A.A.: Cross-code questions covering football, hurling, camogie, handball, rounders. Ask about: the Poc Fada and where it's held, GAA congress venues, GAA grounds and their locations ("Where would one find McGovern Park?"), how many Sam Maguire cups a county has won, GAA organisational structure, sponsors ("What company sponsors the All-Stars?"), former players' careers outside GAA, the Tailteann Cup, rule changes. Include questions like "What GAA game is similar to baseball?" (rounders).
+
+- Irish History: Cover events, figures, dates, treaties, rebellions, political history, cultural history, War of Independence, Civil War, 1916 Rising, Famine, land wars, Home Rule, partition, notable figures and their roles.
+
+- Irish Geography: Rivers and what towns are built on them ("On what river is Ballina, Co. Mayo?"), Irish-language place name translations ("What is the English for Neidín?"), islands and how they connect to the mainland (cable cars, ferries), ferry routes ("From where in Clare do ferries travel to the Aran Islands?"), county borders ("How many counties border County Laois?"), superlatives (largest lake, highest mountain, longest river), mountain locations, lighthouses, bodies of water terminology (estuary), provinces, county towns. Mix well-known and obscure.
+
+- World History and World Geography: Major world events, leaders, capitals, rivers, landmarks, wars, treaties, empires, revolutions, famous explorers and their achievements.
+
 - Irish Current Affairs: A MIX of recent headline events AND standing knowledge with a current flavour. Include: political events, deaths of notable figures, sporting results, media/arts milestones, appointments to positions, anniversaries. Reference specific years. Some questions can be "who currently holds X position" or "what does X acronym stand for" if topical. Not every question needs to be from the last 12 months — some can be timeless knowledge triggered by recent events.
+
 - World Current Affairs: Same mixed approach — headline events (conflicts, elections, natural disasters, deaths of leaders/figures, major incidents) PLUS standing knowledge questions (heads of international organisations, what acronyms stand for, where regular events are held). Reference specific years for events. Include questions about: international organisations (NATO, UN, EU, COP), geopolitics, conflicts, coups, notable deaths, landmark anniversaries, major sporting events. Some questions can reference older events if they were recently topical (e.g. a film or anniversary bringing attention to a historical figure).
-- Irish Culture: Theatre, music, literature, festivals, TV, film, Irish language, arts — both historical and recent
-- General Knowledge: Science, pop culture, food, entertainment, sport (non-GAA), literature, music, film, nature
+
+- Irish Culture: Very broad category. Include: theatres and where they are ("Where is the Belltable Theatre?"), authors and their books, poets and their poems, songwriters ("Who wrote 'Ireland's Call'?"), music groups and their members (Chieftains, Dubliners etc.), TV programme creators, film, festivals, horse racing venues (Punchestown, Fairyhouse), show jumping figures, Irish Traveller culture (Shelta/Cant), organisations and their headquarters, cultural figures and their connections ("Nora Barnacle was married to whom?"), national institutions (ICA, Abbey Theatre). Mix historical and recent.
+
+- General Knowledge: Science, pop culture, food, entertainment, sport (non-GAA), literature, music, film, nature, space, inventions, famous quotes and who said them.
 
 DIFFICULTY: Accessible but requiring genuine knowledge. Not pub-quiz easy, not academic-level hard. A well-prepared Scór team should get 7-8 out of 10.
 
