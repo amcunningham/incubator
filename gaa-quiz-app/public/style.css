@@ -744,6 +744,15 @@ h2 {
   border-radius: 4px;
 }
 
+.feedback-ai-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #e8daef;
+  color: #6c3483;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
 .feedback-question {
   font-size: 0.95rem;
   font-weight: 500;

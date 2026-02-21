@@ -7,6 +7,7 @@ let currentIndex = 0;
 let currentRound = 0;
 let timerInterval = null;
 let timerSeconds = 0;
+let isAISession = false;
 
 // Screen management
 function showScreen(id) {
@@ -79,6 +80,7 @@ async function startQuiz() {
   if (!selectedCategories.length) return;
 
   const useAI = document.getElementById("use-ai").checked;
+  isAISession = useAI;
   const endpoint = useAI ? "/api/generate-ai" : "/api/generate";
 
   if (useAI) {
@@ -280,7 +282,7 @@ function nextRound() {
 // ==================
 
 let currentFeedbackType = null;
-let feedbackTarget = null; // { question, answer, category }
+let feedbackTarget = null; // { question, answer, category, isAI }
 
 function openFeedbackModal(question, answer, category) {
   // If called with no args, use the current practice question
@@ -291,7 +293,7 @@ function openFeedbackModal(question, answer, category) {
     category = q.category;
   }
 
-  feedbackTarget = { question, answer, category };
+  feedbackTarget = { question, answer, category, isAI: isAISession };
   currentFeedbackType = null;
 
   document.getElementById("modal-question-preview").textContent = question || "";
@@ -330,6 +332,7 @@ async function submitFeedback() {
     feedbackType: currentFeedbackType,
     suggestedAnswer: document.getElementById("suggested-answer").value.trim(),
     comment: document.getElementById("feedback-comment").value.trim(),
+    isAI: feedbackTarget?.isAI || false,
   };
 
   try {
@@ -406,6 +409,7 @@ async function showFeedbackReview() {
         <div class="feedback-card-header">
           <span class="feedback-type-label feedback-type-${item.feedbackType}">${typeLabels[item.feedbackType] || item.feedbackType}</span>
           <span class="feedback-category">${item.category || ""}</span>
+          ${item.isAI ? '<span class="feedback-ai-badge">AI Generated</span>' : ""}
           ${item.resolved ? '<span class="feedback-resolved-badge">Resolved</span>' : ""}
         </div>
         <div class="feedback-question">${item.question}</div>
@@ -414,7 +418,7 @@ async function showFeedbackReview() {
         ${item.comment ? '<div class="feedback-comment-text">' + item.comment + "</div>" : ""}
         <div class="feedback-actions">
           <button class="btn btn-secondary btn-sm" onclick="toggleResolved('${item.id}')">${item.resolved ? "Unresolve" : "Mark Resolved"}</button>
-          <button class="btn btn-danger btn-sm" onclick="removeFromFeedback('${item.id}')">Remove from Bank</button>
+          ${!item.isAI ? '<button class="btn btn-danger btn-sm" onclick="removeFromFeedback(\'' + item.id + "')\" >Remove from Bank</button>" : ""}
           <button class="btn btn-secondary btn-sm btn-danger-text" onclick="deleteFeedback('${item.id}')">Delete Feedback</button>
         </div>
       `;

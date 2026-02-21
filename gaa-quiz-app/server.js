@@ -143,7 +143,7 @@ app.post("/api/generate", (req, res) => {
 
 // Submit feedback on a question
 app.post("/api/feedback", (req, res) => {
-  const { question, answer, category, feedbackType, comment, suggestedAnswer } = req.body;
+  const { question, answer, category, feedbackType, comment, suggestedAnswer, isAI } = req.body;
 
   if (!question || !feedbackType) {
     return res.status(400).json({ error: "Question and feedback type are required" });
@@ -157,6 +157,7 @@ app.post("/api/feedback", (req, res) => {
     feedbackType,
     comment: comment || "",
     suggestedAnswer: suggestedAnswer || "",
+    isAI: !!isAI,
     timestamp: new Date().toISOString(),
     resolved: false,
   };
