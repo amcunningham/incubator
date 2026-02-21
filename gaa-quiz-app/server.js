@@ -161,6 +161,11 @@ Set "is_irish" to true for questions written in Irish.`;
   }
 });
 
+// Fallback: serve index.html for any unmatched route
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 app.listen(PORT, () => {
   console.log(`GAA Scór Quiz Prep running at http://localhost:${PORT}`);
 });
