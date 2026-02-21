@@ -228,6 +228,38 @@ app.post("/api/questions/remove", (req, res) => {
   res.json({ success: true, remaining: bank.questions.length + bank.irish_questions.length });
 });
 
+// Edit a question in the question bank
+app.post("/api/questions/edit", (req, res) => {
+  const { originalQuestion, category, newQuestion, newAnswer } = req.body;
+
+  if (!originalQuestion || !category) {
+    return res.status(400).json({ error: "Original question and category are required" });
+  }
+
+  const bank = questionBank[category];
+  if (!bank) {
+    return res.status(404).json({ error: "Category not found" });
+  }
+
+  // Search regular questions
+  let found = bank.questions.find((q) => q.question === originalQuestion);
+
+  // Search irish questions
+  if (!found) {
+    found = bank.irish_questions.find((q) => q.question === originalQuestion);
+  }
+
+  if (!found) {
+    return res.status(404).json({ error: "Question not found in bank" });
+  }
+
+  if (newQuestion) found.question = newQuestion;
+  if (newAnswer) found.answer = newAnswer;
+
+  saveQuestionBank();
+  res.json({ success: true });
+});
+
 // AI-generated questions endpoint (requires ANTHROPIC_API_KEY)
 app.post("/api/generate-ai", async (req, res) => {
   if (!process.env.ANTHROPIC_API_KEY) {

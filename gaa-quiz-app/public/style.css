@@ -779,6 +779,7 @@ h2 {
 
 .feedback-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.75rem;
 }
@@ -794,6 +795,46 @@ h2 {
 
 .btn-danger-text:hover {
   background: #f8d7da;
+}
+
+.feedback-edit-form {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: var(--gray-100, #f5f5f5);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.feedback-edit-form.hidden {
+  display: none;
+}
+
+.feedback-edit-form label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-700, #555);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.feedback-edit-form textarea,
+.feedback-edit-form input[type="text"] {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--gray-300, #ccc);
+  border-radius: 4px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.feedback-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 /* RESPONSIVE */
