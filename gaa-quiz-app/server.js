@@ -13,6 +13,21 @@ const questionBank = JSON.parse(
   fs.readFileSync(path.join(__dirname, "question-bank.json"), "utf-8")
 );
 
+// Load or initialize feedback store
+const feedbackPath = path.join(__dirname, "feedback.json");
+let feedbackStore = [];
+if (fs.existsSync(feedbackPath)) {
+  try {
+    feedbackStore = JSON.parse(fs.readFileSync(feedbackPath, "utf-8"));
+  } catch (e) {
+    feedbackStore = [];
+  }
+}
+
+function saveFeedback() {
+  fs.writeFileSync(feedbackPath, JSON.stringify(feedbackStore, null, 2));
+}
+
 const CATEGORIES = Object.keys(questionBank);
 
 // Shuffle helper
@@ -119,6 +134,53 @@ app.post("/api/generate", (req, res) => {
   });
 
   res.json({ mode, data: { rounds } });
+});
+
+// Submit feedback on a question
+app.post("/api/feedback", (req, res) => {
+  const { question, answer, category, feedbackType, comment, suggestedAnswer } = req.body;
+
+  if (!question || !feedbackType) {
+    return res.status(400).json({ error: "Question and feedback type are required" });
+  }
+
+  const entry = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+    question,
+    answer: answer || "",
+    category: category || "",
+    feedbackType,
+    comment: comment || "",
+    suggestedAnswer: suggestedAnswer || "",
+    timestamp: new Date().toISOString(),
+    resolved: false,
+  };
+
+  feedbackStore.push(entry);
+  saveFeedback();
+  res.json({ success: true, id: entry.id });
+});
+
+// Get all feedback
+app.get("/api/feedback", (req, res) => {
+  res.json(feedbackStore);
+});
+
+// Mark feedback as resolved / delete feedback
+app.patch("/api/feedback/:id", (req, res) => {
+  const entry = feedbackStore.find((f) => f.id === req.params.id);
+  if (!entry) return res.status(404).json({ error: "Not found" });
+  entry.resolved = !entry.resolved;
+  saveFeedback();
+  res.json(entry);
+});
+
+app.delete("/api/feedback/:id", (req, res) => {
+  const idx = feedbackStore.findIndex((f) => f.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: "Not found" });
+  feedbackStore.splice(idx, 1);
+  saveFeedback();
+  res.json({ success: true });
 });
 
 // AI-generated questions endpoint (requires ANTHROPIC_API_KEY)

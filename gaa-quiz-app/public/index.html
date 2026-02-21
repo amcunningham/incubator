@@ -28,6 +28,9 @@
           <p>Full Scor-style timed rounds. 10 questions per round, timed like the real competition.</p>
         </button>
       </div>
+      <div class="button-row" style="margin-top: 0.5rem;">
+        <button class="btn btn-secondary" onclick="showFeedbackReview()">View Feedback</button>
+      </div>
     </section>
 
     <!-- CATEGORY SELECTION -->
@@ -91,6 +94,7 @@
 
       <div class="practice-controls">
         <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+        <button class="btn btn-flag" id="flag-btn" onclick="openFeedbackModal()">Flag</button>
         <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
       </div>
 
@@ -120,7 +124,44 @@
         <button class="btn btn-secondary" onclick="goBack('mode-select')">New Quiz</button>
       </div>
     </section>
+    <!-- FEEDBACK REVIEW -->
+    <section id="feedback-review" class="screen">
+      <h2>Question Feedback</h2>
+      <p id="feedback-count" style="margin-bottom: 1rem; color: var(--gray-500);"></p>
+      <div id="feedback-list" class="feedback-list"></div>
+      <div class="button-row" style="margin-top: 1.5rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+      </div>
+    </section>
   </main>
+
+  <!-- FEEDBACK MODAL -->
+  <div id="feedback-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>Flag This Question</h3>
+      <p id="modal-question-preview" class="modal-preview"></p>
+      <p id="modal-answer-preview" class="modal-preview modal-answer-preview"></p>
+
+      <label class="modal-label">What's the issue?</label>
+      <div class="feedback-type-btns">
+        <button class="feedback-type-btn" data-type="wrong_answer" onclick="selectFeedbackType(this)">Wrong Answer</button>
+        <button class="feedback-type-btn" data-type="unclear" onclick="selectFeedbackType(this)">Unclear Question</button>
+        <button class="feedback-type-btn" data-type="outdated" onclick="selectFeedbackType(this)">Outdated</button>
+        <button class="feedback-type-btn" data-type="other" onclick="selectFeedbackType(this)">Other</button>
+      </div>
+
+      <label class="modal-label" for="suggested-answer">Suggested correct answer (optional)</label>
+      <input type="text" id="suggested-answer" class="modal-input" placeholder="What should the answer be?">
+
+      <label class="modal-label" for="feedback-comment">Comment (optional)</label>
+      <textarea id="feedback-comment" class="modal-input modal-textarea" placeholder="Any extra detail..."></textarea>
+
+      <div class="button-row" style="margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="closeFeedbackModal()">Cancel</button>
+        <button class="btn btn-primary" id="submit-feedback-btn" onclick="submitFeedback()">Submit</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
