@@ -1,0 +1,484 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --gaa-green: #006838;
+  --gaa-green-dark: #004d2a;
+  --gaa-green-light: #e8f5e9;
+  --gaa-gold: #d4a843;
+  --gaa-gold-light: #fdf4e0;
+  --white: #ffffff;
+  --gray-50: #f8f9fa;
+  --gray-100: #f0f1f3;
+  --gray-200: #dde0e4;
+  --gray-500: #6c757d;
+  --gray-700: #404850;
+  --gray-900: #1a1d21;
+  --irish-badge: #e65100;
+  --radius: 12px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  min-height: 100vh;
+}
+
+header {
+  background: var(--gaa-green);
+  color: var(--white);
+  text-align: center;
+  padding: 1.5rem 1rem;
+  box-shadow: var(--shadow);
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+/* SCREENS */
+.screen { display: none; }
+.screen.active { display: block; }
+
+h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--gray-900);
+}
+
+/* MODE CARDS */
+.mode-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.mode-card {
+  background: var(--white);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  color: var(--gray-900);
+}
+
+.mode-card:hover {
+  border-color: var(--gaa-green);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.mode-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.mode-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+  color: var(--gaa-green);
+}
+
+.mode-card p {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  line-height: 1.4;
+}
+
+/* CATEGORY GRID */
+.category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.category-btn {
+  background: var(--white);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  color: var(--gray-700);
+}
+
+.category-btn:hover {
+  border-color: var(--gaa-green);
+}
+
+.category-btn.selected {
+  background: var(--gaa-green-light);
+  border-color: var(--gaa-green);
+  color: var(--gaa-green-dark);
+  font-weight: 600;
+}
+
+/* PRACTICE OPTIONS */
+.practice-options {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.practice-options label {
+  font-size: 0.95rem;
+  color: var(--gray-700);
+}
+
+.practice-options select {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: var(--white);
+}
+
+.hidden { display: none !important; }
+
+/* BUTTONS */
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--gaa-green);
+  color: var(--white);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--gaa-green-dark);
+}
+
+.btn-secondary {
+  background: var(--gray-100);
+  color: var(--gray-700);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--gray-200);
+}
+
+/* LOADING */
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--gray-200);
+  border-top-color: var(--gaa-green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 3rem auto 1.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.loading-sub {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  margin-top: 0.5rem;
+}
+
+/* FLASHCARD */
+.practice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+#practice-progress {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.category-badge {
+  background: var(--gaa-green-light);
+  color: var(--gaa-green-dark);
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.flashcard {
+  perspective: 1000px;
+  height: 280px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.flashcard-inner.flipped {
+  transform: rotateX(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.flashcard-front {
+  background: var(--white);
+  border: 2px solid var(--gray-200);
+  box-shadow: var(--shadow);
+}
+
+.flashcard-back {
+  background: var(--gaa-green);
+  color: var(--white);
+  transform: rotateX(180deg);
+}
+
+.question-text {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.flip-hint {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
+.answer-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+
+.answer-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.irish-badge {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.irish-badge:not(.hidden) {
+  background: var(--irish-badge);
+  color: var(--white);
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.practice-controls {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* QUIZ MODE */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.round-info h2 {
+  margin-bottom: 0.35rem;
+}
+
+.timer {
+  background: var(--gaa-gold-light);
+  color: var(--gray-900);
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  min-width: 80px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer.warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.timer.danger {
+  background: #f8d7da;
+  color: #842029;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.quiz-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.quiz-question-row {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.quiz-question-row.irish {
+  border-left: 3px solid var(--irish-badge);
+}
+
+.q-number {
+  background: var(--gaa-green-light);
+  color: var(--gaa-green-dark);
+  font-weight: 700;
+  font-size: 0.85rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.q-content {
+  flex: 1;
+}
+
+.q-text {
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.q-answer {
+  margin-top: 0.5rem;
+  font-weight: 700;
+  color: var(--gaa-green);
+  display: none;
+}
+
+.q-answer.visible {
+  display: block;
+}
+
+.quiz-controls {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .mode-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+  }
+
+  .flashcard {
+    height: 240px;
+  }
+
+  .question-text {
+    font-size: 1.05rem;
+  }
+
+  .answer-text {
+    font-size: 1.25rem;
+  }
+
+  .timer {
+    font-size: 1.3rem;
+  }
+}
