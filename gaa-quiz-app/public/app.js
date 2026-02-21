@@ -414,7 +414,8 @@ async function showFeedbackReview() {
         ${item.comment ? '<div class="feedback-comment-text">' + item.comment + "</div>" : ""}
         <div class="feedback-actions">
           <button class="btn btn-secondary btn-sm" onclick="toggleResolved('${item.id}')">${item.resolved ? "Unresolve" : "Mark Resolved"}</button>
-          <button class="btn btn-secondary btn-sm btn-danger-text" onclick="deleteFeedback('${item.id}')">Delete</button>
+          <button class="btn btn-danger btn-sm" onclick="removeFromFeedback('${item.id}')">Remove from Bank</button>
+          <button class="btn btn-secondary btn-sm btn-danger-text" onclick="deleteFeedback('${item.id}')">Delete Feedback</button>
         </div>
       `;
 
@@ -434,6 +435,39 @@ async function deleteFeedback(id) {
   if (!confirm("Delete this feedback?")) return;
   await fetch("/api/feedback/" + id, { method: "DELETE" });
   showFeedbackReview();
+}
+
+async function removeFromFeedback(id) {
+  // Fetch the feedback item to get question/category details
+  try {
+    const res = await fetch("/api/feedback");
+    const items = await res.json();
+    const item = items.find((f) => f.id === id);
+    if (!item) {
+      alert("Feedback item not found.");
+      return;
+    }
+
+    if (!confirm("Remove this question from the bank permanently?\n\n\"" + item.question + "\"")) return;
+
+    const removeRes = await fetch("/api/questions/remove", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: item.question, category: item.category }),
+    });
+
+    const data = await removeRes.json();
+    if (removeRes.ok) {
+      showToast("Question removed from bank");
+      // Auto-resolve the feedback
+      await fetch("/api/feedback/" + id, { method: "PATCH" });
+      showFeedbackReview();
+    } else {
+      alert(data.error || "Failed to remove question.");
+    }
+  } catch (e) {
+    alert("Network error.");
+  }
 }
 
 // Remove question from bank
