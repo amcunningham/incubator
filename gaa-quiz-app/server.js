@@ -253,7 +253,7 @@ app.post("/api/feedback", async (req, res) => {
   }
 });
 
-app.get("/api/feedback", requireAdmin, async (req, res) => {
+app.get("/api/feedback", async (req, res) => {
   try {
     const { rows } = await pool.query(
       "SELECT * FROM feedback ORDER BY created_at DESC"
