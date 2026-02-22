@@ -93,6 +93,8 @@ async function seedFromJSON(questionBank) {
     // Check if we already have questions
     const { rows } = await client.query("SELECT COUNT(*) FROM questions");
     if (parseInt(rows[0].count) > 0) {
+      // Backfill translations for existing Irish questions that have none
+      await backfillTranslations(client, questionBank);
       console.log("Database already seeded, skipping");
       return;
     }
@@ -132,6 +134,24 @@ async function seedFromJSON(questionBank) {
     throw err;
   } finally {
     client.release();
+  }
+}
+
+async function backfillTranslations(client, questionBank) {
+  let updated = 0;
+  for (const [categoryName, data] of Object.entries(questionBank)) {
+    for (const q of data.irish_questions) {
+      if (!q.translation) continue;
+      const result = await client.query(
+        `UPDATE questions SET translation = $1
+         WHERE question = $2 AND is_irish = true AND (translation IS NULL OR translation = '')`,
+        [q.translation, q.question]
+      );
+      updated += result.rowCount;
+    }
+  }
+  if (updated > 0) {
+    console.log(`Backfilled translations for ${updated} Irish questions`);
   }
 }
 
