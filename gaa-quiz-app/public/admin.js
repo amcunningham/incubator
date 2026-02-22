@@ -206,6 +206,10 @@ async function loadFeedback() {
       const card = document.createElement("div");
       card.className = "feedback-card" + (item.resolved ? " resolved" : "");
 
+      const date = item.timestamp ? new Date(item.timestamp).toLocaleDateString("en-IE", {
+        day: "numeric", month: "short", year: "numeric",
+      }) : "";
+
       card.innerHTML = `
         <div class="feedback-card-header">
           <span class="feedback-type-label feedback-type-${item.feedbackType}">${typeLabels[item.feedbackType] || item.feedbackType}</span>
@@ -213,6 +217,7 @@ async function loadFeedback() {
           ${item.isAI ? '<span class="feedback-ai-badge">AI Generated</span>' : ""}
           ${item.resolved ? '<span class="feedback-resolved-badge">Resolved</span>' : ""}
           ${item.email ? '<span class="feedback-email-badge">' + escapeHtml(item.email) + '</span>' : ""}
+          ${date ? '<span class="feedback-date">' + date + '</span>' : ""}
         </div>
         <div class="feedback-question">${escapeHtml(item.question)}</div>
         <div class="feedback-current-answer">Current answer: ${escapeHtml(item.answer)}</div>
@@ -220,7 +225,7 @@ async function loadFeedback() {
         ${item.suggestedQuestion ? '<div class="feedback-suggested">Suggested question: <strong>' + escapeHtml(item.suggestedQuestion) + "</strong></div>" : ""}
         ${item.comment ? '<div class="feedback-comment-text">' + escapeHtml(item.comment) + "</div>" : ""}
         <div class="inline-edit hidden" id="edit-fb-${item.id}">
-          <label>Question:<textarea class="edit-q-input" rows="2">${escapeHtml(item.question)}</textarea></label>
+          <label>Question:<textarea class="edit-q-input" rows="2">${escapeHtml(item.suggestedQuestion || item.question)}</textarea></label>
           <label>Answer:<input type="text" class="edit-a-input" value="${escapeHtml(item.suggestedAnswer || item.answer)}"></label>
           <div class="button-row">
             <button class="btn btn-secondary btn-sm cancel-edit">Cancel</button>
