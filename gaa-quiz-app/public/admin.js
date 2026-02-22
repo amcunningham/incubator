@@ -923,16 +923,14 @@ async function addAIToBank(id) {
     const res = await apiFetch(`/api/admin/ai-questions/${id}/add-to-bank`, {
       method: "POST",
     });
+    const d = await res.json();
     if (res.ok) {
-      showToast("Added to question bank!");
-      // Remove from AI questions list after adding to bank
-      try {
-        await apiFetch(`/api/admin/ai-questions/${id}`, { method: "DELETE" });
-      } catch (e) { /* best effort cleanup */ }
-      allAIQuestions = allAIQuestions.filter((x) => x.id !== id);
+      showToast(d.alreadyInBank ? "Already in bank (no duplicate added)." : "Added to question bank!");
+      // Update local state to reflect added_to_bank = true
+      const q = allAIQuestions.find((x) => x.id === id);
+      if (q) q.added_to_bank = true;
       renderAIQuestions();
     } else {
-      const d = await res.json();
       alert(d.error || "Failed to add.");
     }
   } catch (e) {

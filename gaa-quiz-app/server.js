@@ -786,14 +786,20 @@ app.post("/api/admin/ai-feedback/add-to-bank", requireAdmin, async (req, res) =>
     if (catResult.rows.length === 0) {
       catResult = await pool.query("INSERT INTO categories (name) VALUES ($1) RETURNING id", [category]);
     }
-    // Add to question bank
-    await pool.query(
-      "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, $4)",
-      [catResult.rows[0].id, question, answer, !!is_irish]
+    // Check for duplicate before inserting
+    const { rows: existing } = await pool.query(
+      "SELECT id FROM questions WHERE question = $1 LIMIT 1",
+      [question]
     );
+    if (existing.length === 0) {
+      await pool.query(
+        "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, $4)",
+        [catResult.rows[0].id, question, answer, !!is_irish]
+      );
+    }
     // Mark AI question as added if it exists
     await pool.query("UPDATE ai_questions SET added_to_bank = true WHERE question = $1", [question]);
-    res.json({ success: true });
+    res.json({ success: true, alreadyInBank: existing.length > 0 });
   } catch (err) {
     console.error("Add AI to bank error:", err);
     res.status(500).json({ error: "Failed to add to bank" });
@@ -861,11 +867,21 @@ app.post("/api/admin/ai-questions/:id/add-to-bank", requireAdmin, async (req, re
       );
     }
 
-    // Add to question bank
-    await pool.query(
-      "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, $4)",
-      [catResult.rows[0].id, q.question, q.answer, q.is_irish]
+    // Check for duplicate before inserting
+    const { rows: existing } = await pool.query(
+      "SELECT id FROM questions WHERE question = $1 LIMIT 1",
+      [q.question]
     );
+
+    let alreadyInBank = false;
+    if (existing.length > 0) {
+      alreadyInBank = true;
+    } else {
+      await pool.query(
+        "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, $4)",
+        [catResult.rows[0].id, q.question, q.answer, q.is_irish]
+      );
+    }
 
     // Mark as added
     await pool.query(
@@ -873,7 +889,7 @@ app.post("/api/admin/ai-questions/:id/add-to-bank", requireAdmin, async (req, re
       [req.params.id]
     );
 
-    res.json({ success: true });
+    res.json({ success: true, alreadyInBank });
   } catch (err) {
     console.error("Add to bank error:", err);
     res.status(500).json({ error: "Failed to add question to bank" });

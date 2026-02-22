@@ -116,6 +116,13 @@ async function seedFromJSON(questionBank) {
     if (parseInt(rows[0].count) > 0) {
       // Backfill translations for existing Irish questions that have none
       await backfillTranslations(client, questionBank);
+      // Remove duplicate questions (keep the oldest entry)
+      const { rowCount } = await client.query(`
+        DELETE FROM questions WHERE id NOT IN (
+          SELECT MIN(id) FROM questions GROUP BY question
+        )
+      `);
+      if (rowCount > 0) console.log(`Removed ${rowCount} duplicate questions from bank`);
       console.log("Database already seeded, skipping");
       return;
     }
