@@ -180,7 +180,20 @@ async function loadFeedback() {
 
   try {
     const res = await apiFetch("/api/feedback");
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      list.innerHTML = `<p class="empty-state">Failed to load feedback: ${escapeHtml(errData.error || res.statusText)}</p>`;
+      return;
+    }
+
     const items = await res.json();
+
+    if (!Array.isArray(items)) {
+      list.innerHTML = '<p class="empty-state">Unexpected response from server.</p>';
+      return;
+    }
+
     const filter = document.getElementById("feedback-filter").value;
 
     let filtered = items;
@@ -188,7 +201,10 @@ async function loadFeedback() {
     if (filter === "resolved") filtered = items.filter((i) => i.resolved);
 
     if (filtered.length === 0) {
-      list.innerHTML = '<p class="empty-state">No feedback items found.</p>';
+      const msg = items.length === 0
+        ? 'No feedback submitted yet. Users can leave feedback by tapping the <strong>Feedback</strong> button on any question during practice or quiz mode.'
+        : 'No feedback items match the current filter.';
+      list.innerHTML = `<p class="empty-state">${msg}</p>`;
       return;
     }
 
