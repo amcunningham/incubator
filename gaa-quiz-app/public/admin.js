@@ -166,7 +166,7 @@ async function loadFeedback() {
   list.innerHTML = '<p class="empty-state">Loading...</p>';
 
   try {
-    const res = await fetch("/api/feedback");
+    const res = await apiFetch("/api/feedback");
     const items = await res.json();
     const filter = document.getElementById("feedback-filter").value;
 
