@@ -232,8 +232,7 @@ function showRound() {
         <div class="q-answer" id="answer-${currentRound}-${q.number}">${q.answer}</div>
       </div>
       <div class="q-actions">
-        <button class="btn-flag-small" title="Flag this question" onclick="flagQuizQuestion(${currentRound}, ${q.number})">Flag</button>
-        <button class="btn-remove-small" title="Remove from bank" onclick="removeQuizQuestion(${currentRound}, ${q.number})">Remove</button>
+        <button class="btn-flag-small" title="Give feedback on this question" onclick="flagQuizQuestion(${currentRound}, ${q.number})">Feedback</button>
       </div>
     `;
 
