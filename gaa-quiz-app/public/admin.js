@@ -678,6 +678,8 @@ function renderAIQuestions() {
   const catFilter = document.getElementById("ai-category-filter").value;
 
   let filtered = allAIQuestions;
+  if (filter === "user-submitted") filtered = filtered.filter((q) => q.source === "user");
+  if (filter === "ai-generated") filtered = filtered.filter((q) => q.source !== "user");
   if (filter === "has-feedback") filtered = filtered.filter((q) => q.feedback && q.feedback.some((f) => !f.resolved));
   if (filter === "not-added") filtered = filtered.filter((q) => !q.added_to_bank);
   if (filter === "added") filtered = filtered.filter((q) => q.added_to_bank);
@@ -712,6 +714,7 @@ function renderAIQuestions() {
       <div class="ai-question-card${q.added_to_bank ? " added-to-bank" : ""}${q.feedback && q.feedback.length > 0 ? " has-feedback" : ""}">
         <div class="ai-q-header">
           <span class="feedback-category">${escapeHtml(q.category)}</span>
+          ${q.source === "user" ? '<span class="source-badge source-user">User Submitted</span>' : '<span class="source-badge source-ai">AI Generated</span>'}
           ${q.is_irish ? '<span style="background: var(--irish-badge); color: white; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 4px;">As Gaeilge</span>' : ""}
           ${q.added_to_bank ? '<span class="added-badge">In Bank</span>' : ""}
           ${q.feedback && q.feedback.some((f) => !f.resolved) ? '<span class="feedback-badge">Has Feedback</span>' : ""}

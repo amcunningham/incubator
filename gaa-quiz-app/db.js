@@ -79,6 +79,7 @@ async function initDB() {
     await client.query(`
       ALTER TABLE questions ADD COLUMN IF NOT EXISTS translation TEXT DEFAULT '';
       ALTER TABLE ai_questions ADD COLUMN IF NOT EXISTS translation TEXT DEFAULT '';
+      ALTER TABLE ai_questions ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'ai';
     `);
 
     console.log("Database tables initialized");

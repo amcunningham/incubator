@@ -29,7 +29,38 @@
         </button>
       </div>
       <div style="margin-top: 1.5rem; text-align: center;">
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('upload-questions')">Upload Questions</button>
         <a href="/admin" class="btn btn-secondary btn-sm" style="text-decoration: none; font-size: 0.75rem;">Admin</a>
+      </div>
+    </section>
+
+    <!-- UPLOAD QUESTIONS -->
+    <section id="upload-questions" class="screen">
+      <h2>Upload Questions</h2>
+      <p class="tab-description">Paste questions to add them for review. They'll appear in the AI Questions section for the admin to approve.</p>
+
+      <div class="upload-format-help">
+        <strong>Supported formats:</strong><br>
+        <code>Question | Answer</code> (pipe separated)<br>
+        <code>Question[TAB]Answer</code> (tab separated, e.g. from a spreadsheet)<br>
+        <code>Question?</code> then <code>Answer</code> on the next line
+      </div>
+
+      <label class="modal-label">Category</label>
+      <select id="upload-category" class="modal-input"></select>
+
+      <label class="modal-label">Paste your questions</label>
+      <textarea id="upload-textarea" class="modal-input" rows="12" placeholder="What county won the 2024 All-Ireland? | Armagh&#10;What is the Lory Meagher Cup? | Fourth tier hurling competition&#10;&#10;Or paste from a spreadsheet (tab separated)"></textarea>
+
+      <div id="upload-preview" class="upload-preview hidden">
+        <h4>Preview (<span id="upload-count">0</span> questions found)</h4>
+        <div id="upload-preview-list"></div>
+      </div>
+
+      <div class="button-row" style="margin-top: 0.75rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+        <button class="btn btn-secondary" onclick="previewUpload()">Preview</button>
+        <button class="btn btn-primary" onclick="submitUpload()">Upload</button>
       </div>
     </section>
 

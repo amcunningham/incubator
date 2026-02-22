@@ -479,6 +479,143 @@ function removeQuizQuestion() {
   showToast("Use the Admin panel to manage questions");
 }
 
+// ==================
+// UPLOAD QUESTIONS
+// ==================
+
+async function loadUploadCategories() {
+  try {
+    const res = await fetch("/api/categories");
+    const categories = await res.json();
+    const select = document.getElementById("upload-category");
+    select.innerHTML = "";
+    categories.forEach((cat) => {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      opt.textContent = cat;
+      select.appendChild(opt);
+    });
+  } catch (e) {
+    console.error("Failed to load categories for upload:", e);
+  }
+}
+
+function parseUploadText(text) {
+  const lines = text.split("\n").map((l) => l.trim()).filter((l) => l);
+  const questions = [];
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    // Strip leading numbering like "1." or "1)"
+    line = line.replace(/^\d+[\.\)]\s*/, "");
+
+    // Pipe separated: Question | Answer
+    if (line.includes("|")) {
+      const parts = line.split("|").map((p) => p.trim());
+      if (parts.length >= 2 && parts[0] && parts[1]) {
+        questions.push({ question: parts[0], answer: parts[1] });
+        continue;
+      }
+    }
+
+    // Tab separated: Question\tAnswer
+    if (line.includes("\t")) {
+      const parts = line.split("\t").map((p) => p.trim());
+      if (parts.length >= 2 && parts[0] && parts[1]) {
+        questions.push({ question: parts[0], answer: parts[1] });
+        continue;
+      }
+    }
+
+    // Two-line format: Question? then Answer on next line
+    if (line.endsWith("?") && i + 1 < lines.length) {
+      const nextLine = lines[i + 1].replace(/^\d+[\.\)]\s*/, "").trim();
+      // Next line is the answer if it doesn't look like another question
+      if (nextLine && !nextLine.endsWith("?")) {
+        questions.push({ question: line, answer: nextLine });
+        i++; // skip answer line
+        continue;
+      }
+    }
+  }
+  return questions;
+}
+
+function previewUpload() {
+  const text = document.getElementById("upload-textarea").value;
+  const questions = parseUploadText(text);
+  const preview = document.getElementById("upload-preview");
+  const list = document.getElementById("upload-preview-list");
+  const count = document.getElementById("upload-count");
+
+  if (questions.length === 0) {
+    preview.classList.add("hidden");
+    alert("No questions found. Check the format and try again.");
+    return;
+  }
+
+  count.textContent = questions.length;
+  list.innerHTML = "";
+  questions.forEach((q, i) => {
+    const item = document.createElement("div");
+    item.className = "upload-preview-item";
+    item.innerHTML = `<strong>${i + 1}.</strong> ${q.question}<br><span class="upload-preview-answer">${q.answer}</span>`;
+    list.appendChild(item);
+  });
+  preview.classList.remove("hidden");
+}
+
+async function submitUpload() {
+  const text = document.getElementById("upload-textarea").value;
+  const category = document.getElementById("upload-category").value;
+  const questions = parseUploadText(text);
+
+  if (questions.length === 0) {
+    alert("No questions found. Use Preview first to check the format.");
+    return;
+  }
+
+  if (!category) {
+    alert("Please select a category.");
+    return;
+  }
+
+  const payload = questions.map((q) => ({
+    question: q.question,
+    answer: q.answer,
+    category: category,
+    is_irish: false,
+  }));
+
+  try {
+    const res = await fetch("/api/upload-questions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ questions: payload }),
+    });
+    const result = await res.json();
+
+    if (res.ok && result.success) {
+      document.getElementById("upload-textarea").value = "";
+      document.getElementById("upload-preview").classList.add("hidden");
+      showToast(`Uploaded ${result.imported} question(s)${result.skipped ? ` (${result.skipped} skipped as duplicates)` : ""}`);
+      showScreen("mode-select");
+    } else {
+      alert(result.error || "Upload failed.");
+    }
+  } catch (e) {
+    alert("Network error. Please try again.");
+  }
+}
+
+// Load upload categories when navigating to upload screen
+const _originalShowScreen = showScreen;
+showScreen = function (id) {
+  _originalShowScreen(id);
+  if (id === "upload-questions") {
+    loadUploadCategories();
+  }
+};
+
 // Keyboard shortcuts
 document.addEventListener("keydown", (e) => {
   const practiceActive = document.getElementById("practice-mode").classList.contains("active");

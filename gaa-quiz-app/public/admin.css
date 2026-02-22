@@ -338,6 +338,23 @@
   border-radius: 4px;
 }
 
+.source-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.source-user {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.source-ai {
+  background: #e8daef;
+  color: #6c3483;
+}
+
 .ai-question-card.has-feedback {
   border-left: 3px solid #ffc107;
 }

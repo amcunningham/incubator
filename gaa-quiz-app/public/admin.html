@@ -94,7 +94,7 @@
       <!-- AI QUESTIONS TAB -->
       <div id="tab-ai-questions" class="tab-content">
         <div class="tab-header">
-          <h2>AI-Generated Questions</h2>
+          <h2>Review Questions</h2>
           <button class="btn btn-primary btn-sm" onclick="toggleBulkImport()">Import Questions</button>
         </div>
         <p class="tab-description">Review questions and add the best ones to your question bank.</p>
@@ -126,6 +126,8 @@
         <div class="filter-bar">
           <select id="ai-filter" onchange="loadAIQuestions()">
             <option value="all">All</option>
+            <option value="user-submitted">User Submitted</option>
+            <option value="ai-generated">AI Generated</option>
             <option value="has-feedback">Has Feedback</option>
             <option value="not-added">Not in Bank</option>
             <option value="added">Added to Bank</option>

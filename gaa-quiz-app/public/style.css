@@ -900,6 +900,65 @@ h2 {
   margin-top: 0.25rem;
 }
 
+/* UPLOAD QUESTIONS */
+.upload-format-help {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+
+.upload-format-help code {
+  background: var(--gray-100);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.upload-preview {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.upload-preview h4 {
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  margin-bottom: 0.75rem;
+}
+
+.upload-preview-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.upload-preview-item:last-child {
+  border-bottom: none;
+}
+
+.upload-preview-answer {
+  color: var(--gaa-green);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.tab-description {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
 /* RESPONSIVE */
 @media (max-width: 600px) {
   .mode-cards {
