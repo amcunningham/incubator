@@ -527,7 +527,16 @@ RULES FOR QUESTION STYLE:
 - Answers should be concise — typically a name, place, year, or short phrase
 - Do NOT include multiple-choice options — these are open-answer questions
 
-DIFFICULTY: Accessible but requiring genuine knowledge. Not pub-quiz easy, not academic-level hard. A well-prepared Scór team should get 6-7 out of 8.
+DIFFICULTY — THIS IS CRITICAL:
+Questions must be at genuine Scór competition standard. They should test real knowledge, not just surface-level facts. Here are examples of the right difficulty level:
+- "What is the name of the All-Ireland Minor Football Championship cup?" → "Tom Markham Cup"
+- "What county plays home games at Páirc Seán Mac Diarmada?" → "Leitrim"
+- "What year did the GAA allow soccer and rugby at Croke Park?" → "2007"
+- "What is the official capacity of Croke Park?" → "82,300"
+- "Who was the first GAA President?" → "Maurice Davin"
+- "What county won the first Ladies All-Ireland Senior Football title in 1974?" → "Tipperary"
+
+Avoid questions that are too obvious (e.g. "What sport uses a sliotar?" or "How many players on a GAA team?"). Focus on specific grounds, cup names, historical years, records, captains, managers, county nicknames, and detailed knowledge that a well-prepared Scór team would need to study for.
 
 IMPORTANT: Vary the questions each time. Do not repeat questions. Be creative and cover different aspects of each category.`;
 
