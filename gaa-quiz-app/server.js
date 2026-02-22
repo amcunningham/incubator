@@ -644,6 +644,36 @@ app.get("/api/admin/ai-questions", requireAdmin, async (req, res) => {
   }
 });
 
+// Bulk import questions into ai_questions table
+app.post("/api/admin/ai-questions/bulk-import", requireAdmin, async (req, res) => {
+  const { questions } = req.body;
+  if (!Array.isArray(questions) || questions.length === 0) {
+    return res.status(400).json({ error: "No questions provided" });
+  }
+  try {
+    let imported = 0;
+    let skipped = 0;
+    for (const q of questions) {
+      if (!q.question || !q.answer || !q.category) { skipped++; continue; }
+      // Skip duplicates
+      const { rows } = await pool.query(
+        "SELECT id FROM ai_questions WHERE question = $1 LIMIT 1",
+        [q.question]
+      );
+      if (rows.length > 0) { skipped++; continue; }
+      await pool.query(
+        "INSERT INTO ai_questions (category, question, answer, is_irish, rating) VALUES ($1, $2, $3, $4, $5)",
+        [q.category, q.question, q.answer, !!q.is_irish, q.rating || 5]
+      );
+      imported++;
+    }
+    res.json({ success: true, imported, skipped });
+  } catch (err) {
+    console.error("Bulk import error:", err);
+    res.status(500).json({ error: "Failed to import questions" });
+  }
+});
+
 // Edit an AI question from feedback — finds by text or creates a new ai_questions entry
 app.post("/api/admin/ai-feedback/edit", requireAdmin, async (req, res) => {
   const { originalQuestion, category, newQuestion, newAnswer } = req.body;
@@ -818,6 +848,31 @@ async function start() {
         fs.readFileSync(questionBankPath, "utf-8")
       );
       await seedFromJSON(questionBank);
+    }
+
+    // Seed Scór revision questions into ai_questions
+    const scorQuestionsPath = path.join(__dirname, "scor-questions.json");
+    if (fs.existsSync(scorQuestionsPath)) {
+      try {
+        const scorQuestions = JSON.parse(fs.readFileSync(scorQuestionsPath, "utf-8"));
+        let imported = 0;
+        for (const q of scorQuestions) {
+          const { rows } = await pool.query(
+            "SELECT id FROM ai_questions WHERE question = $1 LIMIT 1",
+            [q.question]
+          );
+          if (rows.length === 0) {
+            await pool.query(
+              "INSERT INTO ai_questions (category, question, answer, is_irish, rating) VALUES ($1, $2, $3, $4, $5)",
+              [q.category, q.question, q.answer, !!q.is_irish, q.rating || 5]
+            );
+            imported++;
+          }
+        }
+        if (imported > 0) console.log(`Imported ${imported} Scór revision questions`);
+      } catch (err) {
+        console.error("Failed to import Scór questions:", err);
+      }
     }
 
     app.listen(PORT, () => {
