@@ -9,7 +9,13 @@ const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "scor2024";
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith(".js") || filePath.endsWith(".css")) {
+      res.setHeader("Cache-Control", "no-cache");
+    }
+  },
+}));
 
 // ==================
 // AUTH MIDDLEWARE
@@ -249,6 +255,8 @@ app.post("/api/feedback", async (req, res) => {
     isAI,
   } = req.body;
 
+  console.log("Feedback received:", JSON.stringify({ question, feedbackType, comment, suggestedAnswer, suggestedQuestion, email }));
+
   if (!question || !feedbackType) {
     return res
       .status(400)
@@ -275,7 +283,7 @@ app.post("/api/feedback", async (req, res) => {
         !!isAI,
       ]
     );
-    res.json({ success: true, id });
+    res.json({ success: true, id, received: { comment, suggestedAnswer, suggestedQuestion, email } });
   } catch (err) {
     console.error("Feedback error:", err);
     res.status(500).json({ error: "Failed to save feedback" });
