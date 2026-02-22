@@ -108,8 +108,8 @@ async function pickQuestions(categoryName, count) {
   let irishIdx = 0;
 
   for (let i = 0; i < count; i++) {
-    const posInRound = (i % 10) + 1;
-    if (posInRound >= 9) {
+    const posInRound = (i % 8) + 1;
+    if (posInRound === 8) {
       if (irishIdx < irish.length) {
         result.push({ ...irish[irishIdx], is_irish: true });
         irishIdx++;
@@ -187,7 +187,7 @@ app.post("/api/generate", async (req, res) => {
 
     for (let idx = 0; idx < roundCategories.length; idx++) {
       const cat = roundCategories[idx];
-      const qs = await pickQuestions(cat, 10);
+      const qs = await pickQuestions(cat, 8);
       rounds.push({
         number: idx + 1,
         category: cat,
@@ -521,13 +521,13 @@ app.post("/api/generate-ai", async (req, res) => {
   const SYSTEM_PROMPT = `You are a quiz master for GAA Scór Senior Quiz competitions in Ireland. You generate quiz questions in the exact style used at county, provincial and All-Ireland Scór Tráth na gCeist competitions.
 
 RULES FOR QUESTION STYLE:
-- Each round has exactly 10 questions
+- Each round has exactly 8 questions
 - Questions are short, direct, and factual with a single definitive answer
-- Questions 9 and 10 in every round MUST be written in Irish (as Gaeilge). The answer can be in English or Irish as appropriate.
+- Question 8 in every round MUST be written in Irish (as Gaeilge). The answer can be in English or Irish as appropriate.
 - Answers should be concise — typically a name, place, year, or short phrase
 - Do NOT include multiple-choice options — these are open-answer questions
 
-DIFFICULTY: Accessible but requiring genuine knowledge. Not pub-quiz easy, not academic-level hard. A well-prepared Scór team should get 7-8 out of 10.
+DIFFICULTY: Accessible but requiring genuine knowledge. Not pub-quiz easy, not academic-level hard. A well-prepared Scór team should get 6-7 out of 8.
 
 IMPORTANT: Vary the questions each time. Do not repeat questions. Be creative and cover different aspects of each category.`;
 
@@ -554,13 +554,13 @@ Return your response as a JSON array with this exact structure:
   }
 ]
 
-Set "is_irish" to true if the question is written in Irish. For every 10 questions, questions 9 and 10 should be as Gaeilge. For Irish-language questions, provide an English translation of the question in the "translation" field. Leave "translation" as an empty string for English questions.`;
+Set "is_irish" to true if the question is written in Irish. For every 8 questions, question 8 should be as Gaeilge. For Irish-language questions, provide an English translation of the question in the "translation" field. Leave "translation" as an empty string for English questions.`;
   } else {
     const roundCategories = categories.slice(0, 10);
     userPrompt = `Generate a full Scór-style quiz with one round for each of the following categories (in this order):
 ${roundCategories.map((c, i) => `Round ${i + 1}: ${c}`).join("\n")}
 
-Each round has exactly 10 questions. Questions 9 and 10 in each round must be as Gaeilge (in Irish).
+Each round has exactly 8 questions. Question 8 in each round must be as Gaeilge (in Irish).
 
 Today's date is ${currentMonth} ${currentYear}. For current affairs categories, questions should relate to events in the past 12 months.
 

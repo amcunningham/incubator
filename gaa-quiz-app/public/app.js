@@ -278,9 +278,6 @@ function showRound() {
   document.getElementById("reveal-answers-btn").style.display = "";
   document.getElementById("next-round-btn").textContent =
     currentRound === rounds.length - 1 ? "Finish" : "Next Round";
-
-  // Start timer (3 minutes per round)
-  startTimer(180);
 }
 
 function startTimer(seconds) {
@@ -331,7 +328,6 @@ function toggleQuizTranslation(btn) {
 }
 
 function revealRoundAnswers() {
-  clearTimer();
   const round = rounds[currentRound];
   round.questions.forEach((q) => {
     const el = document.getElementById(`answer-${currentRound}-${q.number}`);
@@ -341,7 +337,6 @@ function revealRoundAnswers() {
 }
 
 function nextRound() {
-  clearTimer();
   if (currentRound < rounds.length - 1) {
     currentRound++;
     showRound();
