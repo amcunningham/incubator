@@ -583,10 +583,22 @@ Set "is_irish" to true for questions written in Irish. For Irish-language questi
 
     const data = JSON.parse(jsonMatch[0]);
 
-    // Store AI-generated questions for rating
+    // Store AI-generated questions for review
     try {
-      const questionsToStore =
-        mode === "practice" ? data : data.rounds?.flatMap((r) => r.questions.map((q) => ({ ...q, category: r.category }))) || [];
+      let questionsToStore;
+      if (mode === "practice") {
+        // Map AI category names back to the requested category names
+        questionsToStore = data.map((q) => {
+          const matched = categories.find((c) => c.toLowerCase().includes((q.category || "").toLowerCase()) || (q.category || "").toLowerCase().includes(c.toLowerCase()));
+          return { ...q, category: matched || q.category || "" };
+        });
+      } else {
+        // Use the requested category names, not the AI's response
+        questionsToStore = data.rounds?.flatMap((r, i) => {
+          const requestedCategory = categories[i] || r.category;
+          return r.questions.map((q) => ({ ...q, category: requestedCategory }));
+        }) || [];
+      }
 
       for (const q of questionsToStore) {
         await pool.query(
@@ -848,6 +860,28 @@ async function start() {
         fs.readFileSync(questionBankPath, "utf-8")
       );
       await seedFromJSON(questionBank);
+    }
+
+    // Merge split categories in ai_questions (e.g. "World History" + "World Geography" -> "World History and World Geography")
+    try {
+      const categoryMerges = {
+        "World History": "World History and World Geography",
+        "World Geography": "World History and World Geography",
+      };
+      for (const [old, merged] of Object.entries(categoryMerges)) {
+        const { rowCount } = await pool.query(
+          "UPDATE ai_questions SET category = $1 WHERE category = $2",
+          [merged, old]
+        );
+        if (rowCount > 0) console.log(`Merged ${rowCount} ai_questions from "${old}" into "${merged}"`);
+        // Also merge in feedback table
+        await pool.query(
+          "UPDATE feedback SET category = $1 WHERE category = $2",
+          [merged, old]
+        );
+      }
+    } catch (err) {
+      console.error("Category merge error:", err);
     }
 
     // Seed Scór revision questions into ai_questions
