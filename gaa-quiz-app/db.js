@@ -53,6 +53,7 @@ async function initDB() {
         feedback_type TEXT NOT NULL,
         comment TEXT DEFAULT '',
         suggested_answer TEXT DEFAULT '',
+        suggested_question TEXT DEFAULT '',
         email TEXT DEFAULT '',
         is_ai BOOLEAN DEFAULT false,
         resolved BOOLEAN DEFAULT false,
@@ -97,6 +98,7 @@ async function initDB() {
       ALTER TABLE ai_questions ADD COLUMN IF NOT EXISTS translation TEXT DEFAULT '';
       ALTER TABLE ai_questions ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'ai';
       ALTER TABLE feedback ADD COLUMN IF NOT EXISTS email TEXT DEFAULT '';
+      ALTER TABLE feedback ADD COLUMN IF NOT EXISTS suggested_question TEXT DEFAULT '';
       ALTER TABLE general_feedback ADD COLUMN IF NOT EXISTS email TEXT DEFAULT '';
     `);
 

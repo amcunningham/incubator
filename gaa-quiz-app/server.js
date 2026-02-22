@@ -244,6 +244,7 @@ app.post("/api/feedback", async (req, res) => {
     feedbackType,
     comment,
     suggestedAnswer,
+    suggestedQuestion,
     email,
     isAI,
   } = req.body;
@@ -259,8 +260,8 @@ app.post("/api/feedback", async (req, res) => {
 
   try {
     await pool.query(
-      `INSERT INTO feedback (id, question, answer, category, feedback_type, comment, suggested_answer, email, is_ai)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      `INSERT INTO feedback (id, question, answer, category, feedback_type, comment, suggested_answer, suggested_question, email, is_ai)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
       [
         id,
         question,
@@ -269,6 +270,7 @@ app.post("/api/feedback", async (req, res) => {
         feedbackType,
         comment || "",
         suggestedAnswer || "",
+        suggestedQuestion || "",
         email || "",
         !!isAI,
       ]
@@ -294,6 +296,7 @@ app.get("/api/feedback", requireAdmin, async (req, res) => {
       feedbackType: r.feedback_type,
       comment: r.comment,
       suggestedAnswer: r.suggested_answer,
+      suggestedQuestion: r.suggested_question || "",
       email: r.email || "",
       isAI: r.is_ai,
       resolved: r.resolved,
@@ -689,6 +692,7 @@ app.get("/api/admin/ai-questions", requireAdmin, async (req, res) => {
         feedbackType: f.feedback_type,
         comment: f.comment,
         suggestedAnswer: f.suggested_answer,
+        suggestedQuestion: f.suggested_question || "",
         resolved: f.resolved,
       });
     });

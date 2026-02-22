@@ -216,7 +216,8 @@ async function loadFeedback() {
         </div>
         <div class="feedback-question">${escapeHtml(item.question)}</div>
         <div class="feedback-current-answer">Current answer: ${escapeHtml(item.answer)}</div>
-        ${item.suggestedAnswer ? '<div class="feedback-suggested">Suggested: <strong>' + escapeHtml(item.suggestedAnswer) + "</strong></div>" : ""}
+        ${item.suggestedAnswer ? '<div class="feedback-suggested">Suggested answer: <strong>' + escapeHtml(item.suggestedAnswer) + "</strong></div>" : ""}
+        ${item.suggestedQuestion ? '<div class="feedback-suggested">Suggested question: <strong>' + escapeHtml(item.suggestedQuestion) + "</strong></div>" : ""}
         ${item.comment ? '<div class="feedback-comment-text">' + escapeHtml(item.comment) + "</div>" : ""}
         <div class="inline-edit hidden" id="edit-fb-${item.id}">
           <label>Question:<textarea class="edit-q-input" rows="2">${escapeHtml(item.question)}</textarea></label>
@@ -841,7 +842,8 @@ function renderAIQuestions() {
           const typeLabels = { wrong_answer: "Wrong Answer", unclear: "Unclear", too_easy: "Too Easy", outdated: "Outdated", duplicate: "Duplicate", other: "Other" };
           return `<div class="ai-q-feedback-item${f.resolved ? " resolved" : ""}">
             <span class="feedback-type-label feedback-type-${f.feedbackType}">${typeLabels[f.feedbackType] || f.feedbackType}</span>
-            ${f.suggestedAnswer ? `<span class="feedback-suggested-inline">Suggested: <strong>${escapeHtml(f.suggestedAnswer)}</strong></span>` : ""}
+            ${f.suggestedAnswer ? `<span class="feedback-suggested-inline">Suggested answer: <strong>${escapeHtml(f.suggestedAnswer)}</strong></span>` : ""}
+            ${f.suggestedQuestion ? `<span class="feedback-suggested-inline">Suggested question: <strong>${escapeHtml(f.suggestedQuestion)}</strong></span>` : ""}
             ${f.comment ? `<span class="feedback-comment-inline">${escapeHtml(f.comment)}</span>` : ""}
             ${f.resolved ? '<span class="feedback-resolved-badge">Resolved</span>' : ""}
           </div>`;

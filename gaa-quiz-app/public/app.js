@@ -368,6 +368,7 @@ function openFeedbackModal(question, answer, category) {
   document.getElementById("modal-question-preview").textContent = question || "";
   document.getElementById("modal-answer-preview").textContent = answer ? "Current answer: " + answer : "";
   document.getElementById("suggested-answer").value = "";
+  document.getElementById("suggested-question").value = "";
   document.getElementById("feedback-comment").value = "";
   document.getElementById("feedback-email").value = "";
 
@@ -401,6 +402,7 @@ async function submitFeedback() {
     category: feedbackTarget?.category || "",
     feedbackType: currentFeedbackType,
     suggestedAnswer: document.getElementById("suggested-answer").value.trim(),
+    suggestedQuestion: document.getElementById("suggested-question").value.trim(),
     comment: document.getElementById("feedback-comment").value.trim(),
     email: document.getElementById("feedback-email").value.trim(),
     isAI: feedbackTarget?.isAI || false,
@@ -486,7 +488,8 @@ async function showFeedbackReview() {
         </div>
         <div class="feedback-question">${item.question}</div>
         <div class="feedback-current-answer">Current answer: ${item.answer}</div>
-        ${item.suggestedAnswer ? '<div class="feedback-suggested">Suggested: <strong>' + item.suggestedAnswer + "</strong></div>" : ""}
+        ${item.suggestedAnswer ? '<div class="feedback-suggested">Suggested answer: <strong>' + item.suggestedAnswer + "</strong></div>" : ""}
+        ${item.suggestedQuestion ? '<div class="feedback-suggested">Suggested question: <strong>' + item.suggestedQuestion + "</strong></div>" : ""}
         ${item.comment ? '<div class="feedback-comment-text">' + item.comment + "</div>" : ""}
       `;
 
