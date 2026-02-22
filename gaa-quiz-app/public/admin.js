@@ -575,6 +575,7 @@ function renderAIQuestions() {
   const catFilter = document.getElementById("ai-category-filter").value;
 
   let filtered = allAIQuestions;
+  if (filter === "has-feedback") filtered = filtered.filter((q) => q.feedback && q.feedback.some((f) => !f.resolved));
   if (filter === "unrated") filtered = filtered.filter((q) => q.rating === 0);
   if (filter === "high-rated") filtered = filtered.filter((q) => q.rating >= 4);
   if (filter === "not-added") filtered = filtered.filter((q) => !q.added_to_bank);
@@ -600,17 +601,40 @@ function renderAIQuestions() {
               <label for="star-${q.id}-${s}" onclick="rateAIQuestion(${q.id}, ${s})">&#9733;</label>`;
     }).reverse().join("");
 
+    const feedbackHtml = (q.feedback && q.feedback.length > 0)
+      ? `<div class="ai-q-feedback">${q.feedback.map((f) => {
+          const typeLabels = { wrong_answer: "Wrong Answer", unclear: "Unclear", duplicate: "Duplicate", other: "Other" };
+          return `<div class="ai-q-feedback-item${f.resolved ? " resolved" : ""}">
+            <span class="feedback-type-label feedback-type-${f.feedbackType}">${typeLabels[f.feedbackType] || f.feedbackType}</span>
+            ${f.suggestedAnswer ? `<span class="feedback-suggested-inline">Suggested: <strong>${escapeHtml(f.suggestedAnswer)}</strong></span>` : ""}
+            ${f.comment ? `<span class="feedback-comment-inline">${escapeHtml(f.comment)}</span>` : ""}
+            ${f.resolved ? '<span class="feedback-resolved-badge">Resolved</span>' : ""}
+          </div>`;
+        }).join("")}</div>`
+      : "";
+
     html += `
-      <div class="ai-question-card${q.added_to_bank ? " added-to-bank" : ""}">
+      <div class="ai-question-card${q.added_to_bank ? " added-to-bank" : ""}${q.feedback && q.feedback.length > 0 ? " has-feedback" : ""}">
         <div class="ai-q-header">
           <span class="feedback-category">${escapeHtml(q.category)}</span>
           ${q.is_irish ? '<span style="background: var(--irish-badge); color: white; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 4px;">As Gaeilge</span>' : ""}
           ${q.added_to_bank ? '<span class="added-badge">In Bank</span>' : ""}
+          ${q.feedback && q.feedback.some((f) => !f.resolved) ? '<span class="feedback-badge">Has Feedback</span>' : ""}
         </div>
         <div class="ai-q-question">${escapeHtml(q.question)}</div>
         <div class="ai-q-answer">${escapeHtml(q.answer)}</div>
+        ${feedbackHtml}
+        <div class="inline-edit hidden" id="edit-ai-${q.id}">
+          <label>Question:<textarea class="edit-q-input" rows="2">${escapeHtml(q.question)}</textarea></label>
+          <label>Answer:<input type="text" class="edit-a-input" value="${escapeHtml(q.answer)}"></label>
+          <div class="button-row">
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('edit-ai-${q.id}').classList.add('hidden')">Cancel</button>
+            <button class="btn btn-primary btn-sm" onclick="saveAIEdit(${q.id})">Save Changes</button>
+          </div>
+        </div>
         <div class="ai-q-actions">
           <div class="star-rating">${stars}</div>
+          <button class="btn btn-secondary btn-sm" onclick="document.getElementById('edit-ai-${q.id}').classList.toggle('hidden')">Edit</button>
           ${!q.added_to_bank ? `<button class="btn btn-primary btn-sm" onclick="addAIToBank(${q.id})">Add to Bank</button>` : ""}
           <button class="btn btn-secondary btn-sm btn-danger-text" onclick="deleteAIQuestion(${q.id})">Delete</button>
         </div>
@@ -667,6 +691,35 @@ async function addAIToBank(id) {
   } catch (e) {
     alert("Network error.");
   }
+}
+
+async function saveAIEdit(id) {
+  const form = document.getElementById(`edit-ai-${id}`);
+  const newQ = form.querySelector(".edit-q-input").value.trim();
+  const newA = form.querySelector(".edit-a-input").value.trim();
+  if (!newQ || !newA) { alert("Question and answer cannot be empty."); return; }
+  try {
+    const res = await apiFetch(`/api/admin/ai-questions/${id}/edit`, {
+      method: "POST",
+      body: JSON.stringify({ question: newQ, answer: newA }),
+    });
+    if (res.ok) {
+      const q = allAIQuestions.find((x) => x.id === id);
+      if (q) { q.question = newQ; q.answer = newA; }
+      // Resolve any associated feedback
+      const feedbacks = q?.feedback || [];
+      for (const f of feedbacks) {
+        if (!f.resolved) {
+          await apiFetch(`/api/feedback/${f.id}`, { method: "PATCH" });
+        }
+      }
+      showToast("Question updated");
+      renderAIQuestions();
+    } else {
+      const d = await res.json();
+      alert(d.error || "Failed to update.");
+    }
+  } catch (e) { alert("Network error."); }
 }
 
 async function deleteAIQuestion(id) {

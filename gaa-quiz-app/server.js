@@ -616,10 +616,29 @@ Set "is_irish" to true for questions written in Irish. For Irish-language questi
 
 app.get("/api/admin/ai-questions", requireAdmin, async (req, res) => {
   try {
-    const { rows } = await pool.query(
+    const { rows: questions } = await pool.query(
       "SELECT * FROM ai_questions ORDER BY created_at DESC"
     );
-    res.json(rows);
+    // Attach any feedback for each AI question
+    const { rows: feedback } = await pool.query(
+      "SELECT * FROM feedback WHERE is_ai = true ORDER BY created_at DESC"
+    );
+    const feedbackByQuestion = {};
+    feedback.forEach((f) => {
+      if (!feedbackByQuestion[f.question]) feedbackByQuestion[f.question] = [];
+      feedbackByQuestion[f.question].push({
+        id: f.id,
+        feedbackType: f.feedback_type,
+        comment: f.comment,
+        suggestedAnswer: f.suggested_answer,
+        resolved: f.resolved,
+      });
+    });
+    const result = questions.map((q) => ({
+      ...q,
+      feedback: feedbackByQuestion[q.question] || [],
+    }));
+    res.json(result);
   } catch (err) {
     res.status(500).json({ error: "Failed to load AI questions" });
   }

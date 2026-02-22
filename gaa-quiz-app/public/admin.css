@@ -318,6 +318,50 @@
   border-radius: 4px;
 }
 
+.feedback-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #fff3cd;
+  color: #856404;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.ai-question-card.has-feedback {
+  border-left: 3px solid #ffc107;
+}
+
+.ai-q-feedback {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background: #fffdf5;
+  border: 1px solid #ffe69c;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.ai-q-feedback-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0.25rem 0;
+}
+
+.ai-q-feedback-item.resolved {
+  opacity: 0.5;
+}
+
+.feedback-suggested-inline {
+  font-size: 0.85rem;
+}
+
+.feedback-comment-inline {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  font-style: italic;
+}
+
 /* INLINE EDIT */
 .inline-edit {
   margin-top: 0.5rem;
