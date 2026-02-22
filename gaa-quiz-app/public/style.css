@@ -1019,3 +1019,68 @@ h2 {
     font-size: 1.3rem;
   }
 }
+
+/* Difficulty rating */
+.difficulty-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.difficulty-prompt {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+.btn-difficulty {
+  padding: 0.3rem 0.9rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.btn-easy:hover {
+  background: #d1fae5;
+  border-color: #6ee7b7;
+  color: #065f46;
+}
+
+.btn-hard:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+.difficulty-thanks {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  font-style: italic;
+}
+
+.difficulty-badge {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.difficulty-badge.mostly-easy {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.difficulty-badge.mostly-hard {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.difficulty-badge.mixed {
+  background: #fef3c7;
+  color: #92400e;
+}

@@ -93,11 +93,11 @@ async function pickQuestions(categoryName, count) {
   const categoryId = catResult.rows[0].id;
 
   const regResult = await pool.query(
-    "SELECT question, answer, translation FROM questions WHERE category_id = $1 AND is_irish = false ORDER BY RANDOM()",
+    "SELECT id, question, answer, translation FROM questions WHERE category_id = $1 AND is_irish = false ORDER BY RANDOM()",
     [categoryId]
   );
   const irishResult = await pool.query(
-    "SELECT question, answer, translation FROM questions WHERE category_id = $1 AND is_irish = true ORDER BY RANDOM()",
+    "SELECT id, question, answer, translation FROM questions WHERE category_id = $1 AND is_irish = true ORDER BY RANDOM()",
     [categoryId]
   );
 
@@ -169,6 +169,7 @@ app.post("/api/generate", async (req, res) => {
       allQuestions = shuffle(allQuestions).slice(0, numQuestions);
 
       const data = allQuestions.map((q, i) => ({
+        id: q.id,
         number: i + 1,
         category: q.category,
         question: q.question,
@@ -204,6 +205,30 @@ app.post("/api/generate", async (req, res) => {
   } catch (err) {
     console.error("Generate error:", err);
     res.status(500).json({ error: "Failed to generate questions" });
+  }
+});
+
+// ==================
+// DIFFICULTY RATING
+// ==================
+
+app.post("/api/questions/:id/difficulty", async (req, res) => {
+  const { rating } = req.body;
+  const questionId = parseInt(req.params.id, 10);
+
+  if (!rating || !["easy", "hard"].includes(rating)) {
+    return res.status(400).json({ error: "Rating must be 'easy' or 'hard'" });
+  }
+
+  try {
+    await pool.query(
+      "INSERT INTO difficulty_ratings (question_id, rating) VALUES ($1, $2)",
+      [questionId, rating]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Difficulty rating error:", err);
+    res.status(500).json({ error: "Failed to save rating" });
   }
 });
 
@@ -416,9 +441,18 @@ app.post("/api/questions/add", requireAdmin, async (req, res) => {
 app.get("/api/admin/questions", requireAdmin, async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `SELECT q.id, q.question, q.answer, q.is_irish, q.translation, c.name as category
+      `SELECT q.id, q.question, q.answer, q.is_irish, q.translation, c.name as category,
+              COALESCE(d.easy_count, 0)::int as easy_count,
+              COALESCE(d.hard_count, 0)::int as hard_count
        FROM questions q
        JOIN categories c ON q.category_id = c.id
+       LEFT JOIN (
+         SELECT question_id,
+                COUNT(*) FILTER (WHERE rating = 'easy') as easy_count,
+                COUNT(*) FILTER (WHERE rating = 'hard') as hard_count
+         FROM difficulty_ratings
+         GROUP BY question_id
+       ) d ON d.question_id = q.id
        ORDER BY c.name, q.is_irish, q.id`
     );
     res.json(rows);

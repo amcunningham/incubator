@@ -111,6 +111,17 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function difficultyBadge(q) {
+  const total = (q.easy_count || 0) + (q.hard_count || 0);
+  if (total === 0) return "";
+  const easyPct = Math.round((q.easy_count / total) * 100);
+  let cls = "mixed";
+  let label = `${easyPct}% easy`;
+  if (easyPct >= 70) cls = "mostly-easy";
+  else if (easyPct <= 30) cls = "mostly-hard";
+  return ` &middot; <span class="difficulty-badge ${cls}">${label} (${total})</span>`;
+}
+
 // ==================
 // DASHBOARD / STATS
 // ==================
@@ -406,7 +417,7 @@ function renderQuestions() {
         <div class="admin-q-content">
           <div class="admin-q-text">${escapeHtml(q.question)}</div>
           <div class="admin-q-answer">${escapeHtml(q.answer)}</div>
-          <div class="admin-q-meta">${escapeHtml(q.category)}${q.is_irish ? " &middot; As Gaeilge" : ""}</div>
+          <div class="admin-q-meta">${escapeHtml(q.category)}${q.is_irish ? " &middot; As Gaeilge" : ""}${difficultyBadge(q)}</div>
         </div>
         <div class="admin-q-actions">
           <button class="edit-btn" onclick="editQuestion(${q.id})">Edit</button>

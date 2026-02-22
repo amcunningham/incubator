@@ -8,6 +8,7 @@ let currentRound = 0;
 let timerInterval = null;
 let timerSeconds = 0;
 let isAISession = false;
+let ratedQuestions = new Set();
 
 // Screen management
 function showScreen(id) {
@@ -22,6 +23,7 @@ function goBack(screenId) {
   rounds = [];
   currentIndex = 0;
   currentRound = 0;
+  ratedQuestions = new Set();
   showScreen(screenId);
 }
 
@@ -141,8 +143,12 @@ function showPracticeQuestion() {
   document.getElementById("practice-question").textContent = q.question;
   document.getElementById("practice-answer").textContent = q.answer;
 
-  // Reset flip
+  // Reset flip and difficulty
   document.getElementById("flashcard-inner").classList.remove("flipped");
+  const diffRow = document.getElementById("difficulty-row");
+  diffRow.classList.add("hidden");
+  diffRow.classList.remove("rated");
+  diffRow.innerHTML = '<span class="difficulty-prompt">How was this question?</span><button class="btn-difficulty btn-easy" onclick="rateDifficulty(\'easy\')">Easy</button><button class="btn-difficulty btn-hard" onclick="rateDifficulty(\'hard\')">Hard</button>';
 
   // Irish badge and translation
   const badge = document.getElementById("practice-irish-badge");
@@ -171,7 +177,36 @@ function showPracticeQuestion() {
 }
 
 function flipCard() {
-  document.getElementById("flashcard-inner").classList.toggle("flipped");
+  const inner = document.getElementById("flashcard-inner");
+  inner.classList.toggle("flipped");
+
+  const diffRow = document.getElementById("difficulty-row");
+  const q = questions[currentIndex];
+  if (inner.classList.contains("flipped") && q && q.id && !ratedQuestions.has(q.id)) {
+    diffRow.classList.remove("hidden");
+  } else {
+    diffRow.classList.add("hidden");
+  }
+}
+
+async function rateDifficulty(rating) {
+  const q = questions[currentIndex];
+  if (!q || !q.id || ratedQuestions.has(q.id)) return;
+
+  ratedQuestions.add(q.id);
+  const diffRow = document.getElementById("difficulty-row");
+  diffRow.classList.add("rated");
+  diffRow.innerHTML = `<span class="difficulty-thanks">Rated ${rating === "easy" ? "Easy" : "Hard"} — thanks!</span>`;
+
+  try {
+    await fetch(`/api/questions/${q.id}/difficulty`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rating }),
+    });
+  } catch (e) {
+    // Silent fail — rating is non-critical
+  }
 }
 
 function toggleTranslation() {

@@ -70,6 +70,13 @@ async function initDB() {
         created_at TIMESTAMPTZ DEFAULT NOW()
       );
 
+      CREATE TABLE IF NOT EXISTS difficulty_ratings (
+        id SERIAL PRIMARY KEY,
+        question_id INTEGER REFERENCES questions(id) ON DELETE CASCADE,
+        rating TEXT NOT NULL CHECK (rating IN ('easy', 'hard')),
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+
       CREATE TABLE IF NOT EXISTS general_feedback (
         id SERIAL PRIMARY KEY,
         name TEXT DEFAULT '',
