@@ -625,6 +625,45 @@ app.get("/api/admin/ai-questions", requireAdmin, async (req, res) => {
   }
 });
 
+app.post("/api/admin/ai-questions/find", requireAdmin, async (req, res) => {
+  const { question } = req.body;
+  if (!question) return res.status(400).json({ error: "Question text required" });
+  try {
+    const { rows } = await pool.query(
+      "SELECT * FROM ai_questions WHERE question = $1 ORDER BY created_at DESC LIMIT 1",
+      [question]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: "AI question not found" });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to find AI question" });
+  }
+});
+
+app.post("/api/admin/ai-questions/:id/edit", requireAdmin, async (req, res) => {
+  const { question, answer } = req.body;
+  if (!question && !answer) {
+    return res.status(400).json({ error: "No changes provided" });
+  }
+  try {
+    const updates = [];
+    const values = [];
+    let idx = 1;
+    if (question) { updates.push(`question = $${idx++}`); values.push(question); }
+    if (answer) { updates.push(`answer = $${idx++}`); values.push(answer); }
+    values.push(req.params.id);
+    const { rows } = await pool.query(
+      `UPDATE ai_questions SET ${updates.join(", ")} WHERE id = $${idx} RETURNING *`,
+      values
+    );
+    if (rows.length === 0) return res.status(404).json({ error: "Not found" });
+    res.json(rows[0]);
+  } catch (err) {
+    console.error("Edit AI question error:", err);
+    res.status(500).json({ error: "Failed to edit AI question" });
+  }
+});
+
 app.post("/api/admin/ai-questions/:id/rate", requireAdmin, async (req, res) => {
   const { rating } = req.body;
   try {

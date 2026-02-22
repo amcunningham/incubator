@@ -212,9 +212,9 @@ async function loadFeedback() {
           </div>
         </div>
         <div class="feedback-actions">
-          ${!item.isAI ? '<button class="btn btn-primary btn-sm edit-btn">Edit Question</button>' : ""}
+          <button class="btn btn-primary btn-sm edit-btn">Edit Question</button>
           <button class="btn btn-secondary btn-sm resolve-btn">${item.resolved ? "Unresolve" : "Mark Resolved"}</button>
-          ${!item.isAI ? '<button class="btn btn-danger btn-sm remove-btn">Remove from Bank</button>' : ""}
+          ${!item.isAI ? '<button class="btn btn-danger btn-sm remove-btn">Remove from Bank</button>' : '<button class="btn btn-primary btn-sm add-to-bank-btn">Add to Bank</button>'}
           <button class="btn btn-secondary btn-sm btn-danger-text delete-btn">Delete Feedback</button>
         </div>
       `;
@@ -239,15 +239,30 @@ async function loadFeedback() {
           const newA = editForm.querySelector(".edit-a-input").value.trim();
           if (!newQ || !newA) { alert("Question and answer cannot be empty."); return; }
           try {
-            const r = await apiFetch("/api/questions/edit", {
-              method: "POST",
-              body: JSON.stringify({
-                originalQuestion: item.question,
-                category: item.category,
-                newQuestion: newQ,
-                newAnswer: newA,
-              }),
-            });
+            let r;
+            if (item.isAI) {
+              // Find the AI question by text, then edit it
+              const findRes = await apiFetch("/api/admin/ai-questions/find", {
+                method: "POST",
+                body: JSON.stringify({ question: item.question }),
+              });
+              if (!findRes.ok) { alert("Could not find AI question to edit."); return; }
+              const aiQ = await findRes.json();
+              r = await apiFetch(`/api/admin/ai-questions/${aiQ.id}/edit`, {
+                method: "POST",
+                body: JSON.stringify({ question: newQ, answer: newA }),
+              });
+            } else {
+              r = await apiFetch("/api/questions/edit", {
+                method: "POST",
+                body: JSON.stringify({
+                  originalQuestion: item.question,
+                  category: item.category,
+                  newQuestion: newQ,
+                  newAnswer: newA,
+                }),
+              });
+            }
             if (r.ok) {
               showToast("Question updated");
               await apiFetch("/api/feedback/" + item.id, { method: "PATCH" });
@@ -255,6 +270,29 @@ async function loadFeedback() {
             } else {
               const d = await r.json();
               alert(d.error || "Failed to update.");
+            }
+          } catch (e) { alert("Network error."); }
+        });
+      }
+
+      const addToBankBtn = card.querySelector(".add-to-bank-btn");
+      if (addToBankBtn) {
+        addToBankBtn.addEventListener("click", async () => {
+          try {
+            const findRes = await apiFetch("/api/admin/ai-questions/find", {
+              method: "POST",
+              body: JSON.stringify({ question: item.question }),
+            });
+            if (!findRes.ok) { alert("Could not find AI question."); return; }
+            const aiQ = await findRes.json();
+            const r = await apiFetch(`/api/admin/ai-questions/${aiQ.id}/add-to-bank`, { method: "POST" });
+            if (r.ok) {
+              showToast("Added to question bank");
+              await apiFetch("/api/feedback/" + item.id, { method: "PATCH" });
+              loadFeedback();
+            } else {
+              const d = await r.json();
+              alert(d.error || "Failed to add to bank.");
             }
           } catch (e) { alert("Network error."); }
         });
