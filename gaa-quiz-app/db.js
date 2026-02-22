@@ -1,8 +1,23 @@
 const { Pool } = require("pg");
 const dns = require("dns");
+const net = require("net");
 
-// Force IPv4 to avoid ENETUNREACH on hosts without IPv6 support
+// Force IPv4 to avoid ENETUNREACH on Render (no IPv6 support)
 dns.setDefaultResultOrder("ipv4first");
+
+// Override dns.lookup to always request IPv4
+const originalLookup = dns.lookup;
+dns.lookup = function (hostname, options, callback) {
+  if (typeof options === "function") {
+    callback = options;
+    options = { family: 4 };
+  } else if (typeof options === "number") {
+    options = { family: 4 };
+  } else {
+    options = Object.assign({}, options, { family: 4 });
+  }
+  return originalLookup.call(dns, hostname, options, callback);
+};
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
