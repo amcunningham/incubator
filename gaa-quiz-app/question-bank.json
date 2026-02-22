@@ -18,13 +18,21 @@
       {"question": "Who managed Tyrone to the 2021 All-Ireland Senior Football title?", "answer": "Brian Dooher and Feargal Logan"},
       {"question": "Which county's home ground is MacCumhaill Park?", "answer": "Donegal"},
       {"question": "How many All-Ireland Senior Football titles has Mayo won?", "answer": "Three"},
-      {"question": "Who won the 2023 Footballer of the Year award?", "answer": "David Clifford"}
+      {"question": "Who won the 2023 Footballer of the Year award?", "answer": "David Clifford"},
+      {"question": "Who captained Kerry to the 2025 All-Ireland Senior Football Championship title?", "answer": "Gavin White"},
+      {"question": "How many two-pointers did David Clifford score in the 2025 All-Ireland football final?", "answer": "Three"},
+      {"question": "What college won the 2025 Electric Ireland Sigerson Cup, and which college did they beat in the final?", "answer": "DCU beat UCD"},
+      {"question": "Dingle won the 2025–26 All-Ireland Senior Club Football Championship. What club did they beat in the final?", "answer": "St Brigid's (Roscommon)"},
+      {"question": "Kerry wore an unusual jersey colour in the 2025 All-Ireland football final. What colour?", "answer": "Blue (dark blue)"},
+      {"question": "How many All-Ireland Senior Football Championship titles has Kerry now won in total?", "answer": "39"},
+      {"question": "Which Donegal player tore his ACL after 23 minutes of the 2025 All-Ireland football final?", "answer": "Ciarán Thompson"}
     ],
     "irish_questions": [
       {"question": "Cé mhéad Corn Uí Mhaoilmhichíl (Sam Maguire) atá buaite ag Gaillimh?", "answer": "Nine (Naoi gcinn)", "translation": "How many Sam Maguire Cups have Galway won?"},
       {"question": "Cén contae a bhuaigh Craobh Peile na hÉireann sa bhliain 2020?", "answer": "Dublin (Baile Átha Cliath)", "translation": "Which county won the All-Ireland Football Championship in 2020?"},
       {"question": "Cá bhfuil Páirc an Chrócaigh?", "answer": "Dublin (Baile Átha Cliath)", "translation": "Where is Croke Park?"},
-      {"question": "Cén contae as a dtáinig Colm 'Gooch' Cooper?", "answer": "Kerry (Ciarraí)", "translation": "Which county did Colm 'Gooch' Cooper come from?"}
+      {"question": "Cén contae as a dtáinig Colm 'Gooch' Cooper?", "answer": "Kerry (Ciarraí)", "translation": "Which county did Colm 'Gooch' Cooper come from?"},
+      {"question": "Cé a fuair an gradam Peileadóir Óg na Bliana PwC GAA/GPA i 2025 – ógánach 19 mbliana d'aois ó Dhún na nGall?", "answer": "Finnbarr Roarty", "translation": "Who won the PwC GAA/GPA Young Footballer of the Year in 2025 – a 19-year-old from Donegal?"}
     ]
   },
   "Hurling and Camogie": {
@@ -46,13 +54,21 @@
       {"question": "Who captained Limerick to the 2023 All-Ireland Senior Hurling title?", "answer": "Declan Hannon"},
       {"question": "Which county has won the most O'Duffy Cups in camogie?", "answer": "Cork"},
       {"question": "Which county did Joe Canning play for?", "answer": "Galway"},
-      {"question": "Where is the LIT Gaelic Grounds?", "answer": "Limerick"}
+      {"question": "Where is the LIT Gaelic Grounds?", "answer": "Limerick"},
+      {"question": "Cork led by how many points at half-time in the 2025 All-Ireland hurling final before Tipperary's famous comeback?", "answer": "Six points"},
+      {"question": "Who was named PwC GAA-GPA Hurler of the Year in 2025?", "answer": "John McGrath"},
+      {"question": "Which county won the 2025 National Hurling League Division 1A title?", "answer": "Cork (defeating Tipperary in the final)"},
+      {"question": "Name the Tipperary goalkeeper who made history by scoring a point from play in the 2025 All-Ireland hurling final.", "answer": "Paddy Shelly"},
+      {"question": "Who scored the winning free in injury time to secure Galway's 2025 All-Ireland Senior Camogie title?", "answer": "Carrie Dolan"},
+      {"question": "What is the name of the trophy awarded to the All-Ireland club festival for under-14 camogie and hurling players?", "answer": "Féile na nGael"},
+      {"question": "Cork's Eoin Downey was sent off in the 2025 hurling final. Was it a straight red or a second yellow card?", "answer": "A second yellow card"}
     ],
     "irish_questions": [
       {"question": "Cé mhéad Craobh Iomána Sinsir atá buaite ag Tiobraid Árann?", "answer": "Twenty-eight (28)", "translation": "How many Senior Hurling Championships have Tipperary won?"},
       {"question": "Cén contae a bhuaigh Craobh Iomána na hÉireann sa bhliain 2022?", "answer": "Limerick (Luimneach)", "translation": "Which county won the All-Ireland Hurling Championship in 2022?"},
       {"question": "Cá bhfuil Páirc Uí Chaoimh?", "answer": "Cork (Corcaigh)", "translation": "Where is Páirc Uí Chaoimh?"},
-      {"question": "Cén cluiche ina n-úsáidtear camán agus sliotar?", "answer": "Hurling (Iomáint)", "translation": "Which game uses a hurley and sliotar?"}
+      {"question": "Cén cluiche ina n-úsáidtear camán agus sliotar?", "answer": "Hurling (Iomáint)", "translation": "Which game uses a hurley and sliotar?"},
+      {"question": "Cé a bhí ina réiteoir ar chluiche ceannais iomána na hÉireann 2025 – fear ó chontae na Gaillimhe?", "answer": "Liam Gordon (Killimor, Galway)", "translation": "Who refereed the 2025 All-Ireland hurling final – a man from County Galway?"}
     ]
   },
   "General G.A.A.": {
@@ -74,13 +90,21 @@
       {"question": "What is the name of the stand at the Railway End of Croke Park?", "answer": "Davin Stand"},
       {"question": "Where is Markievicz Park?", "answer": "Sligo"},
       {"question": "How many counties compete in the All-Ireland Senior Football Championship?", "answer": "Thirty-two (plus London and New York)"},
-      {"question": "Where is Cusack Park in Munster?", "answer": "Ennis, County Clare"}
+      {"question": "Where is Cusack Park in Munster?", "answer": "Ennis, County Clare"},
+      {"question": "Who scored the first ever two-pointer in championship football in 2025, doing so in Ruislip?", "answer": "Liam Gallagher (London v Roscommon, Connacht SFC)"},
+      {"question": "How many All-Ireland senior football finals has Jack O'Connor managed Kerry in across his three spells?", "answer": "Eight"},
+      {"question": "What was unique about the Croke Park scoreboard error that controversially affected the 2025 All-Ireland hurling semi-final between Kilkenny and Tipperary?", "answer": "A wide was incorrectly recorded as a point, misleading Kilkenny into chasing a goal they didn't need"},
+      {"question": "Michael Murphy came out of retirement to lead Donegal to the 2025 All-Ireland football final. How many championship points did he score that summer?", "answer": "0-52 (52 points, no goals)"},
+      {"question": "Which county won their first Leinster Senior Football Championship title since 1957 in 2025?", "answer": "Louth"},
+      {"question": "How many years is the term of office of the President of the GAA?", "answer": "Three years"},
+      {"question": "The GAA's annual report for 2025 showed gate receipts increased to almost how much – €36m, €46m, or €56m?", "answer": "€46 million"}
     ],
     "irish_questions": [
       {"question": "Cén bhliain ar bunaíodh Cumann Lúthchleas Gael?", "answer": "1884", "translation": "In what year was the GAA founded?"},
       {"question": "Cá bhfuil Páirc an Chrócaigh?", "answer": "Dublin (Baile Átha Cliath)", "translation": "Where is Croke Park?"},
       {"question": "Cé mhéad imreoir atá ar fhoireann iomána?", "answer": "Fifteen (Cúig dhuine dhéag)", "translation": "How many players are on a hurling team?"},
-      {"question": "Cén contae ina bhfuil Staid Semple?", "answer": "Tipperary (Tiobraid Árann)", "translation": "Which county is Semple Stadium in?"}
+      {"question": "Cén contae ina bhfuil Staid Semple?", "answer": "Tipperary (Tiobraid Árann)", "translation": "Which county is Semple Stadium in?"},
+      {"question": "Cén contae a bhuaigh craobh Peile Sinsir Laighean den chéad uair ó 2007, ag cur deireadh le ré 14 bliana Bhaile Átha Cliath?", "answer": "An Mhí (Meath)", "translation": "Which county won the Leinster Senior Football Championship for the first time since 2007, ending Dublin's 14-year reign?"}
     ]
   },
   "Irish History": {
@@ -102,13 +126,21 @@
       {"question": "Who was known as 'The Liberator' for his campaign for Catholic Emancipation?", "answer": "Daniel O'Connell"},
       {"question": "In what year did Ireland join the European Economic Community (EEC)?", "answer": "1973"},
       {"question": "What agreement was signed on Good Friday 1998?", "answer": "The Belfast Agreement (Good Friday Agreement)"},
-      {"question": "Who was the leader of the Irish Parliamentary Party during the Home Rule crisis?", "answer": "John Redmond"}
+      {"question": "Who was the leader of the Irish Parliamentary Party during the Home Rule crisis?", "answer": "John Redmond"},
+      {"question": "What political party was founded in Ireland in 1926 by Éamon de Valera?", "answer": "Fianna Fáil"},
+      {"question": "The Siege of Derry lasted 105 days. In what year did it end?", "answer": "1689"},
+      {"question": "In what Italian city did Daniel O'Connell die in 1847?", "answer": "Genoa"},
+      {"question": "General Humbert landed over 1,000 French soldiers at Killala in 1798. In what county is Killala?", "answer": "Mayo"},
+      {"question": "The First Dáil met on 21 January 1919 in what Dublin building?", "answer": "The Mansion House (Round Room)"},
+      {"question": "The Normans landed in Bannow Bay, County Wexford, in 1169. Who was the first major Norman lord to arrive in Ireland?", "answer": "Richard de Clare (Strongbow)"},
+      {"question": "In what year was the Irish Free State officially established?", "answer": "1922"}
     ],
     "irish_questions": [
       {"question": "Cén bhliain ar tharla Éirí Amach na Cásca?", "answer": "1916", "translation": "In what year did the Easter Rising take place?"},
       {"question": "Cé a léigh Forógra na Poblachta lasmuigh den GPO?", "answer": "Patrick Pearse (Pádraig Mac Piarais)", "translation": "Who read the Proclamation of the Republic outside the GPO?"},
       {"question": "Cé a bhí mar chéad Uachtarán na hÉireann?", "answer": "Douglas Hyde (Dubhghlas de hÍde)", "translation": "Who was the first President of Ireland?"},
-      {"question": "Cén bhliain ar thosaigh an Gorta Mór?", "answer": "1845", "translation": "In what year did the Great Famine begin?"}
+      {"question": "Cén bhliain ar thosaigh an Gorta Mór?", "answer": "1845", "translation": "In what year did the Great Famine begin?"},
+      {"question": "Cén t-ainm a bhí ar an ard rí a maraíodh ag Cath Cluain Tarbh sa bhliain 1014?", "answer": "Brian Bórú (Brian Boru)", "translation": "What was the name of the high king killed at the Battle of Clontarf in 1014?"}
     ]
   },
   "World History and World Geography": {
@@ -130,13 +162,21 @@
       {"question": "In what country would you find Machu Picchu?", "answer": "Peru"},
       {"question": "What is the capital of Canada?", "answer": "Ottawa"},
       {"question": "Who was the British Prime Minister at the end of World War II?", "answer": "Clement Attlee"},
-      {"question": "On which river does Cairo stand?", "answer": "The Nile"}
+      {"question": "On which river does Cairo stand?", "answer": "The Nile"},
+      {"question": "Only one country in the world begins with the letter Q. Name it.", "answer": "Qatar"},
+      {"question": "The Suez Canal links the Mediterranean Sea with what other sea?", "answer": "The Red Sea"},
+      {"question": "Sacramento is the capital of California. What is the capital of Australia?", "answer": "Canberra"},
+      {"question": "In what year was the first atom bomb dropped on Hiroshima?", "answer": "1945"},
+      {"question": "Kilimanjaro is the highest mountain in Africa. In which country is it located?", "answer": "Tanzania"},
+      {"question": "Which Italian explorer, born in Genoa in 1451, is credited with sailing to America in 1492?", "answer": "Christopher Columbus (Cristoforo Colombo)"},
+      {"question": "The Danube flows through four European capital cities. Name any two of them.", "answer": "Any two of: Vienna, Bratislava, Budapest, Belgrade"}
     ],
     "irish_questions": [
       {"question": "Cén tír is mó ar domhan?", "answer": "Russia (An Rúis)", "translation": "What is the largest country in the world?"},
       {"question": "Cén bhliain ar thosaigh an Chéad Chogadh Domhanda?", "answer": "1914", "translation": "In what year did the First World War begin?"},
       {"question": "Cén sliabh is airde ar domhan?", "answer": "Mount Everest", "translation": "What is the highest mountain in the world?"},
-      {"question": "Cén phríomhchathair atá ag an bhFrainc?", "answer": "Paris (Páras)", "translation": "What is the capital of France?"}
+      {"question": "Cén phríomhchathair atá ag an bhFrainc?", "answer": "Paris (Páras)", "translation": "What is the capital of France?"},
+      {"question": "Tá trí dhath i mbratach na hIodáile: dearg, glas agus? Ainmnigh an tríú dath.", "answer": "Bán (White)", "translation": "There are three colours in the Italian flag: red, green and? Name the third colour."}
     ]
   },
   "Irish Geography": {
@@ -158,13 +198,21 @@
       {"question": "On what river is the city of Limerick built?", "answer": "The River Shannon"},
       {"question": "How many counties are in the province of Ulster?", "answer": "Nine"},
       {"question": "What is the most northerly county in Ireland?", "answer": "Donegal"},
-      {"question": "In which county is the Hook Head Lighthouse?", "answer": "Wexford"}
+      {"question": "In which county is the Hook Head Lighthouse?", "answer": "Wexford"},
+      {"question": "Sandstone and shale are rocks found in Ireland. To what group of rocks do they belong?", "answer": "Sedimentary"},
+      {"question": "What shape are the columns of basalt in the Giant's Causeway?", "answer": "Hexagonal (six-sided)"},
+      {"question": "Name the highest waterfall in Ireland, located in County Wicklow.", "answer": "Powerscourt Waterfall"},
+      {"question": "In Ailwee Cave in the Burren, does a stalagmite hang from the roof or rise from the floor?", "answer": "Rise from the floor"},
+      {"question": "The River Barrow flows through which county town beginning with C?", "answer": "Carlow"},
+      {"question": "Achill Island is connected to the mainland by a bridge. In which county is Achill Island?", "answer": "Mayo"},
+      {"question": "Ireland's prevailing wind blows from which direction?", "answer": "South-west"}
     ],
     "irish_questions": [
       {"question": "Cén t-ainm Béarla atá ar Corcaigh?", "answer": "Cork", "translation": "What is the English name for Cork?"},
       {"question": "Cén t-ainm Béarla atá ar Dún na nGall?", "answer": "Donegal", "translation": "What is the English name for Donegal?"},
       {"question": "Cén abhainn is faide in Éirinn?", "answer": "The Shannon (An tSionainn)", "translation": "What is the longest river in Ireland?"},
-      {"question": "Cé mhéad contae atá i gCúige Mumhan?", "answer": "Six (Sé cinn)", "translation": "How many counties are in the province of Munster?"}
+      {"question": "Cé mhéad contae atá i gCúige Mumhan?", "answer": "Six (Sé cinn)", "translation": "How many counties are in the province of Munster?"},
+      {"question": "Ainmnigh an loch is mó ar an Sionann.", "answer": "Loch Deirgirt (Lough Derg)", "translation": "Name the largest lake on the Shannon."}
     ]
   },
   "Irish Current Affairs": {
@@ -186,13 +234,21 @@
       {"question": "Who was the first female President of Ireland?", "answer": "Mary Robinson"},
       {"question": "What sporting event did Ireland host for the first time in 2023 at the Aviva Stadium?", "answer": "UEFA Europa League Final"},
       {"question": "What is the name of Ireland's sovereign wealth fund established in 2024?", "answer": "The Future Ireland Fund"},
-      {"question": "What does the acronym FAI stand for?", "answer": "Football Association of Ireland"}
+      {"question": "What does the acronym FAI stand for?", "answer": "Football Association of Ireland"},
+      {"question": "Fleadh Cheoil na hÉireann 2025 was held in Wexford. An estimated record how many people attended?", "answer": "800,000"},
+      {"question": "David Clifford won a record-breaking third PwC GAA-GPA Footballer of the Year award in 2025. Whose record of four such awards is he now chasing?", "answer": "Jack O'Shea (Kerry)"},
+      {"question": "Which 36-year-old Donegal player came out of retirement in 2025 and was nominated for Footballer of the Year?", "answer": "Michael Murphy"},
+      {"question": "Which county beat Dublin in the 2025 Leinster SFC, ending Dublin's 14-year reign as Leinster champions, in a match played in Portlaoise?", "answer": "Meath"},
+      {"question": "In what city will Fleadh Cheoil na hÉireann 2026 be held – for the first time ever in that city?", "answer": "Belfast"},
+      {"question": "Which Tipperary hurler won the All-Stars Hurler of the Year after scoring two goals in the All-Ireland final?", "answer": "John McGrath"},
+      {"question": "Kerry's total of 1-26 in the 2025 football final included five two-pointers. How many total points (old scoring) does 1-26 equal?", "answer": "29 points"}
     ],
     "irish_questions": [
       {"question": "Cé hé Taoiseach na hÉireann faoi láthair?", "answer": "Micheál Martin", "translation": "Who is the current Taoiseach of Ireland?"},
       {"question": "Cé hé Uachtarán na hÉireann faoi láthair?", "answer": "Michael D. Higgins (Mícheál D. Ó hUigínn)", "translation": "Who is the current President of Ireland?"},
       {"question": "Cén ainm atá ar sheirbhís phóilíneachta na hÉireann?", "answer": "An Garda Síochána", "translation": "What is the name of Ireland's police service?"},
-      {"question": "Cén bhliain ar vótáil muintir na hÉireann ar son an phósta chomhghnéis?", "answer": "2015", "translation": "In what year did the people of Ireland vote in favour of same-sex marriage?"}
+      {"question": "Cén bhliain ar vótáil muintir na hÉireann ar son an phósta chomhghnéis?", "answer": "2015", "translation": "In what year did the people of Ireland vote in favour of same-sex marriage?"},
+      {"question": "Cé a thóg Corn Sam Maguire mar chaptaen Chiarraí i 2025?", "answer": "Gavin White", "translation": "Who lifted the Sam Maguire Cup as Kerry captain in 2025?"}
     ]
   },
   "World Current Affairs": {
@@ -214,13 +270,21 @@
       {"question": "Which country hosted COP28 in 2023?", "answer": "United Arab Emirates (Dubai)"},
       {"question": "Who is the current Chancellor of Germany?", "answer": "Friedrich Merz"},
       {"question": "What social media platform was rebranded to 'X' in 2023?", "answer": "Twitter"},
-      {"question": "Which country experienced a coup in 2023, with its military taking power from the elected government in Niger?", "answer": "Niger"}
+      {"question": "Which country experienced a coup in 2023, with its military taking power from the elected government in Niger?", "answer": "Niger"},
+      {"question": "In January 2025, devastating wildfires hit which area of Los Angeles?", "answer": "Pacific Palisades (accept also Altadena)"},
+      {"question": "Pope Francis passed away in April 2025. What was his birth name?", "answer": "Jorge (Jorge Mario Bergoglio)"},
+      {"question": "Former US President Jimmy Carter died in December 2024 at the age of 100. He was president number what?", "answer": "39th"},
+      {"question": "What Chinese AI company released a model in January 2025 that caused a major stock market sell-off in tech shares worldwide?", "answer": "DeepSeek"},
+      {"question": "The Paris Agreement on climate change was signed in 2015. In what Brazilian city was COP30 held in 2025?", "answer": "Belém"},
+      {"question": "In what city will the 2028 Summer Olympics be held, and in what city will the 2032 Summer Olympics be held?", "answer": "Los Angeles (2028) and Brisbane (2032)"},
+      {"question": "Which country's Taoiseach Micheál Martin was questioned about returning early from Japan to watch the 2025 All-Ireland hurling semi-final?", "answer": "Ireland"}
     ],
     "irish_questions": [
       {"question": "Cén tír a bhuaigh Corn an Domhain FIFA sa bhliain 2022?", "answer": "Argentina (An Airgintín)", "translation": "Which country won the FIFA World Cup in 2022?"},
       {"question": "Cé hé Rí na Ríochta Aontaithe faoi láthair?", "answer": "King Charles III (Rí Séarlas III)", "translation": "Who is the current King of the United Kingdom?"},
       {"question": "Cén cathair a bhí mar óstach na gCluichí Oilimpeacha sa bhliain 2024?", "answer": "Paris (Páras)", "translation": "Which city hosted the Olympic Games in 2024?"},
-      {"question": "Cén eagraíocht idirnáisiúnta a bhfuil a ceanncheathrú i Nua-Eabhrac?", "answer": "The United Nations (Na Náisiúin Aontaithe)", "translation": "Which international organisation has its headquarters in New York?"}
+      {"question": "Cén eagraíocht idirnáisiúnta a bhfuil a ceanncheathrú i Nua-Eabhrac?", "answer": "The United Nations (Na Náisiúin Aontaithe)", "translation": "Which international organisation has its headquarters in New York?"},
+      {"question": "Tá Emmanuel Macron ina uachtarán ar an bhFrainc. Cén uimhir phoblacht atá ann – an 4ú nó an 5ú?", "answer": "An 5ú Poblacht (The Fifth Republic)", "translation": "Emmanuel Macron is president of France. What number republic is it – the 4th or 5th?"}
     ]
   },
   "Irish Culture": {
@@ -242,13 +306,21 @@
       {"question": "Who wrote 'Angela's Ashes'?", "answer": "Frank McCourt"},
       {"question": "Which traditional Irish music group featured Paddy Moloney?", "answer": "The Chieftains"},
       {"question": "In which county is the Fleadh Cheoil na hÉireann traditionally held in various locations?", "answer": "It rotates between different towns and counties"},
-      {"question": "Who created the TV series 'Derry Girls'?", "answer": "Lisa McGee"}
+      {"question": "Who created the TV series 'Derry Girls'?", "answer": "Lisa McGee"},
+      {"question": "Which of these four Irish writers did NOT win a Nobel Prize for Literature: James Joyce, Samuel Beckett, George Bernard Shaw, or Seamus Heaney?", "answer": "James Joyce"},
+      {"question": "What song, written by Steve Earle, did Mundy and Sharon Shannon take to the top of the Irish charts?", "answer": "Galway Girl"},
+      {"question": "What is the main ingredient in the Irish dish Colcannon?", "answer": "Potato (mashed with cabbage/kale)"},
+      {"question": "In the legend of the Children of Lir, for how many years in total were the children turned into swans?", "answer": "900 years (three periods of 300 years)"},
+      {"question": "Who was known as 'Mary of the Gael' (Muire na nGael)?", "answer": "St Brigid"},
+      {"question": "The Claddagh ring features two hands, a heart, and a crown. What do the three elements symbolise?", "answer": "Friendship (hands), Love (heart), and Loyalty (crown)"},
+      {"question": "What Irish poet wrote the poem 'Midterm Break', about the death of his young brother?", "answer": "Seamus Heaney"}
     ],
     "irish_questions": [
       {"question": "Cé a scríobh an dán 'Mise Éire'?", "answer": "Patrick Pearse (Pádraig Mac Piarais)", "translation": "Who wrote the poem 'Mise Éire'?"},
       {"question": "Cén t-amhráin náisiúnta atá ag Éirinn?", "answer": "Amhrán na bhFiann (The Soldier's Song)", "translation": "What is Ireland's national anthem?"},
       {"question": "Cá bhfuil Amharclann na Mainistreach (The Abbey Theatre)?", "answer": "Dublin (Baile Átha Cliath)", "translation": "Where is the Abbey Theatre?"},
-      {"question": "Cé a scríobh 'Cré na Cille'?", "answer": "Máirtín Ó Cadhain", "translation": "Who wrote 'Cré na Cille'?"}
+      {"question": "Cé a scríobh 'Cré na Cille'?", "answer": "Máirtín Ó Cadhain", "translation": "Who wrote 'Cré na Cille'?"},
+      {"question": "Cén dáta ina mbíonn Lá Fhéile Bríde againn?", "answer": "1 Feabhra (1 February)", "translation": "On what date is St Brigid's Day?"}
     ]
   },
   "General Knowledge": {
@@ -270,13 +342,21 @@
       {"question": "What gas do plants absorb from the atmosphere during photosynthesis?", "answer": "Carbon dioxide"},
       {"question": "In what year was the first iPhone released?", "answer": "2007"},
       {"question": "What is the largest organ in the human body?", "answer": "The skin"},
-      {"question": "Who holds the record for the most Grand Slam tennis titles in men's singles?", "answer": "Novak Djokovic"}
+      {"question": "Who holds the record for the most Grand Slam tennis titles in men's singles?", "answer": "Novak Djokovic"},
+      {"question": "In the Harry Potter books, what is the name of the pub in London through which you access Diagon Alley?", "answer": "The Leaky Cauldron"},
+      {"question": "Caledonia was the Roman name for Scotland. What was the Roman name for Ireland?", "answer": "Hibernia"},
+      {"question": "Who painted the ceiling of the Sistine Chapel, and approximately how many years did it take?", "answer": "Michelangelo, approximately 4 years (1508–1512)"},
+      {"question": "There are four major blood groups: A, B, AB, and O. Which is the universal donor?", "answer": "O (specifically O negative)"},
+      {"question": "How many keys does a standard piano have?", "answer": "88"},
+      {"question": "In what year was the Titanic launched from Belfast?", "answer": "1911 (launched May 1911, sank April 1912)"},
+      {"question": "What is the largest organ in the human body?", "answer": "The skin"}
     ],
     "irish_questions": [
       {"question": "Cé mhéad pláinéad atá sa ghrianchóras?", "answer": "Eight (Ocht gcinn)", "translation": "How many planets are in the solar system?"},
       {"question": "Cén t-ainm atá ar an bpláinéad is mó sa ghrianchóras?", "answer": "Jupiter (Iúpatar)", "translation": "What is the name of the largest planet in the solar system?"},
       {"question": "Cén dath atá ag emerald?", "answer": "Green (Glas)", "translation": "What colour is an emerald?"},
-      {"question": "Cén siombal ceimiceach atá ag uisce?", "answer": "H₂O", "translation": "What is the chemical symbol for water?"}
+      {"question": "Cén siombal ceimiceach atá ag uisce?", "answer": "H₂O", "translation": "What is the chemical symbol for water?"},
+      {"question": "Cén sórt ainmhithe iad Borzoi, Boxer agus Beagle?", "answer": "Madraí (Dogs)", "translation": "What type of animals are Borzoi, Boxer and Beagle?"}
     ]
   }
 }
