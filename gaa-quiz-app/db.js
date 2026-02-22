@@ -1,4 +1,8 @@
 const { Pool } = require("pg");
+const dns = require("dns");
+
+// Force IPv4 to avoid ENETUNREACH on hosts without IPv6 support
+dns.setDefaultResultOrder("ipv4first");
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
