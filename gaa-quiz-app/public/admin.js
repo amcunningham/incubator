@@ -89,7 +89,9 @@ function switchTab(tab) {
 
   if (tab === "stats") loadStats();
   if (tab === "feedback") loadFeedback();
+  if (tab === "general-feedback") loadGeneralFeedback();
   if (tab === "questions") loadQuestions();
+  if (tab === "user-submissions") loadUserSubmissions();
   if (tab === "ai-questions") loadAIQuestions();
 }
 
@@ -348,6 +350,62 @@ async function removeFeedbackQuestion(item) {
 }
 
 // ==================
+// GENERAL FEEDBACK
+// ==================
+
+async function loadGeneralFeedback() {
+  const list = document.getElementById("admin-general-feedback-list");
+  list.innerHTML = '<p class="empty-state">Loading...</p>';
+
+  try {
+    const res = await apiFetch("/api/general-feedback");
+    const items = await res.json();
+
+    if (items.length === 0) {
+      list.innerHTML = '<p class="empty-state">No general feedback yet.</p>';
+      return;
+    }
+
+    list.innerHTML = "";
+
+    items.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "feedback-card";
+
+      const date = new Date(item.created_at).toLocaleDateString("en-IE", {
+        day: "numeric", month: "short", year: "numeric",
+      });
+
+      card.innerHTML = `
+        <div class="feedback-card-header">
+          <span class="feedback-category">${item.name ? escapeHtml(item.name) : "Anonymous"}</span>
+          ${item.email ? '<span class="feedback-email-badge">' + escapeHtml(item.email) + '</span>' : ""}
+          <span class="feedback-date">${date}</span>
+        </div>
+        <div class="feedback-comment-text">${escapeHtml(item.message)}</div>
+        <div class="feedback-actions">
+          <button class="btn btn-secondary btn-sm btn-danger-text" onclick="deleteGeneralFeedback(${item.id})">Delete</button>
+        </div>
+      `;
+
+      list.appendChild(card);
+    });
+  } catch (err) {
+    list.innerHTML = '<p class="empty-state">Failed to load feedback.</p>';
+  }
+}
+
+async function deleteGeneralFeedback(id) {
+  if (!confirm("Delete this feedback?")) return;
+  try {
+    await apiFetch(`/api/general-feedback/${id}`, { method: "DELETE" });
+    loadGeneralFeedback();
+  } catch (e) {
+    alert("Failed to delete.");
+  }
+}
+
+// ==================
 // QUESTION BANK
 // ==================
 
@@ -554,6 +612,76 @@ async function addQuestion() {
 }
 
 // ==================
+// USER SUBMISSIONS
+// ==================
+
+async function loadUserSubmissions() {
+  const container = document.getElementById("admin-user-submissions-list");
+  container.innerHTML = '<p class="empty-state">Loading...</p>';
+
+  try {
+    const res = await apiFetch("/api/admin/ai-questions");
+    const all = await res.json();
+    const userItems = all.filter((q) => q.source === "user");
+
+    if (userItems.length === 0) {
+      container.innerHTML = '<p class="empty-state">No user-submitted questions yet. Users can submit via the "Submit a Question" form.</p>';
+      return;
+    }
+
+    container.innerHTML = "";
+
+    userItems.forEach((q) => {
+      const card = document.createElement("div");
+      card.className = "ai-question-card" + (q.added_to_bank ? " added-to-bank" : "");
+
+      card.innerHTML = `
+        <div class="ai-q-header">
+          <span class="feedback-category">${escapeHtml(q.category)}</span>
+          ${q.is_irish ? '<span style="background: var(--irish-badge); color: white; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 4px;">As Gaeilge</span>' : ""}
+          ${q.added_to_bank ? '<span class="added-badge">In Bank</span>' : ""}
+        </div>
+        <div class="ai-q-question">${escapeHtml(q.question)}</div>
+        <div class="ai-q-answer">${escapeHtml(q.answer)}</div>
+        <div class="ai-q-actions">
+          ${!q.added_to_bank ? `<button class="btn btn-primary btn-sm" onclick="addUserSubToBank(${q.id})">Add to Bank</button>` : ""}
+          <button class="btn btn-secondary btn-sm btn-danger-text" onclick="deleteUserSub(${q.id})">Delete</button>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  } catch (err) {
+    container.innerHTML = '<p class="empty-state">Failed to load submissions.</p>';
+  }
+}
+
+async function addUserSubToBank(id) {
+  try {
+    const res = await apiFetch(`/api/admin/ai-questions/${id}/add-to-bank`, { method: "POST" });
+    if (res.ok) {
+      showToast("Added to question bank!");
+      try {
+        await apiFetch(`/api/admin/ai-questions/${id}`, { method: "DELETE" });
+      } catch (e) { /* best effort cleanup */ }
+      loadUserSubmissions();
+    } else {
+      const d = await res.json();
+      alert(d.error || "Failed to add.");
+    }
+  } catch (e) { alert("Network error."); }
+}
+
+async function deleteUserSub(id) {
+  if (!confirm("Delete this submission?")) return;
+  try {
+    await apiFetch(`/api/admin/ai-questions/${id}`, { method: "DELETE" });
+    loadUserSubmissions();
+    showToast("Deleted");
+  } catch (e) { alert("Failed to delete."); }
+}
+
+// ==================
 // BULK IMPORT
 // ==================
 
@@ -689,9 +817,7 @@ function renderAIQuestions() {
   const filter = document.getElementById("ai-filter").value;
   const catFilter = document.getElementById("ai-category-filter").value;
 
-  let filtered = allAIQuestions;
-  if (filter === "user-submitted") filtered = filtered.filter((q) => q.source === "user");
-  if (filter === "ai-generated") filtered = filtered.filter((q) => q.source !== "user");
+  let filtered = allAIQuestions.filter((q) => q.source !== "user");
   if (filter === "has-feedback") filtered = filtered.filter((q) => q.feedback && q.feedback.some((f) => !f.resolved));
   if (filter === "not-added") filtered = filtered.filter((q) => !q.added_to_bank);
   if (filter === "added") filtered = filtered.filter((q) => q.added_to_bank);

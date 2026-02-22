@@ -31,8 +31,10 @@
       <!-- NAV TABS -->
       <div class="admin-tabs">
         <button class="admin-tab active" data-tab="stats" onclick="switchTab('stats')">Dashboard</button>
-        <button class="admin-tab" data-tab="feedback" onclick="switchTab('feedback')">Feedback</button>
+        <button class="admin-tab" data-tab="feedback" onclick="switchTab('feedback')">Question Feedback</button>
+        <button class="admin-tab" data-tab="general-feedback" onclick="switchTab('general-feedback')">General Feedback</button>
         <button class="admin-tab" data-tab="questions" onclick="switchTab('questions')">Question Bank</button>
+        <button class="admin-tab" data-tab="user-submissions" onclick="switchTab('user-submissions')">User Submissions</button>
         <button class="admin-tab" data-tab="ai-questions" onclick="switchTab('ai-questions')">AI Questions</button>
         <button class="admin-tab logout-tab" onclick="handleLogout()">Logout</button>
       </div>
@@ -43,9 +45,10 @@
         <div id="stats-grid" class="stats-grid"></div>
       </div>
 
-      <!-- FEEDBACK TAB -->
+      <!-- QUESTION FEEDBACK TAB -->
       <div id="tab-feedback" class="tab-content">
-        <h2>Feedback Review</h2>
+        <h2>Question Feedback</h2>
+        <p class="tab-description">Feedback users have left on individual questions during practice or quiz mode.</p>
         <div class="filter-bar">
           <select id="feedback-filter" onchange="loadFeedback()">
             <option value="all">All</option>
@@ -54,6 +57,13 @@
           </select>
         </div>
         <div id="admin-feedback-list" class="feedback-list"></div>
+      </div>
+
+      <!-- GENERAL FEEDBACK TAB -->
+      <div id="tab-general-feedback" class="tab-content">
+        <h2>General Feedback</h2>
+        <p class="tab-description">Messages submitted via the "Send Feedback" form on the homepage.</p>
+        <div id="admin-general-feedback-list" class="feedback-list"></div>
       </div>
 
       <!-- QUESTIONS TAB -->
@@ -91,13 +101,20 @@
         <div id="admin-questions-list"></div>
       </div>
 
+      <!-- USER SUBMISSIONS TAB -->
+      <div id="tab-user-submissions" class="tab-content">
+        <h2>User Submissions</h2>
+        <p class="tab-description">Questions submitted by users via the "Submit a Question" form. Review and add the best ones to your question bank.</p>
+        <div id="admin-user-submissions-list" class="feedback-list"></div>
+      </div>
+
       <!-- AI QUESTIONS TAB -->
       <div id="tab-ai-questions" class="tab-content">
         <div class="tab-header">
-          <h2>Review Questions</h2>
+          <h2>AI Questions</h2>
           <button class="btn btn-primary btn-sm" onclick="toggleBulkImport()">Import Questions</button>
         </div>
-        <p class="tab-description">Review questions and add the best ones to your question bank.</p>
+        <p class="tab-description">AI-generated questions. Review and add the best ones to your question bank.</p>
 
         <!-- BULK IMPORT FORM -->
         <div id="bulk-import-form" class="admin-form hidden">
@@ -124,10 +141,8 @@
         </div>
 
         <div class="filter-bar">
-          <select id="ai-filter" onchange="loadAIQuestions()">
+          <select id="ai-filter" onchange="renderAIQuestions()">
             <option value="all">All</option>
-            <option value="user-submitted">User Submitted</option>
-            <option value="ai-generated">AI Generated</option>
             <option value="has-feedback">Has Feedback</option>
             <option value="not-added">Not in Bank</option>
             <option value="added">Added to Bank</option>

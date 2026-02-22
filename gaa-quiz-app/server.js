@@ -940,6 +940,15 @@ app.get("/api/general-feedback", requireAdmin, async (req, res) => {
   }
 });
 
+app.delete("/api/general-feedback/:id", requireAdmin, async (req, res) => {
+  try {
+    await pool.query("DELETE FROM general_feedback WHERE id = $1", [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete feedback" });
+  }
+});
+
 // Serve admin page
 app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin.html"));
