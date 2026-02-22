@@ -41,6 +41,7 @@ async function initDB() {
         question TEXT NOT NULL,
         answer TEXT NOT NULL,
         is_irish BOOLEAN DEFAULT false,
+        translation TEXT DEFAULT '',
         created_at TIMESTAMPTZ DEFAULT NOW()
       );
 
@@ -63,6 +64,7 @@ async function initDB() {
         question TEXT NOT NULL,
         answer TEXT NOT NULL,
         is_irish BOOLEAN DEFAULT false,
+        translation TEXT DEFAULT '',
         rating INTEGER DEFAULT 0,
         added_to_bank BOOLEAN DEFAULT false,
         created_at TIMESTAMPTZ DEFAULT NOW()
@@ -73,6 +75,12 @@ async function initDB() {
         created_at TIMESTAMPTZ DEFAULT NOW()
       );
     `);
+    // Add translation column if missing (migration for existing databases)
+    await client.query(`
+      ALTER TABLE questions ADD COLUMN IF NOT EXISTS translation TEXT DEFAULT '';
+      ALTER TABLE ai_questions ADD COLUMN IF NOT EXISTS translation TEXT DEFAULT '';
+    `);
+
     console.log("Database tables initialized");
   } finally {
     client.release();
@@ -111,8 +119,8 @@ async function seedFromJSON(questionBank) {
       // Insert irish questions
       for (const q of data.irish_questions) {
         await client.query(
-          "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, true)",
-          [categoryId, q.question, q.answer]
+          "INSERT INTO questions (category_id, question, answer, is_irish, translation) VALUES ($1, $2, $3, true, $4)",
+          [categoryId, q.question, q.answer, q.translation || ""]
         );
       }
     }

@@ -144,12 +144,24 @@ function showPracticeQuestion() {
   // Reset flip
   document.getElementById("flashcard-inner").classList.remove("flipped");
 
-  // Irish badge
+  // Irish badge and translation
   const badge = document.getElementById("practice-irish-badge");
+  const translationContainer = document.getElementById("practice-translation");
+  const translationText = document.getElementById("translation-text");
   if (q.is_irish) {
     badge.classList.remove("hidden");
+    if (q.translation) {
+      translationContainer.classList.remove("hidden");
+      translationText.textContent = q.translation;
+      translationText.classList.add("hidden");
+      // Reset button text
+      translationContainer.querySelector(".btn-translation").textContent = "Show Translation";
+    } else {
+      translationContainer.classList.add("hidden");
+    }
   } else {
     badge.classList.add("hidden");
+    translationContainer.classList.add("hidden");
   }
 
   // Button states
@@ -160,6 +172,18 @@ function showPracticeQuestion() {
 
 function flipCard() {
   document.getElementById("flashcard-inner").classList.toggle("flipped");
+}
+
+function toggleTranslation() {
+  const text = document.getElementById("translation-text");
+  const btn = document.querySelector(".btn-translation");
+  if (text.classList.contains("hidden")) {
+    text.classList.remove("hidden");
+    btn.textContent = "Hide Translation";
+  } else {
+    text.classList.add("hidden");
+    btn.textContent = "Show Translation";
+  }
 }
 
 function nextQuestion() {
@@ -196,10 +220,15 @@ function showRound() {
     const row = document.createElement("div");
     row.className = "quiz-question-row" + (q.is_irish ? " irish" : "");
 
+    const translationHtml = q.is_irish && q.translation
+      ? `<div class="q-translation"><button class="btn-translation-small" onclick="toggleQuizTranslation(this)">Show Translation</button><span class="q-translation-text hidden">${q.translation}</span></div>`
+      : "";
+
     row.innerHTML = `
       <span class="q-number">${q.number}</span>
       <div class="q-content">
         <div class="q-text">${q.question}</div>
+        ${translationHtml}
         <div class="q-answer" id="answer-${currentRound}-${q.number}">${q.answer}</div>
       </div>
       <div class="q-actions">
@@ -253,6 +282,17 @@ function updateTimerDisplay() {
     el.classList.add("danger");
   } else if (timerSeconds <= 60) {
     el.classList.add("warning");
+  }
+}
+
+function toggleQuizTranslation(btn) {
+  const text = btn.nextElementSibling;
+  if (text.classList.contains("hidden")) {
+    text.classList.remove("hidden");
+    btn.textContent = "Hide Translation";
+  } else {
+    text.classList.add("hidden");
+    btn.textContent = "Show Translation";
   }
 }
 

@@ -21,10 +21,10 @@
       {"question": "Who won the 2023 Footballer of the Year award?", "answer": "David Clifford"}
     ],
     "irish_questions": [
-      {"question": "Cé mhéad Corn Uí Mhaoilmhichíl (Sam Maguire) atá buaite ag Gaillimh?", "answer": "Nine (Naoi gcinn)"},
-      {"question": "Cén contae a bhuaigh Craobh Peile na hÉireann sa bhliain 2020?", "answer": "Dublin (Baile Átha Cliath)"},
-      {"question": "Cá bhfuil Páirc an Chrócaigh?", "answer": "Dublin (Baile Átha Cliath)"},
-      {"question": "Cén contae as a dtáinig Colm 'Gooch' Cooper?", "answer": "Kerry (Ciarraí)"}
+      {"question": "Cé mhéad Corn Uí Mhaoilmhichíl (Sam Maguire) atá buaite ag Gaillimh?", "answer": "Nine (Naoi gcinn)", "translation": "How many Sam Maguire Cups have Galway won?"},
+      {"question": "Cén contae a bhuaigh Craobh Peile na hÉireann sa bhliain 2020?", "answer": "Dublin (Baile Átha Cliath)", "translation": "Which county won the All-Ireland Football Championship in 2020?"},
+      {"question": "Cá bhfuil Páirc an Chrócaigh?", "answer": "Dublin (Baile Átha Cliath)", "translation": "Where is Croke Park?"},
+      {"question": "Cén contae as a dtáinig Colm 'Gooch' Cooper?", "answer": "Kerry (Ciarraí)", "translation": "Which county did Colm 'Gooch' Cooper come from?"}
     ]
   },
   "Hurling and Camogie": {
@@ -49,10 +49,10 @@
       {"question": "Where is the LIT Gaelic Grounds?", "answer": "Limerick"}
     ],
     "irish_questions": [
-      {"question": "Cé mhéad Craobh Iomána Sinsir atá buaite ag Tiobraid Árann?", "answer": "Twenty-eight (28)"},
-      {"question": "Cén contae a bhuaigh Craobh Iomána na hÉireann sa bhliain 2022?", "answer": "Limerick (Luimneach)"},
-      {"question": "Cá bhfuil Páirc Uí Chaoimh?", "answer": "Cork (Corcaigh)"},
-      {"question": "Cén cluiche ina n-úsáidtear camán agus sliotar?", "answer": "Hurling (Iomáint)"}
+      {"question": "Cé mhéad Craobh Iomána Sinsir atá buaite ag Tiobraid Árann?", "answer": "Twenty-eight (28)", "translation": "How many Senior Hurling Championships have Tipperary won?"},
+      {"question": "Cén contae a bhuaigh Craobh Iomána na hÉireann sa bhliain 2022?", "answer": "Limerick (Luimneach)", "translation": "Which county won the All-Ireland Hurling Championship in 2022?"},
+      {"question": "Cá bhfuil Páirc Uí Chaoimh?", "answer": "Cork (Corcaigh)", "translation": "Where is Páirc Uí Chaoimh?"},
+      {"question": "Cén cluiche ina n-úsáidtear camán agus sliotar?", "answer": "Hurling (Iomáint)", "translation": "Which game uses a hurley and sliotar?"}
     ]
   },
   "General G.A.A.": {
@@ -77,10 +77,10 @@
       {"question": "Where is Cusack Park in Munster?", "answer": "Ennis, County Clare"}
     ],
     "irish_questions": [
-      {"question": "Cén bhliain ar bunaíodh Cumann Lúthchleas Gael?", "answer": "1884"},
-      {"question": "Cá bhfuil Páirc an Chrócaigh?", "answer": "Dublin (Baile Átha Cliath)"},
-      {"question": "Cé mhéad imreoir atá ar fhoireann iomána?", "answer": "Fifteen (Cúig dhuine dhéag)"},
-      {"question": "Cén contae ina bhfuil Staid Semple?", "answer": "Tipperary (Tiobraid Árann)"}
+      {"question": "Cén bhliain ar bunaíodh Cumann Lúthchleas Gael?", "answer": "1884", "translation": "In what year was the GAA founded?"},
+      {"question": "Cá bhfuil Páirc an Chrócaigh?", "answer": "Dublin (Baile Átha Cliath)", "translation": "Where is Croke Park?"},
+      {"question": "Cé mhéad imreoir atá ar fhoireann iomána?", "answer": "Fifteen (Cúig dhuine dhéag)", "translation": "How many players are on a hurling team?"},
+      {"question": "Cén contae ina bhfuil Staid Semple?", "answer": "Tipperary (Tiobraid Árann)", "translation": "Which county is Semple Stadium in?"}
     ]
   },
   "Irish History": {
@@ -105,10 +105,10 @@
       {"question": "Who was the leader of the Irish Parliamentary Party during the Home Rule crisis?", "answer": "John Redmond"}
     ],
     "irish_questions": [
-      {"question": "Cén bhliain ar tharla Éirí Amach na Cásca?", "answer": "1916"},
-      {"question": "Cé a léigh Forógra na Poblachta lasmuigh den GPO?", "answer": "Patrick Pearse (Pádraig Mac Piarais)"},
-      {"question": "Cé a bhí mar chéad Uachtarán na hÉireann?", "answer": "Douglas Hyde (Dubhghlas de hÍde)"},
-      {"question": "Cén bhliain ar thosaigh an Gorta Mór?", "answer": "1845"}
+      {"question": "Cén bhliain ar tharla Éirí Amach na Cásca?", "answer": "1916", "translation": "In what year did the Easter Rising take place?"},
+      {"question": "Cé a léigh Forógra na Poblachta lasmuigh den GPO?", "answer": "Patrick Pearse (Pádraig Mac Piarais)", "translation": "Who read the Proclamation of the Republic outside the GPO?"},
+      {"question": "Cé a bhí mar chéad Uachtarán na hÉireann?", "answer": "Douglas Hyde (Dubhghlas de hÍde)", "translation": "Who was the first President of Ireland?"},
+      {"question": "Cén bhliain ar thosaigh an Gorta Mór?", "answer": "1845", "translation": "In what year did the Great Famine begin?"}
     ]
   },
   "World History and World Geography": {
@@ -133,10 +133,10 @@
       {"question": "On which river does Cairo stand?", "answer": "The Nile"}
     ],
     "irish_questions": [
-      {"question": "Cén tír is mó ar domhan?", "answer": "Russia (An Rúis)"},
-      {"question": "Cén bhliain ar thosaigh an Chéad Chogadh Domhanda?", "answer": "1914"},
-      {"question": "Cén sliabh is airde ar domhan?", "answer": "Mount Everest"},
-      {"question": "Cén phríomhchathair atá ag an bhFrainc?", "answer": "Paris (Páras)"}
+      {"question": "Cén tír is mó ar domhan?", "answer": "Russia (An Rúis)", "translation": "What is the largest country in the world?"},
+      {"question": "Cén bhliain ar thosaigh an Chéad Chogadh Domhanda?", "answer": "1914", "translation": "In what year did the First World War begin?"},
+      {"question": "Cén sliabh is airde ar domhan?", "answer": "Mount Everest", "translation": "What is the highest mountain in the world?"},
+      {"question": "Cén phríomhchathair atá ag an bhFrainc?", "answer": "Paris (Páras)", "translation": "What is the capital of France?"}
     ]
   },
   "Irish Geography": {
@@ -161,10 +161,10 @@
       {"question": "In which county is the Hook Head Lighthouse?", "answer": "Wexford"}
     ],
     "irish_questions": [
-      {"question": "Cén t-ainm Béarla atá ar Corcaigh?", "answer": "Cork"},
-      {"question": "Cén t-ainm Béarla atá ar Dún na nGall?", "answer": "Donegal"},
-      {"question": "Cén abhainn is faide in Éirinn?", "answer": "The Shannon (An tSionainn)"},
-      {"question": "Cé mhéad contae atá i gCúige Mumhan?", "answer": "Six (Sé cinn)"}
+      {"question": "Cén t-ainm Béarla atá ar Corcaigh?", "answer": "Cork", "translation": "What is the English name for Cork?"},
+      {"question": "Cén t-ainm Béarla atá ar Dún na nGall?", "answer": "Donegal", "translation": "What is the English name for Donegal?"},
+      {"question": "Cén abhainn is faide in Éirinn?", "answer": "The Shannon (An tSionainn)", "translation": "What is the longest river in Ireland?"},
+      {"question": "Cé mhéad contae atá i gCúige Mumhan?", "answer": "Six (Sé cinn)", "translation": "How many counties are in the province of Munster?"}
     ]
   },
   "Irish Current Affairs": {
@@ -189,10 +189,10 @@
       {"question": "What does the acronym FAI stand for?", "answer": "Football Association of Ireland"}
     ],
     "irish_questions": [
-      {"question": "Cé hé Taoiseach na hÉireann faoi láthair?", "answer": "Micheál Martin"},
-      {"question": "Cé hé Uachtarán na hÉireann faoi láthair?", "answer": "Michael D. Higgins (Mícheál D. Ó hUigínn)"},
-      {"question": "Cén ainm atá ar sheirbhís phóilíneachta na hÉireann?", "answer": "An Garda Síochána"},
-      {"question": "Cén bhliain ar vótáil muintir na hÉireann ar son an phósta chomhghnéis?", "answer": "2015"}
+      {"question": "Cé hé Taoiseach na hÉireann faoi láthair?", "answer": "Micheál Martin", "translation": "Who is the current Taoiseach of Ireland?"},
+      {"question": "Cé hé Uachtarán na hÉireann faoi láthair?", "answer": "Michael D. Higgins (Mícheál D. Ó hUigínn)", "translation": "Who is the current President of Ireland?"},
+      {"question": "Cén ainm atá ar sheirbhís phóilíneachta na hÉireann?", "answer": "An Garda Síochána", "translation": "What is the name of Ireland's police service?"},
+      {"question": "Cén bhliain ar vótáil muintir na hÉireann ar son an phósta chomhghnéis?", "answer": "2015", "translation": "In what year did the people of Ireland vote in favour of same-sex marriage?"}
     ]
   },
   "World Current Affairs": {
@@ -217,10 +217,10 @@
       {"question": "Which country experienced a coup in 2023, with its military taking power from the elected government in Niger?", "answer": "Niger"}
     ],
     "irish_questions": [
-      {"question": "Cén tír a bhuaigh Corn an Domhain FIFA sa bhliain 2022?", "answer": "Argentina (An Airgintín)"},
-      {"question": "Cé hé Rí na Ríochta Aontaithe faoi láthair?", "answer": "King Charles III (Rí Séarlas III)"},
-      {"question": "Cén cathair a bhí mar óstach na gCluichí Oilimpeacha sa bhliain 2024?", "answer": "Paris (Páras)"},
-      {"question": "Cén eagraíocht idirnáisiúnta a bhfuil a ceanncheathrú i Nua-Eabhrac?", "answer": "The United Nations (Na Náisiúin Aontaithe)"}
+      {"question": "Cén tír a bhuaigh Corn an Domhain FIFA sa bhliain 2022?", "answer": "Argentina (An Airgintín)", "translation": "Which country won the FIFA World Cup in 2022?"},
+      {"question": "Cé hé Rí na Ríochta Aontaithe faoi láthair?", "answer": "King Charles III (Rí Séarlas III)", "translation": "Who is the current King of the United Kingdom?"},
+      {"question": "Cén cathair a bhí mar óstach na gCluichí Oilimpeacha sa bhliain 2024?", "answer": "Paris (Páras)", "translation": "Which city hosted the Olympic Games in 2024?"},
+      {"question": "Cén eagraíocht idirnáisiúnta a bhfuil a ceanncheathrú i Nua-Eabhrac?", "answer": "The United Nations (Na Náisiúin Aontaithe)", "translation": "Which international organisation has its headquarters in New York?"}
     ]
   },
   "Irish Culture": {
@@ -245,10 +245,10 @@
       {"question": "Who created the TV series 'Derry Girls'?", "answer": "Lisa McGee"}
     ],
     "irish_questions": [
-      {"question": "Cé a scríobh an dán 'Mise Éire'?", "answer": "Patrick Pearse (Pádraig Mac Piarais)"},
-      {"question": "Cén t-amhráin náisiúnta atá ag Éirinn?", "answer": "Amhrán na bhFiann (The Soldier's Song)"},
-      {"question": "Cá bhfuil Amharclann na Mainistreach (The Abbey Theatre)?", "answer": "Dublin (Baile Átha Cliath)"},
-      {"question": "Cé a scríobh 'Cré na Cille'?", "answer": "Máirtín Ó Cadhain"}
+      {"question": "Cé a scríobh an dán 'Mise Éire'?", "answer": "Patrick Pearse (Pádraig Mac Piarais)", "translation": "Who wrote the poem 'Mise Éire'?"},
+      {"question": "Cén t-amhráin náisiúnta atá ag Éirinn?", "answer": "Amhrán na bhFiann (The Soldier's Song)", "translation": "What is Ireland's national anthem?"},
+      {"question": "Cá bhfuil Amharclann na Mainistreach (The Abbey Theatre)?", "answer": "Dublin (Baile Átha Cliath)", "translation": "Where is the Abbey Theatre?"},
+      {"question": "Cé a scríobh 'Cré na Cille'?", "answer": "Máirtín Ó Cadhain", "translation": "Who wrote 'Cré na Cille'?"}
     ]
   },
   "General Knowledge": {
@@ -273,10 +273,10 @@
       {"question": "Who holds the record for the most Grand Slam tennis titles in men's singles?", "answer": "Novak Djokovic"}
     ],
     "irish_questions": [
-      {"question": "Cé mhéad pláinéad atá sa ghrianchóras?", "answer": "Eight (Ocht gcinn)"},
-      {"question": "Cén t-ainm atá ar an bpláinéad is mó sa ghrianchóras?", "answer": "Jupiter (Iúpatar)"},
-      {"question": "Cén dath atá ag emerald?", "answer": "Green (Glas)"},
-      {"question": "Cén siombal ceimiceach atá ag uisce?", "answer": "H₂O"}
+      {"question": "Cé mhéad pláinéad atá sa ghrianchóras?", "answer": "Eight (Ocht gcinn)", "translation": "How many planets are in the solar system?"},
+      {"question": "Cén t-ainm atá ar an bpláinéad is mó sa ghrianchóras?", "answer": "Jupiter (Iúpatar)", "translation": "What is the name of the largest planet in the solar system?"},
+      {"question": "Cén dath atá ag emerald?", "answer": "Green (Glas)", "translation": "What colour is an emerald?"},
+      {"question": "Cén siombal ceimiceach atá ag uisce?", "answer": "H₂O", "translation": "What is the chemical symbol for water?"}
     ]
   }
 }

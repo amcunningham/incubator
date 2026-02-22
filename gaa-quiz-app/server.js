@@ -93,11 +93,11 @@ async function pickQuestions(categoryName, count) {
   const categoryId = catResult.rows[0].id;
 
   const regResult = await pool.query(
-    "SELECT question, answer FROM questions WHERE category_id = $1 AND is_irish = false ORDER BY RANDOM()",
+    "SELECT question, answer, translation FROM questions WHERE category_id = $1 AND is_irish = false ORDER BY RANDOM()",
     [categoryId]
   );
   const irishResult = await pool.query(
-    "SELECT question, answer FROM questions WHERE category_id = $1 AND is_irish = true ORDER BY RANDOM()",
+    "SELECT question, answer, translation FROM questions WHERE category_id = $1 AND is_irish = true ORDER BY RANDOM()",
     [categoryId]
   );
 
@@ -174,6 +174,7 @@ app.post("/api/generate", async (req, res) => {
         question: q.question,
         answer: q.answer,
         is_irish: q.is_irish,
+        translation: q.translation || "",
       }));
 
       return res.json({ mode, data });
@@ -194,6 +195,7 @@ app.post("/api/generate", async (req, res) => {
           question: q.question,
           answer: q.answer,
           is_irish: q.is_irish,
+          translation: q.translation || "",
         })),
       });
     }
@@ -414,7 +416,7 @@ app.post("/api/questions/add", requireAdmin, async (req, res) => {
 app.get("/api/admin/questions", requireAdmin, async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `SELECT q.id, q.question, q.answer, q.is_irish, c.name as category
+      `SELECT q.id, q.question, q.answer, q.is_irish, q.translation, c.name as category
        FROM questions q
        JOIN categories c ON q.category_id = c.id
        ORDER BY c.name, q.is_irish, q.id`

@@ -366,6 +366,64 @@ h2 {
   margin-right: auto;
 }
 
+/* TRANSLATION */
+.translation-container {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.btn-translation {
+  background: none;
+  border: 1px solid var(--irish-badge);
+  border-radius: 20px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  color: var(--irish-badge);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-translation:hover {
+  background: var(--irish-badge);
+  color: var(--white);
+}
+
+.translation-text {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.q-translation {
+  margin-top: 0.3rem;
+}
+
+.btn-translation-small {
+  background: none;
+  border: 1px solid var(--irish-badge);
+  border-radius: 12px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  font-family: inherit;
+  color: var(--irish-badge);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-translation-small:hover {
+  background: var(--irish-badge);
+  color: var(--white);
+}
+
+.q-translation-text {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  font-style: italic;
+  margin-left: 0.5rem;
+}
+
 .practice-controls {
   display: flex;
   gap: 0.75rem;
