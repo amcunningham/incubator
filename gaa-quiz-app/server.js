@@ -512,11 +512,12 @@ Return your response as a JSON array with this exact structure:
     "category": "Category Name",
     "question": "The question text",
     "answer": "The answer",
-    "is_irish": false
+    "is_irish": false,
+    "translation": ""
   }
 ]
 
-Set "is_irish" to true if the question is written in Irish. For every 10 questions, questions 9 and 10 should be as Gaeilge.`;
+Set "is_irish" to true if the question is written in Irish. For every 10 questions, questions 9 and 10 should be as Gaeilge. For Irish-language questions, provide an English translation of the question in the "translation" field. Leave "translation" as an empty string for English questions.`;
   } else {
     const roundCategories = categories.slice(0, 10);
     userPrompt = `Generate a full Scór-style quiz with one round for each of the following categories (in this order):
@@ -537,14 +538,15 @@ Return your response as a JSON object with this exact structure:
           "number": 1,
           "question": "The question text",
           "answer": "The answer",
-          "is_irish": false
+          "is_irish": false,
+          "translation": ""
         }
       ]
     }
   ]
 }
 
-Set "is_irish" to true for questions written in Irish.`;
+Set "is_irish" to true for questions written in Irish. For Irish-language questions, provide an English translation of the question in the "translation" field. Leave "translation" as an empty string for English questions.`;
   }
 
   res.setHeader("Content-Type", "application/json");
