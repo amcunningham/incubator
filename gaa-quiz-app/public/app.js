@@ -436,6 +436,7 @@ async function showFeedbackReview() {
     const typeLabels = {
       wrong_answer: "Wrong Answer",
       unclear: "Unclear",
+      too_easy: "Too Easy",
       outdated: "Outdated",
       other: "Other",
     };

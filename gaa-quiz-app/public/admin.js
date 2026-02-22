@@ -182,6 +182,7 @@ async function loadFeedback() {
     const typeLabels = {
       wrong_answer: "Wrong Answer",
       unclear: "Unclear",
+      too_easy: "Too Easy",
       outdated: "Outdated",
       other: "Other",
     };
@@ -595,7 +596,7 @@ function renderAIQuestions() {
   pageItems.forEach((q) => {
     const feedbackHtml = (q.feedback && q.feedback.length > 0)
       ? `<div class="ai-q-feedback">${q.feedback.map((f) => {
-          const typeLabels = { wrong_answer: "Wrong Answer", unclear: "Unclear", duplicate: "Duplicate", other: "Other" };
+          const typeLabels = { wrong_answer: "Wrong Answer", unclear: "Unclear", too_easy: "Too Easy", outdated: "Outdated", duplicate: "Duplicate", other: "Other" };
           return `<div class="ai-q-feedback-item${f.resolved ? " resolved" : ""}">
             <span class="feedback-type-label feedback-type-${f.feedbackType}">${typeLabels[f.feedbackType] || f.feedbackType}</span>
             ${f.suggestedAnswer ? `<span class="feedback-suggested-inline">Suggested: <strong>${escapeHtml(f.suggestedAnswer)}</strong></span>` : ""}

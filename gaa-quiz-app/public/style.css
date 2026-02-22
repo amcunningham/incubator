@@ -778,6 +778,11 @@ h2 {
   color: #856404;
 }
 
+.feedback-type-too_easy {
+  background: #e2e3ff;
+  color: #3d348b;
+}
+
 .feedback-type-outdated {
   background: #cff4fc;
   color: #055160;
