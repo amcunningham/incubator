@@ -862,23 +862,40 @@ async function start() {
       await seedFromJSON(questionBank);
     }
 
-    // Merge split categories in ai_questions (e.g. "World History" + "World Geography" -> "World History and World Geography")
+    // Merge split/misnamed categories across all tables
     try {
       const categoryMerges = {
         "World History": "World History and World Geography",
         "World Geography": "World History and World Geography",
+        "General GAA": "General G.A.A.",
       };
-      for (const [old, merged] of Object.entries(categoryMerges)) {
-        const { rowCount } = await pool.query(
+      for (const [oldName, mergedName] of Object.entries(categoryMerges)) {
+        // Merge in ai_questions
+        const { rowCount: aiCount } = await pool.query(
           "UPDATE ai_questions SET category = $1 WHERE category = $2",
-          [merged, old]
+          [mergedName, oldName]
         );
-        if (rowCount > 0) console.log(`Merged ${rowCount} ai_questions from "${old}" into "${merged}"`);
-        // Also merge in feedback table
+        if (aiCount > 0) console.log(`Merged ${aiCount} ai_questions from "${oldName}" into "${mergedName}"`);
+        // Merge in feedback
         await pool.query(
           "UPDATE feedback SET category = $1 WHERE category = $2",
-          [merged, old]
+          [mergedName, oldName]
         );
+        // Merge in categories table (move questions, then delete old category)
+        const oldCat = await pool.query("SELECT id FROM categories WHERE name = $1", [oldName]);
+        const mergedCat = await pool.query("SELECT id FROM categories WHERE name = $1", [mergedName]);
+        if (oldCat.rows.length > 0 && mergedCat.rows.length > 0) {
+          await pool.query(
+            "UPDATE questions SET category_id = $1 WHERE category_id = $2",
+            [mergedCat.rows[0].id, oldCat.rows[0].id]
+          );
+          await pool.query("DELETE FROM categories WHERE id = $1", [oldCat.rows[0].id]);
+          console.log(`Merged category "${oldName}" into "${mergedName}" in categories table`);
+        } else if (oldCat.rows.length > 0 && mergedCat.rows.length === 0) {
+          // Just rename the old category
+          await pool.query("UPDATE categories SET name = $1 WHERE id = $2", [mergedName, oldCat.rows[0].id]);
+          console.log(`Renamed category "${oldName}" to "${mergedName}"`);
+        }
       }
     } catch (err) {
       console.error("Category merge error:", err);
