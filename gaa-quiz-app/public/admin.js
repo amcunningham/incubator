@@ -542,6 +542,108 @@ async function addQuestion() {
 }
 
 // ==================
+// BULK IMPORT
+// ==================
+
+function toggleBulkImport() {
+  const form = document.getElementById("bulk-import-form");
+  form.classList.toggle("hidden");
+  if (!form.classList.contains("hidden")) {
+    // Populate category dropdown
+    const sel = document.getElementById("import-category");
+    sel.innerHTML = "";
+    const cats = [...new Set(allAIQuestions.map((q) => q.category).filter(Boolean))];
+    // Also fetch from main categories
+    apiFetch("/api/categories").then((r) => r.json()).then((categories) => {
+      const allCats = [...new Set([...categories, ...cats])].sort();
+      sel.innerHTML = allCats.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+    });
+  }
+}
+
+function parseImportText(text) {
+  const lines = text.split("\n").map((l) => l.trim()).filter((l) => l);
+  const questions = [];
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    // Remove leading numbers like "1." or "1)"
+    line = line.replace(/^\d+[\.\)]\s*/, "");
+    // Try pipe separator
+    if (line.includes("|")) {
+      const parts = line.split("|").map((p) => p.trim());
+      if (parts.length >= 2 && parts[0] && parts[1]) {
+        questions.push({ question: parts[0], answer: parts[1] });
+        continue;
+      }
+    }
+    // Try tab separator
+    if (line.includes("\t")) {
+      const parts = line.split("\t").map((p) => p.trim());
+      if (parts.length >= 2 && parts[0] && parts[1]) {
+        questions.push({ question: parts[0], answer: parts[1] });
+        continue;
+      }
+    }
+    // Two-line format: question on one line, answer on next
+    if (i + 1 < lines.length) {
+      const nextLine = lines[i + 1].replace(/^\d+[\.\)]\s*/, "").trim();
+      // If current line looks like a question and next doesn't have separators
+      if (line.endsWith("?") && !nextLine.includes("|") && !nextLine.includes("\t")) {
+        questions.push({ question: line, answer: nextLine });
+        i++; // skip next line
+        continue;
+      }
+    }
+  }
+  return questions;
+}
+
+function previewImport() {
+  const text = document.getElementById("import-textarea").value;
+  const questions = parseImportText(text);
+  const preview = document.getElementById("import-preview");
+  const list = document.getElementById("import-preview-list");
+  document.getElementById("import-count").textContent = questions.length;
+
+  if (questions.length === 0) {
+    list.innerHTML = '<p class="empty-state">No questions detected. Check the format.</p>';
+  } else {
+    list.innerHTML = questions.slice(0, 20).map((q, i) =>
+      `<div class="import-preview-item"><strong>Q${i + 1}:</strong> ${escapeHtml(q.question)}<br><strong>A:</strong> ${escapeHtml(q.answer)}</div>`
+    ).join("") + (questions.length > 20 ? `<p class="empty-state">...and ${questions.length - 20} more</p>` : "");
+  }
+  preview.classList.remove("hidden");
+}
+
+async function submitBulkImport() {
+  const text = document.getElementById("import-textarea").value;
+  const category = document.getElementById("import-category").value;
+  const questions = parseImportText(text);
+
+  if (questions.length === 0) { alert("No questions detected. Check the format."); return; }
+  if (!category) { alert("Please select a category."); return; }
+
+  try {
+    const res = await apiFetch("/api/admin/ai-questions/bulk-import", {
+      method: "POST",
+      body: JSON.stringify({
+        questions: questions.map((q) => ({ ...q, category })),
+      }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast(`Imported ${data.imported} questions (${data.skipped} skipped)`);
+      document.getElementById("import-textarea").value = "";
+      document.getElementById("import-preview").classList.add("hidden");
+      document.getElementById("bulk-import-form").classList.add("hidden");
+      loadAIQuestions();
+    } else {
+      alert(data.error || "Import failed.");
+    }
+  } catch (e) { alert("Network error."); }
+}
+
+// ==================
 // AI QUESTIONS
 // ==================
 

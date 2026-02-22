@@ -242,6 +242,41 @@
   color: #842029;
 }
 
+/* BULK IMPORT */
+.import-format-help {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  background: var(--gray-50);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.import-preview {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: var(--gray-50);
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.import-preview h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+.import-preview-item {
+  font-size: 0.8rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.import-preview-item:last-child {
+  border-bottom: none;
+}
+
 /* AI QUESTION CARDS */
 .ai-question-card {
   background: var(--white);

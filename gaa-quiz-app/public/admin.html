@@ -93,8 +93,36 @@
 
       <!-- AI QUESTIONS TAB -->
       <div id="tab-ai-questions" class="tab-content">
-        <h2>AI-Generated Questions</h2>
-        <p class="tab-description">Rate AI questions and add the best ones to your question bank.</p>
+        <div class="tab-header">
+          <h2>AI-Generated Questions</h2>
+          <button class="btn btn-primary btn-sm" onclick="toggleBulkImport()">Import Questions</button>
+        </div>
+        <p class="tab-description">Review questions and add the best ones to your question bank.</p>
+
+        <!-- BULK IMPORT FORM -->
+        <div id="bulk-import-form" class="admin-form hidden">
+          <h3>Bulk Import Questions</h3>
+          <p class="tab-description">Paste questions below. Use one of these formats:</p>
+          <div class="import-format-help">
+            <strong>Format 1 — Tab separated:</strong> Question[TAB]Answer<br>
+            <strong>Format 2 — Pipe separated:</strong> Question | Answer<br>
+            <strong>Format 3 — Numbered:</strong> 1. Question | Answer
+          </div>
+          <label class="modal-label">Category</label>
+          <select id="import-category" class="modal-input"></select>
+          <label class="modal-label">Questions</label>
+          <textarea id="import-textarea" class="modal-input" rows="12" placeholder="What county won the 2024 All-Ireland?&#10;Armagh&#10;&#10;Or use: Question | Answer (one per line)"></textarea>
+          <div class="import-preview hidden" id="import-preview">
+            <h4>Preview (<span id="import-count">0</span> questions)</h4>
+            <div id="import-preview-list"></div>
+          </div>
+          <div class="button-row" style="margin-top: 0.75rem;">
+            <button class="btn btn-secondary btn-sm" onclick="previewImport()">Preview</button>
+            <button class="btn btn-primary btn-sm" onclick="submitBulkImport()">Import All</button>
+            <button class="btn btn-secondary btn-sm" onclick="toggleBulkImport()">Cancel</button>
+          </div>
+        </div>
+
         <div class="filter-bar">
           <select id="ai-filter" onchange="loadAIQuestions()">
             <option value="all">All</option>
