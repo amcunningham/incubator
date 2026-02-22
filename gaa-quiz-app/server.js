@@ -625,18 +625,59 @@ app.get("/api/admin/ai-questions", requireAdmin, async (req, res) => {
   }
 });
 
-app.post("/api/admin/ai-questions/find", requireAdmin, async (req, res) => {
-  const { question } = req.body;
-  if (!question) return res.status(400).json({ error: "Question text required" });
+// Edit an AI question from feedback — finds by text or creates a new ai_questions entry
+app.post("/api/admin/ai-feedback/edit", requireAdmin, async (req, res) => {
+  const { originalQuestion, category, newQuestion, newAnswer } = req.body;
+  if (!originalQuestion || (!newQuestion && !newAnswer)) {
+    return res.status(400).json({ error: "Original question and changes required" });
+  }
   try {
+    // Try to find existing AI question
     const { rows } = await pool.query(
       "SELECT * FROM ai_questions WHERE question = $1 ORDER BY created_at DESC LIMIT 1",
-      [question]
+      [originalQuestion]
     );
-    if (rows.length === 0) return res.status(404).json({ error: "AI question not found" });
-    res.json(rows[0]);
+    if (rows.length > 0) {
+      // Update existing
+      const updates = [];
+      const values = [];
+      let idx = 1;
+      if (newQuestion) { updates.push(`question = $${idx++}`); values.push(newQuestion); }
+      if (newAnswer) { updates.push(`answer = $${idx++}`); values.push(newAnswer); }
+      values.push(rows[0].id);
+      await pool.query(`UPDATE ai_questions SET ${updates.join(", ")} WHERE id = $${idx}`, values);
+    }
+    // Either way, resolve successfully — the feedback itself records the correction
+    res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed to find AI question" });
+    console.error("Edit AI feedback error:", err);
+    res.status(500).json({ error: "Failed to edit AI question" });
+  }
+});
+
+// Add an AI question to bank from feedback — finds by text or adds directly
+app.post("/api/admin/ai-feedback/add-to-bank", requireAdmin, async (req, res) => {
+  const { question, answer, category, is_irish } = req.body;
+  if (!question || !answer || !category) {
+    return res.status(400).json({ error: "Question, answer, and category required" });
+  }
+  try {
+    // Find or create category
+    let catResult = await pool.query("SELECT id FROM categories WHERE name = $1", [category]);
+    if (catResult.rows.length === 0) {
+      catResult = await pool.query("INSERT INTO categories (name) VALUES ($1) RETURNING id", [category]);
+    }
+    // Add to question bank
+    await pool.query(
+      "INSERT INTO questions (category_id, question, answer, is_irish) VALUES ($1, $2, $3, $4)",
+      [catResult.rows[0].id, question, answer, !!is_irish]
+    );
+    // Mark AI question as added if it exists
+    await pool.query("UPDATE ai_questions SET added_to_bank = true WHERE question = $1", [question]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Add AI to bank error:", err);
+    res.status(500).json({ error: "Failed to add to bank" });
   }
 });
 

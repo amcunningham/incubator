@@ -241,16 +241,14 @@ async function loadFeedback() {
           try {
             let r;
             if (item.isAI) {
-              // Find the AI question by text, then edit it
-              const findRes = await apiFetch("/api/admin/ai-questions/find", {
+              r = await apiFetch("/api/admin/ai-feedback/edit", {
                 method: "POST",
-                body: JSON.stringify({ question: item.question }),
-              });
-              if (!findRes.ok) { alert("Could not find AI question to edit."); return; }
-              const aiQ = await findRes.json();
-              r = await apiFetch(`/api/admin/ai-questions/${aiQ.id}/edit`, {
-                method: "POST",
-                body: JSON.stringify({ question: newQ, answer: newA }),
+                body: JSON.stringify({
+                  originalQuestion: item.question,
+                  category: item.category,
+                  newQuestion: newQ,
+                  newAnswer: newA,
+                }),
               });
             } else {
               r = await apiFetch("/api/questions/edit", {
@@ -279,13 +277,15 @@ async function loadFeedback() {
       if (addToBankBtn) {
         addToBankBtn.addEventListener("click", async () => {
           try {
-            const findRes = await apiFetch("/api/admin/ai-questions/find", {
+            const r = await apiFetch("/api/admin/ai-feedback/add-to-bank", {
               method: "POST",
-              body: JSON.stringify({ question: item.question }),
+              body: JSON.stringify({
+                question: item.question,
+                answer: item.answer,
+                category: item.category,
+                is_irish: false,
+              }),
             });
-            if (!findRes.ok) { alert("Could not find AI question."); return; }
-            const aiQ = await findRes.json();
-            const r = await apiFetch(`/api/admin/ai-questions/${aiQ.id}/add-to-bank`, { method: "POST" });
             if (r.ok) {
               showToast("Added to question bank");
               await apiFetch("/api/feedback/" + item.id, { method: "PATCH" });
