@@ -239,12 +239,11 @@ async function loadFeedback() {
         <div class="feedback-question">${escapeHtml(item.question)}</div>
         <div class="feedback-current-answer">Current answer: <strong>${escapeHtml(item.answer)}</strong></div>
         <div class="feedback-details-section">
-          <div class="feedback-detail-label">Issue reported: <strong>${typeLabels[item.feedbackType] || item.feedbackType}</strong></div>
-          ${item.suggestedAnswer ? '<div class="feedback-detail-row"><span class="feedback-detail-label">Suggested answer:</span> <strong>' + escapeHtml(item.suggestedAnswer) + "</strong></div>" : ""}
-          ${item.suggestedQuestion ? '<div class="feedback-detail-row"><span class="feedback-detail-label">Suggested wording:</span> <strong>' + escapeHtml(item.suggestedQuestion) + "</strong></div>" : ""}
-          ${item.comment ? '<div class="feedback-detail-row"><span class="feedback-detail-label">Comment:</span> ' + escapeHtml(item.comment) + "</div>" : ""}
-          ${item.email ? '<div class="feedback-detail-row"><span class="feedback-detail-label">Email:</span> ' + escapeHtml(item.email) + "</div>" : ""}
-          ${!hasDetails ? '<div class="feedback-detail-row feedback-detail-empty">No additional details provided — user only flagged the issue type.</div>' : ""}
+          <div class="feedback-detail-row"><span class="feedback-detail-label">Issue reported:</span> <strong>${typeLabels[item.feedbackType] || item.feedbackType || '(none)'}</strong></div>
+          <div class="feedback-detail-row"><span class="feedback-detail-label">Suggested answer:</span> <strong>${escapeHtml(item.suggestedAnswer || '(none)')}</strong></div>
+          <div class="feedback-detail-row"><span class="feedback-detail-label">Suggested wording:</span> <strong>${escapeHtml(item.suggestedQuestion || '(none)')}</strong></div>
+          <div class="feedback-detail-row"><span class="feedback-detail-label">Comment:</span> ${escapeHtml(item.comment || '(none)')}</div>
+          <div class="feedback-detail-row"><span class="feedback-detail-label">Email:</span> ${escapeHtml(item.email || '(none)')}</div>
         </div>
         <div class="inline-edit hidden" id="edit-fb-${item.id}">
           <label>Question:<textarea class="edit-q-input" rows="2">${escapeHtml(item.suggestedQuestion || item.question)}</textarea></label>
