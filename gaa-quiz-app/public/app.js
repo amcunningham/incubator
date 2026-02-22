@@ -380,6 +380,10 @@ function openFeedbackModal(question, answer, category) {
 
 function closeFeedbackModal() {
   document.getElementById("feedback-modal").classList.add("hidden");
+  document.getElementById("suggested-answer").value = "";
+  document.getElementById("suggested-question").value = "";
+  document.getElementById("feedback-comment").value = "";
+  document.getElementById("feedback-email").value = "";
   feedbackTarget = null;
   currentFeedbackType = null;
 }
