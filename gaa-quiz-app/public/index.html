@@ -36,15 +36,39 @@
 
     <!-- UPLOAD QUESTIONS -->
     <section id="upload-questions" class="screen">
-      <h2>Submit Questions</h2>
-      <p class="tab-description">Have some good quiz questions? Submit them here and we'll add the best ones to the quiz. Go raibh maith agat!</p>
+      <h2>Submit a Question</h2>
+      <p class="tab-description">Have a good quiz question? Submit it here and we'll add the best ones to the quiz. Go raibh maith agat!</p>
 
       <label class="modal-label">Category</label>
       <select id="upload-category" class="modal-input"></select>
 
-      <label class="modal-label">Paste your questions below</label>
+      <label class="modal-label">Question</label>
+      <input type="text" id="upload-question" class="modal-input" placeholder="e.g. What county won the 2024 All-Ireland?">
+
+      <label class="modal-label">Answer</label>
+      <input type="text" id="upload-answer" class="modal-input" placeholder="e.g. Armagh">
+
+      <div class="button-row" style="margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+        <button class="btn btn-primary" onclick="submitSingleQuestion()">Submit</button>
+      </div>
+
+      <div class="bulk-toggle" style="margin-top: 1.5rem; text-align: center;">
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('upload-bulk')">Submit multiple questions at once</button>
+      </div>
+    </section>
+
+    <!-- BULK UPLOAD -->
+    <section id="upload-bulk" class="screen">
+      <h2>Submit Multiple Questions</h2>
+      <p class="tab-description">Paste several questions at once. Go raibh maith agat!</p>
+
+      <label class="modal-label">Category</label>
+      <select id="upload-bulk-category" class="modal-input"></select>
+
+      <label class="modal-label">Questions</label>
       <p class="upload-hint">Put each question and answer on one line, separated by a <code>|</code> symbol.</p>
-      <textarea id="upload-textarea" class="modal-input" rows="12" placeholder="What county won the 2024 All-Ireland? | Armagh&#10;Who captained Limerick to four All-Irelands in a row? | Declan Hannon&#10;What is the Lory Meagher Cup? | Fourth tier hurling competition"></textarea>
+      <textarea id="upload-textarea" class="modal-input" rows="10" placeholder="What county won the 2024 All-Ireland? | Armagh&#10;Who captained Limerick to four All-Irelands in a row? | Declan Hannon&#10;What is the Lory Meagher Cup? | Fourth tier hurling competition"></textarea>
 
       <div id="upload-preview" class="upload-preview hidden">
         <h4>Preview (<span id="upload-count">0</span> questions found)</h4>
@@ -52,9 +76,9 @@
       </div>
 
       <div class="button-row" style="margin-top: 0.75rem;">
-        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+        <button class="btn btn-secondary" onclick="showScreen('upload-questions')">Back</button>
         <button class="btn btn-secondary" onclick="previewUpload()">Preview</button>
-        <button class="btn btn-primary" onclick="submitUpload()">Upload</button>
+        <button class="btn btn-primary" onclick="submitUpload()">Upload All</button>
       </div>
     </section>
 

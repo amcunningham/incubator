@@ -487,16 +487,53 @@ async function loadUploadCategories() {
   try {
     const res = await fetch("/api/categories");
     const categories = await res.json();
-    const select = document.getElementById("upload-category");
-    select.innerHTML = "";
-    categories.forEach((cat) => {
-      const opt = document.createElement("option");
-      opt.value = cat;
-      opt.textContent = cat;
-      select.appendChild(opt);
+    // Populate both single and bulk category dropdowns
+    const selects = [
+      document.getElementById("upload-category"),
+      document.getElementById("upload-bulk-category"),
+    ].filter(Boolean);
+    selects.forEach((select) => {
+      select.innerHTML = "";
+      categories.forEach((cat) => {
+        const opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat;
+        select.appendChild(opt);
+      });
     });
   } catch (e) {
     console.error("Failed to load categories for upload:", e);
+  }
+}
+
+async function submitSingleQuestion() {
+  const category = document.getElementById("upload-category").value;
+  const question = document.getElementById("upload-question").value.trim();
+  const answer = document.getElementById("upload-answer").value.trim();
+
+  if (!question) { alert("Please enter a question."); return; }
+  if (!answer) { alert("Please enter an answer."); return; }
+  if (!category) { alert("Please select a category."); return; }
+
+  try {
+    const res = await fetch("/api/upload-questions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        questions: [{ question, answer, category, is_irish: false }],
+      }),
+    });
+    const result = await res.json();
+
+    if (res.ok && result.success) {
+      document.getElementById("upload-question").value = "";
+      document.getElementById("upload-answer").value = "";
+      showToast("Question submitted — go raibh maith agat!");
+    } else {
+      alert(result.error || "Failed to submit.");
+    }
+  } catch (e) {
+    alert("Network error. Please try again.");
   }
 }
 
@@ -566,7 +603,7 @@ function previewUpload() {
 
 async function submitUpload() {
   const text = document.getElementById("upload-textarea").value;
-  const category = document.getElementById("upload-category").value;
+  const category = document.getElementById("upload-bulk-category").value;
   const questions = parseUploadText(text);
 
   if (questions.length === 0) {
@@ -611,7 +648,7 @@ async function submitUpload() {
 const _originalShowScreen = showScreen;
 showScreen = function (id) {
   _originalShowScreen(id);
-  if (id === "upload-questions") {
+  if (id === "upload-questions" || id === "upload-bulk") {
     loadUploadCategories();
   }
 };
