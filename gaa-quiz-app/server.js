@@ -1077,6 +1077,18 @@ async function start() {
       }
     }
 
+    // Sync added_to_bank flag: mark AI questions that already exist in the question bank
+    try {
+      const { rowCount } = await pool.query(`
+        UPDATE ai_questions SET added_to_bank = true
+        WHERE added_to_bank = false
+          AND question IN (SELECT question FROM questions)
+      `);
+      if (rowCount > 0) console.log(`Marked ${rowCount} AI questions as already in bank`);
+    } catch (err) {
+      console.error("Failed to sync added_to_bank flags:", err);
+    }
+
     app.listen(PORT, () => {
       console.log(`GAA Scór Quiz Prep running at http://localhost:${PORT}`);
       console.log(`Admin panel: http://localhost:${PORT}/admin`);
