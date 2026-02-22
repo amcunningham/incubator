@@ -616,8 +616,11 @@ async function addAIToBank(id) {
     });
     if (res.ok) {
       showToast("Added to question bank!");
-      const q = allAIQuestions.find((x) => x.id === id);
-      if (q) q.added_to_bank = true;
+      // Remove from AI questions list after adding to bank
+      try {
+        await apiFetch(`/api/admin/ai-questions/${id}`, { method: "DELETE" });
+      } catch (e) { /* best effort cleanup */ }
+      allAIQuestions = allAIQuestions.filter((x) => x.id !== id);
       renderAIQuestions();
     } else {
       const d = await res.json();
