@@ -29,7 +29,11 @@
         </button>
       </div>
       <div style="margin-top: 1.5rem; text-align: center;">
-        <button class="btn btn-secondary btn-sm" onclick="showScreen('upload-questions')">Upload Questions</button>
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('upload-questions')">Submit a Question</button>
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('general-feedback')">Send Feedback</button>
+      </div>
+      <div style="margin-top: 0.75rem; text-align: center;">
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('about')">About</button>
         <a href="/admin" class="btn btn-secondary btn-sm" style="text-decoration: none; font-size: 0.75rem;">Admin</a>
       </div>
     </section>
@@ -79,6 +83,37 @@
         <button class="btn btn-secondary" onclick="showScreen('upload-questions')">Back</button>
         <button class="btn btn-secondary" onclick="previewUpload()">Preview</button>
         <button class="btn btn-primary" onclick="submitUpload()">Upload All</button>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="screen">
+      <h2>About</h2>
+      <div class="about-content">
+        <p>This app helps GAA clubs and individuals prepare for <strong>Scor Trath na gCeist</strong> (Senior Quiz) competitions at county, provincial and All-Ireland level.</p>
+        <p>You can practise solo with flashcards or run full timed quiz rounds in the format used at real Scor competitions — 10 questions per round, with questions 9 and 10 as Gaeilge.</p>
+        <p>The question bank covers all the standard Scor categories and is updated regularly. If you spot an error or have questions to contribute, use the <strong>Submit a Question</strong> or <strong>Send Feedback</strong> options on the home screen.</p>
+        <p style="margin-top: 1rem; color: var(--gray-500); font-size: 0.85rem;">Built for the love of Scor. Go n-eiri an t-adh libh!</p>
+      </div>
+      <div class="button-row" style="margin-top: 1.5rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+      </div>
+    </section>
+
+    <!-- GENERAL FEEDBACK -->
+    <section id="general-feedback" class="screen">
+      <h2>Send Feedback</h2>
+      <p class="tab-description">Suggestions, ideas, or anything else you'd like to tell us.</p>
+
+      <label class="modal-label">Your Name (optional)</label>
+      <input type="text" id="gf-name" class="modal-input" placeholder="e.g. Seamus">
+
+      <label class="modal-label">Message</label>
+      <textarea id="gf-message" class="modal-input" rows="5" placeholder="What's on your mind?"></textarea>
+
+      <div class="button-row" style="margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+        <button class="btn btn-primary" onclick="submitGeneralFeedback()">Send</button>
       </div>
     </section>
 

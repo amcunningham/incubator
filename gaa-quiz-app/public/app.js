@@ -644,6 +644,37 @@ async function submitUpload() {
   }
 }
 
+// ==================
+// GENERAL FEEDBACK
+// ==================
+
+async function submitGeneralFeedback() {
+  const name = document.getElementById("gf-name").value.trim();
+  const message = document.getElementById("gf-message").value.trim();
+
+  if (!message) { alert("Please enter a message."); return; }
+
+  try {
+    const res = await fetch("/api/general-feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, message }),
+    });
+    const result = await res.json();
+
+    if (res.ok && result.success) {
+      document.getElementById("gf-name").value = "";
+      document.getElementById("gf-message").value = "";
+      showToast("Feedback sent — go raibh maith agat!");
+      showScreen("mode-select");
+    } else {
+      alert(result.error || "Failed to send feedback.");
+    }
+  } catch (e) {
+    alert("Network error. Please try again.");
+  }
+}
+
 // Load upload categories when navigating to upload screen
 const _originalShowScreen = showScreen;
 showScreen = function (id) {

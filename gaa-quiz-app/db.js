@@ -70,6 +70,13 @@ async function initDB() {
         created_at TIMESTAMPTZ DEFAULT NOW()
       );
 
+      CREATE TABLE IF NOT EXISTS general_feedback (
+        id SERIAL PRIMARY KEY,
+        name TEXT DEFAULT '',
+        message TEXT NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+
       CREATE TABLE IF NOT EXISTS admin_sessions (
         token TEXT PRIMARY KEY,
         created_at TIMESTAMPTZ DEFAULT NOW()

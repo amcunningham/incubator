@@ -952,6 +952,22 @@ h2 {
   font-size: 0.85rem;
 }
 
+.about-content {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  line-height: 1.6;
+}
+
+.about-content p {
+  margin-bottom: 0.75rem;
+}
+
+.about-content p:last-child {
+  margin-bottom: 0;
+}
+
 .upload-hint {
   font-size: 0.85rem;
   color: var(--gray-500);
