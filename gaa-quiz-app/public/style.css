@@ -952,6 +952,20 @@ h2 {
   font-size: 0.85rem;
 }
 
+.upload-hint {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.upload-hint code {
+  background: var(--gray-100);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
 .tab-description {
   font-size: 0.9rem;
   color: var(--gray-500);

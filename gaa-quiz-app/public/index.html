@@ -36,21 +36,15 @@
 
     <!-- UPLOAD QUESTIONS -->
     <section id="upload-questions" class="screen">
-      <h2>Upload Questions</h2>
-      <p class="tab-description">Paste questions to submit them for review. An admin will review and approve them before they appear in quizzes. Thank you for contributing!</p>
-
-      <div class="upload-format-help">
-        <strong>Supported formats:</strong><br>
-        <code>Question | Answer</code> (pipe separated)<br>
-        <code>Question[TAB]Answer</code> (tab separated, e.g. from a spreadsheet)<br>
-        <code>Question?</code> then <code>Answer</code> on the next line
-      </div>
+      <h2>Submit Questions</h2>
+      <p class="tab-description">Have some good quiz questions? Submit them here and we'll add the best ones to the quiz. Thanks for helping out!</p>
 
       <label class="modal-label">Category</label>
       <select id="upload-category" class="modal-input"></select>
 
-      <label class="modal-label">Paste your questions</label>
-      <textarea id="upload-textarea" class="modal-input" rows="12" placeholder="What county won the 2024 All-Ireland? | Armagh&#10;What is the Lory Meagher Cup? | Fourth tier hurling competition&#10;&#10;Or paste from a spreadsheet (tab separated)"></textarea>
+      <label class="modal-label">Paste your questions below</label>
+      <p class="upload-hint">Put each question and answer on one line, separated by a <code>|</code> symbol.</p>
+      <textarea id="upload-textarea" class="modal-input" rows="12" placeholder="What county won the 2024 All-Ireland? | Armagh&#10;Who captained Limerick to four All-Irelands in a row? | Declan Hannon&#10;What is the Lory Meagher Cup? | Fourth tier hurling competition"></textarea>
 
       <div id="upload-preview" class="upload-preview hidden">
         <h4>Preview (<span id="upload-count">0</span> questions found)</h4>
