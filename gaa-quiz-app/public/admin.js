@@ -576,8 +576,6 @@ function renderAIQuestions() {
 
   let filtered = allAIQuestions;
   if (filter === "has-feedback") filtered = filtered.filter((q) => q.feedback && q.feedback.some((f) => !f.resolved));
-  if (filter === "unrated") filtered = filtered.filter((q) => q.rating === 0);
-  if (filter === "high-rated") filtered = filtered.filter((q) => q.rating >= 4);
   if (filter === "not-added") filtered = filtered.filter((q) => !q.added_to_bank);
   if (filter === "added") filtered = filtered.filter((q) => q.added_to_bank);
   if (catFilter !== "all") filtered = filtered.filter((q) => q.category === catFilter);
@@ -595,12 +593,6 @@ function renderAIQuestions() {
   let html = "";
 
   pageItems.forEach((q) => {
-    const stars = [1, 2, 3, 4, 5].map((s) => {
-      const checked = q.rating >= s ? "checked" : "";
-      return `<input type="radio" name="rating-${q.id}" id="star-${q.id}-${s}" value="${s}" ${checked}>
-              <label for="star-${q.id}-${s}" onclick="rateAIQuestion(${q.id}, ${s})">&#9733;</label>`;
-    }).reverse().join("");
-
     const feedbackHtml = (q.feedback && q.feedback.length > 0)
       ? `<div class="ai-q-feedback">${q.feedback.map((f) => {
           const typeLabels = { wrong_answer: "Wrong Answer", unclear: "Unclear", duplicate: "Duplicate", other: "Other" };
@@ -633,7 +625,6 @@ function renderAIQuestions() {
           </div>
         </div>
         <div class="ai-q-actions">
-          <div class="star-rating">${stars}</div>
           <button class="btn btn-secondary btn-sm" onclick="document.getElementById('edit-ai-${q.id}').classList.toggle('hidden')">Edit</button>
           ${!q.added_to_bank ? `<button class="btn btn-primary btn-sm" onclick="addAIToBank(${q.id})">Add to Bank</button>` : ""}
           <button class="btn btn-secondary btn-sm btn-danger-text" onclick="deleteAIQuestion(${q.id})">Delete</button>
@@ -653,22 +644,6 @@ function renderAIQuestions() {
   `;
 
   container.innerHTML = html;
-}
-
-async function rateAIQuestion(id, rating) {
-  try {
-    const res = await apiFetch(`/api/admin/ai-questions/${id}/rate`, {
-      method: "POST",
-      body: JSON.stringify({ rating }),
-    });
-    if (res.ok) {
-      const q = allAIQuestions.find((x) => x.id === id);
-      if (q) q.rating = rating;
-      showToast(`Rated ${rating}/5`);
-    }
-  } catch (e) {
-    alert("Failed to rate question.");
-  }
 }
 
 async function addAIToBank(id) {

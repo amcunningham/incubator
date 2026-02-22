@@ -304,7 +304,7 @@ async function importQuestions() {
       }
 
       await client.query(
-        "INSERT INTO ai_questions (category, question, answer, is_irish, rating) VALUES ($1, $2, $3, false, 5)",
+        "INSERT INTO ai_questions (category, question, answer, is_irish, rating) VALUES ($1, $2, $3, false, 0)",
         [q.category, q.question, q.answer]
       );
       imported++;

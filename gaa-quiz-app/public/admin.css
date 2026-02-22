@@ -277,30 +277,6 @@
   margin-bottom: 0.5rem;
 }
 
-/* STAR RATING */
-.star-rating {
-  display: inline-flex;
-  gap: 0.15rem;
-  direction: rtl;
-}
-
-.star-rating input {
-  display: none;
-}
-
-.star-rating label {
-  font-size: 1.4rem;
-  cursor: pointer;
-  color: var(--gray-200);
-  transition: color 0.1s;
-}
-
-.star-rating label:hover,
-.star-rating label:hover ~ label,
-.star-rating input:checked ~ label {
-  color: var(--gaa-gold);
-}
-
 .ai-q-actions {
   display: flex;
   gap: 0.5rem;
