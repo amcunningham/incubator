@@ -374,6 +374,7 @@ function openFeedbackModal(question, answer, category) {
   document.getElementById("modal-answer-preview").textContent = answer ? "Current answer: " + answer : "";
   document.getElementById("suggested-answer").value = "";
   document.getElementById("feedback-comment").value = "";
+  document.getElementById("feedback-email").value = "";
 
   // Reset type buttons
   document.querySelectorAll(".feedback-type-btn").forEach((b) => b.classList.remove("selected"));
@@ -406,6 +407,7 @@ async function submitFeedback() {
     feedbackType: currentFeedbackType,
     suggestedAnswer: document.getElementById("suggested-answer").value.trim(),
     comment: document.getElementById("feedback-comment").value.trim(),
+    email: document.getElementById("feedback-email").value.trim(),
     isAI: feedbackTarget?.isAI || false,
   };
 
@@ -685,6 +687,7 @@ async function submitUpload() {
 
 async function submitGeneralFeedback() {
   const name = document.getElementById("gf-name").value.trim();
+  const email = document.getElementById("gf-email").value.trim();
   const message = document.getElementById("gf-message").value.trim();
 
   if (!message) { alert("Please enter a message."); return; }
@@ -693,12 +696,13 @@ async function submitGeneralFeedback() {
     const res = await fetch("/api/general-feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, message }),
+      body: JSON.stringify({ name, email, message }),
     });
     const result = await res.json();
 
     if (res.ok && result.success) {
       document.getElementById("gf-name").value = "";
+      document.getElementById("gf-email").value = "";
       document.getElementById("gf-message").value = "";
       showToast("Feedback sent — go raibh maith agat!");
       showScreen("mode-select");

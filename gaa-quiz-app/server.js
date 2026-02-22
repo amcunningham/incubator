@@ -244,6 +244,7 @@ app.post("/api/feedback", async (req, res) => {
     feedbackType,
     comment,
     suggestedAnswer,
+    email,
     isAI,
   } = req.body;
 
@@ -258,8 +259,8 @@ app.post("/api/feedback", async (req, res) => {
 
   try {
     await pool.query(
-      `INSERT INTO feedback (id, question, answer, category, feedback_type, comment, suggested_answer, is_ai)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      `INSERT INTO feedback (id, question, answer, category, feedback_type, comment, suggested_answer, email, is_ai)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [
         id,
         question,
@@ -268,6 +269,7 @@ app.post("/api/feedback", async (req, res) => {
         feedbackType,
         comment || "",
         suggestedAnswer || "",
+        email || "",
         !!isAI,
       ]
     );
@@ -292,6 +294,7 @@ app.get("/api/feedback", requireAdmin, async (req, res) => {
       feedbackType: r.feedback_type,
       comment: r.comment,
       suggestedAnswer: r.suggested_answer,
+      email: r.email || "",
       isAI: r.is_ai,
       resolved: r.resolved,
       timestamp: r.created_at,
@@ -910,14 +913,14 @@ app.post("/api/upload-questions", async (req, res) => {
 // ==================
 
 app.post("/api/general-feedback", async (req, res) => {
-  const { name, message } = req.body;
+  const { name, email, message } = req.body;
   if (!message || !message.trim()) {
     return res.status(400).json({ error: "Message is required" });
   }
   try {
     await pool.query(
-      "INSERT INTO general_feedback (name, message) VALUES ($1, $2)",
-      [name || "", message.trim()]
+      "INSERT INTO general_feedback (name, email, message) VALUES ($1, $2, $3)",
+      [name || "", email || "", message.trim()]
     );
     res.json({ success: true });
   } catch (err) {

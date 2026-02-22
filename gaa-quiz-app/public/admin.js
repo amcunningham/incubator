@@ -210,6 +210,7 @@ async function loadFeedback() {
           <span class="feedback-category">${escapeHtml(item.category || "")}</span>
           ${item.isAI ? '<span class="feedback-ai-badge">AI Generated</span>' : ""}
           ${item.resolved ? '<span class="feedback-resolved-badge">Resolved</span>' : ""}
+          ${item.email ? '<span class="feedback-email-badge">' + escapeHtml(item.email) + '</span>' : ""}
         </div>
         <div class="feedback-question">${escapeHtml(item.question)}</div>
         <div class="feedback-current-answer">Current answer: ${escapeHtml(item.answer)}</div>

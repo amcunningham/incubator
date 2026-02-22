@@ -111,8 +111,13 @@
       <label class="modal-label">Your Name (optional)</label>
       <input type="text" id="gf-name" class="modal-input" placeholder="e.g. Seamus">
 
+      <label class="modal-label">Your Email (optional)</label>
+      <input type="email" id="gf-email" class="modal-input" placeholder="In case we need to follow up">
+
       <label class="modal-label">Message</label>
       <textarea id="gf-message" class="modal-input" rows="5" placeholder="What's on your mind?"></textarea>
+
+      <p class="data-notice">We only use your name and email to follow up on feedback. Your data is stored securely and never shared with third parties. You can request deletion at any time by contacting us.</p>
 
       <div class="button-row" style="margin-top: 1rem;">
         <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
@@ -253,6 +258,11 @@
 
       <label class="modal-label" for="feedback-comment">Comment (optional)</label>
       <textarea id="feedback-comment" class="modal-input modal-textarea" placeholder="Any extra detail..."></textarea>
+
+      <label class="modal-label" for="feedback-email">Your email (optional)</label>
+      <input type="email" id="feedback-email" class="modal-input" placeholder="In case we need to follow up">
+
+      <p class="data-notice">We only use your email to follow up on this feedback. It is stored securely and never shared. You can request deletion at any time.</p>
 
       <div class="modal-actions" style="margin-top: 1rem;">
         <div class="button-row">

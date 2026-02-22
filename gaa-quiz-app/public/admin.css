@@ -338,6 +338,12 @@
   border-radius: 4px;
 }
 
+.feedback-email-badge {
+  font-size: 0.7rem;
+  color: var(--gray-500, #6b7280);
+  font-style: italic;
+}
+
 .source-badge {
   font-size: 0.7rem;
   font-weight: 700;

@@ -1084,3 +1084,15 @@ h2 {
   background: #fef3c7;
   color: #92400e;
 }
+
+/* Data/GDPR notice */
+.data-notice {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  line-height: 1.4;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--gray-50, #f9fafb);
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+}
