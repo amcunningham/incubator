@@ -4,43 +4,9 @@ const fs = require("fs");
 const crypto = require("crypto");
 const { pool, initDB, seedFromJSON } = require("./db");
 
-const nodemailer = require("nodemailer");
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "scor2024";
-
-// ==================
-// EMAIL NOTIFICATIONS (optional — set NOTIFY_EMAIL_* env vars to enable)
-// ==================
-
-function createMailTransporter() {
-  if (!process.env.NOTIFY_EMAIL_HOST || !process.env.NOTIFY_EMAIL_TO) return null;
-  return nodemailer.createTransport({
-    host: process.env.NOTIFY_EMAIL_HOST,
-    port: parseInt(process.env.NOTIFY_EMAIL_PORT || "587"),
-    secure: process.env.NOTIFY_EMAIL_SECURE === "true",
-    auth: {
-      user: process.env.NOTIFY_EMAIL_USER,
-      pass: process.env.NOTIFY_EMAIL_PASS,
-    },
-  });
-}
-
-async function sendNotification(subject, body) {
-  try {
-    const transporter = createMailTransporter();
-    if (!transporter) return; // email not configured, skip silently
-    await transporter.sendMail({
-      from: process.env.NOTIFY_EMAIL_FROM || process.env.NOTIFY_EMAIL_USER,
-      to: process.env.NOTIFY_EMAIL_TO,
-      subject: `[GAA Quiz] ${subject}`,
-      text: body,
-    });
-  } catch (err) {
-    console.error("Email notification failed:", err.message);
-  }
-}
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -898,13 +864,6 @@ app.post("/api/upload-questions", async (req, res) => {
       );
       imported++;
     }
-    if (imported > 0) {
-      const summary = questions.map((q) => `Q: ${q.question}\nA: ${q.answer} [${q.category}]`).join("\n\n");
-      sendNotification(
-        `${imported} New Question(s) Uploaded`,
-        `${imported} question(s) submitted by a user:\n\n${summary}`
-      );
-    }
     res.json({ success: true, imported, skipped });
   } catch (err) {
     console.error("Public upload error:", err);
@@ -925,10 +884,6 @@ app.post("/api/general-feedback", async (req, res) => {
     await pool.query(
       "INSERT INTO general_feedback (name, message) VALUES ($1, $2)",
       [name || "", message.trim()]
-    );
-    sendNotification(
-      "New Feedback Received",
-      `From: ${name || "Anonymous"}\n\n${message.trim()}`
     );
     res.json({ success: true });
   } catch (err) {
