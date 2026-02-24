@@ -16,6 +16,9 @@
     <!-- MODE SELECTION -->
     <section id="mode-select" class="screen active">
       <h2>Choose Your Mode</h2>
+      <div class="welcome-panel">
+        <p>This is a free community resource — everyone is welcome to use it. The question bank is a work in progress and some questions may contain errors. Please let us know what you think!</p>
+      </div>
       <div class="mode-cards">
         <button class="mode-card" onclick="selectMode('practice')">
           <div class="mode-icon">&#9889;</div>
@@ -30,7 +33,7 @@
       </div>
       <div style="margin-top: 1.5rem; text-align: center;">
         <button class="btn btn-secondary btn-sm" onclick="showScreen('upload-questions')">Submit a Question</button>
-        <button class="btn btn-secondary btn-sm" onclick="showScreen('general-feedback')">Send Feedback</button>
+        <button class="btn btn-flag btn-sm" onclick="showScreen('general-feedback')">Send Feedback</button>
       </div>
       <div style="margin-top: 0.75rem; text-align: center;">
         <button class="btn btn-secondary btn-sm" onclick="showScreen('about')">About</button>
