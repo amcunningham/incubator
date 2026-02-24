@@ -113,6 +113,11 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function getAllCategories() {
+  const aiCats = allAIQuestions.map((q) => q.category).filter(Boolean);
+  return [...new Set([...categories, ...aiCats])].sort();
+}
+
 function difficultyBadge(q) {
   const total = (q.easy_count || 0) + (q.hard_count || 0);
   if (total === 0) return "";
@@ -246,6 +251,9 @@ async function loadFeedback() {
           <div class="feedback-detail-row"><span class="feedback-detail-label">Email:</span> ${escapeHtml(item.email || '(none)')}</div>
         </div>
         <div class="inline-edit hidden" id="edit-fb-${item.id}">
+          <label>Category:<select class="edit-cat-input modal-input">${getAllCategories().map((c) =>
+            `<option value="${escapeHtml(c)}"${c === item.category ? " selected" : ""}>${escapeHtml(c)}</option>`
+          ).join("")}</select></label>
           <label>Question:<textarea class="edit-q-input" rows="2">${escapeHtml(item.suggestedQuestion || item.question)}</textarea></label>
           <label>Answer:<input type="text" class="edit-a-input" value="${escapeHtml(item.suggestedAnswer || item.answer)}"></label>
           <div class="button-row">
@@ -279,6 +287,7 @@ async function loadFeedback() {
         editForm.querySelector(".save-edit").addEventListener("click", async () => {
           const newQ = editForm.querySelector(".edit-q-input").value.trim();
           const newA = editForm.querySelector(".edit-a-input").value.trim();
+          const newCat = editForm.querySelector(".edit-cat-input").value;
           if (!newQ || !newA) { alert("Question and answer cannot be empty."); return; }
           try {
             let r;
@@ -290,6 +299,7 @@ async function loadFeedback() {
                   category: item.category,
                   newQuestion: newQ,
                   newAnswer: newA,
+                  newCategory: newCat !== item.category ? newCat : undefined,
                 }),
               });
             } else {
@@ -300,6 +310,7 @@ async function loadFeedback() {
                   category: item.category,
                   newQuestion: newQ,
                   newAnswer: newA,
+                  newCategory: newCat !== item.category ? newCat : undefined,
                 }),
               });
             }
@@ -541,7 +552,11 @@ async function editQuestion(id) {
 
   const editDiv = document.createElement("div");
   editDiv.className = "inline-edit";
+  const catOptions = categories.map((c) =>
+    `<option value="${escapeHtml(c)}"${c === q.category ? " selected" : ""}>${escapeHtml(c)}</option>`
+  ).join("");
   editDiv.innerHTML = `
+    <label>Category:<select class="edit-cat modal-input">${catOptions}</select></label>
     <label>Question:<textarea rows="2" class="edit-q">${escapeHtml(q.question)}</textarea></label>
     <label>Answer:<input type="text" class="edit-a" value="${escapeHtml(q.answer)}"></label>
     <div class="button-row">
@@ -558,6 +573,7 @@ async function saveQuestionEdit(id, originalQuestion, category) {
   const editDiv = card.querySelector(".inline-edit");
   const newQ = editDiv.querySelector(".edit-q").value.trim();
   const newA = editDiv.querySelector(".edit-a").value.trim();
+  const newCat = editDiv.querySelector(".edit-cat").value;
 
   if (!newQ || !newA) { alert("Question and answer cannot be empty."); return; }
 
@@ -569,6 +585,7 @@ async function saveQuestionEdit(id, originalQuestion, category) {
         category,
         newQuestion: newQ,
         newAnswer: newA,
+        newCategory: newCat !== category ? newCat : undefined,
       }),
     });
 
@@ -889,6 +906,9 @@ function renderAIQuestions() {
         <div class="ai-q-answer">${escapeHtml(q.answer)}</div>
         ${feedbackHtml}
         <div class="inline-edit hidden" id="edit-ai-${q.id}">
+          <label>Category:<select class="edit-cat-input modal-input">${getAllCategories().map((c) =>
+            `<option value="${escapeHtml(c)}"${c === q.category ? " selected" : ""}>${escapeHtml(c)}</option>`
+          ).join("")}</select></label>
           <label>Question:<textarea class="edit-q-input" rows="2">${escapeHtml(q.question)}</textarea></label>
           <label>Answer:<input type="text" class="edit-a-input" value="${escapeHtml(q.answer)}"></label>
           <div class="button-row">
@@ -942,15 +962,16 @@ async function saveAIEdit(id) {
   const form = document.getElementById(`edit-ai-${id}`);
   const newQ = form.querySelector(".edit-q-input").value.trim();
   const newA = form.querySelector(".edit-a-input").value.trim();
+  const newCat = form.querySelector(".edit-cat-input").value;
   if (!newQ || !newA) { alert("Question and answer cannot be empty."); return; }
   try {
     const res = await apiFetch(`/api/admin/ai-questions/${id}/edit`, {
       method: "POST",
-      body: JSON.stringify({ question: newQ, answer: newA }),
+      body: JSON.stringify({ question: newQ, answer: newA, category: newCat }),
     });
     if (res.ok) {
       const q = allAIQuestions.find((x) => x.id === id);
-      if (q) { q.question = newQ; q.answer = newA; }
+      if (q) { q.question = newQ; q.answer = newA; q.category = newCat; }
       // Resolve any associated feedback
       const feedbacks = q?.feedback || [];
       for (const f of feedbacks) {

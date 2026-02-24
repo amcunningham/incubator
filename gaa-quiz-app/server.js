@@ -377,7 +377,7 @@ app.post("/api/questions/remove", requireAdmin, async (req, res) => {
 });
 
 app.post("/api/questions/edit", requireAdmin, async (req, res) => {
-  const { originalQuestion, category, newQuestion, newAnswer } = req.body;
+  const { originalQuestion, category, newQuestion, newAnswer, newCategory } = req.body;
 
   if (!originalQuestion || !category) {
     return res
@@ -397,6 +397,17 @@ app.post("/api/questions/edit", requireAdmin, async (req, res) => {
     if (newAnswer) {
       updates.push(`answer = $${paramIdx++}`);
       values.push(newAnswer);
+    }
+    if (newCategory) {
+      const catResult = await pool.query(
+        "SELECT id FROM categories WHERE name = $1",
+        [newCategory]
+      );
+      if (catResult.rows.length === 0) {
+        return res.status(404).json({ error: "New category not found" });
+      }
+      updates.push(`category_id = $${paramIdx++}`);
+      values.push(catResult.rows[0].id);
     }
 
     if (updates.length === 0) {
@@ -746,8 +757,8 @@ app.post("/api/admin/ai-questions/bulk-import", requireAdmin, async (req, res) =
 
 // Edit an AI question from feedback — finds by text or creates a new ai_questions entry
 app.post("/api/admin/ai-feedback/edit", requireAdmin, async (req, res) => {
-  const { originalQuestion, category, newQuestion, newAnswer } = req.body;
-  if (!originalQuestion || (!newQuestion && !newAnswer)) {
+  const { originalQuestion, category, newQuestion, newAnswer, newCategory } = req.body;
+  if (!originalQuestion || (!newQuestion && !newAnswer && !newCategory)) {
     return res.status(400).json({ error: "Original question and changes required" });
   }
   try {
@@ -763,6 +774,7 @@ app.post("/api/admin/ai-feedback/edit", requireAdmin, async (req, res) => {
       let idx = 1;
       if (newQuestion) { updates.push(`question = $${idx++}`); values.push(newQuestion); }
       if (newAnswer) { updates.push(`answer = $${idx++}`); values.push(newAnswer); }
+      if (newCategory) { updates.push(`category = $${idx++}`); values.push(newCategory); }
       values.push(rows[0].id);
       await pool.query(`UPDATE ai_questions SET ${updates.join(", ")} WHERE id = $${idx}`, values);
     }
@@ -807,8 +819,8 @@ app.post("/api/admin/ai-feedback/add-to-bank", requireAdmin, async (req, res) =>
 });
 
 app.post("/api/admin/ai-questions/:id/edit", requireAdmin, async (req, res) => {
-  const { question, answer } = req.body;
-  if (!question && !answer) {
+  const { question, answer, category } = req.body;
+  if (!question && !answer && !category) {
     return res.status(400).json({ error: "No changes provided" });
   }
   try {
@@ -817,6 +829,7 @@ app.post("/api/admin/ai-questions/:id/edit", requireAdmin, async (req, res) => {
     let idx = 1;
     if (question) { updates.push(`question = $${idx++}`); values.push(question); }
     if (answer) { updates.push(`answer = $${idx++}`); values.push(answer); }
+    if (category) { updates.push(`category = $${idx++}`); values.push(category); }
     values.push(req.params.id);
     const { rows } = await pool.query(
       `UPDATE ai_questions SET ${updates.join(", ")} WHERE id = $${idx} RETURNING *`,
