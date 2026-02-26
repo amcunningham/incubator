@@ -2,13 +2,49 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const { pool, initDB, seedFromJSON } = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "scor2024";
 
-app.use(express.json());
+if (!process.env.ADMIN_PASSWORD) {
+  console.warn("WARNING: ADMIN_PASSWORD not set — using insecure default. Set ADMIN_PASSWORD env var in production.");
+}
+
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+    },
+  },
+}));
+
+// Rate limiting
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // 10 login attempts per window
+  message: { error: "Too many login attempts. Please try again later." },
+});
+
+const publicPostLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30, // 30 requests per 15 minutes for public POST endpoints
+  message: { error: "Too many requests. Please try again later." },
+});
+
+const aiLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // 10 AI generation requests per hour
+  message: { error: "AI generation rate limit reached. Please try again later." },
+});
+
+app.use(express.json({ limit: "100kb" }));
 app.use(express.static(path.join(__dirname, "public"), {
   setHeaders: (res, filePath) => {
     if (filePath.endsWith(".js") || filePath.endsWith(".css")) {
@@ -44,7 +80,7 @@ async function requireAdmin(req, res, next) {
 // AUTH ROUTES
 // ==================
 
-app.post("/api/admin/login", async (req, res) => {
+app.post("/api/admin/login", loginLimiter, async (req, res) => {
   const { password } = req.body;
   if (password !== ADMIN_PASSWORD) {
     return res.status(401).json({ error: "Incorrect password" });
@@ -161,7 +197,7 @@ app.post("/api/generate", async (req, res) => {
 
   try {
     if (mode === "practice") {
-      const numQuestions = count || 5;
+      const numQuestions = Math.min(Math.max(parseInt(count) || 5, 1), 50);
       const perCategory = Math.ceil(numQuestions / categories.length);
       let allQuestions = [];
 
@@ -218,7 +254,7 @@ app.post("/api/generate", async (req, res) => {
 // DIFFICULTY RATING
 // ==================
 
-app.post("/api/questions/:id/difficulty", async (req, res) => {
+app.post("/api/questions/:id/difficulty", publicPostLimiter, async (req, res) => {
   const { rating } = req.body;
   const questionId = parseInt(req.params.id, 10);
 
@@ -242,7 +278,7 @@ app.post("/api/questions/:id/difficulty", async (req, res) => {
 // FEEDBACK ROUTES
 // ==================
 
-app.post("/api/feedback", async (req, res) => {
+app.post("/api/feedback", publicPostLimiter, async (req, res) => {
   const {
     question,
     answer,
@@ -516,7 +552,7 @@ app.get("/api/admin/stats", requireAdmin, async (req, res) => {
 // AI QUESTION ROUTES
 // ==================
 
-app.post("/api/generate-ai", async (req, res) => {
+app.post("/api/generate-ai", aiLimiter, async (req, res) => {
   if (!process.env.ANTHROPIC_API_KEY) {
     return res
       .status(400)
@@ -565,7 +601,7 @@ IMPORTANT: Vary the questions each time. Do not repeat questions. Be creative an
   let userPrompt;
 
   if (mode === "practice") {
-    const numQuestions = count || 5;
+    const numQuestions = Math.min(Math.max(parseInt(count) || 5, 1), 50);
     const categoryList = categories.join(", ");
     userPrompt = `Generate ${numQuestions} practice questions from the following categories: ${categoryList}.
 
@@ -926,7 +962,7 @@ app.delete("/api/admin/ai-questions/:id", requireAdmin, async (req, res) => {
 // PUBLIC QUESTION UPLOAD
 // ==================
 
-app.post("/api/upload-questions", async (req, res) => {
+app.post("/api/upload-questions", publicPostLimiter, async (req, res) => {
   const { questions } = req.body;
   if (!Array.isArray(questions) || questions.length === 0) {
     return res.status(400).json({ error: "No questions provided" });
@@ -962,7 +998,7 @@ app.post("/api/upload-questions", async (req, res) => {
 // GENERAL FEEDBACK
 // ==================
 
-app.post("/api/general-feedback", async (req, res) => {
+app.post("/api/general-feedback", publicPostLimiter, async (req, res) => {
   const { name, email, message } = req.body;
   if (!message || !message.trim()) {
     return res.status(400).json({ error: "Message is required" });
