@@ -235,7 +235,7 @@ async function loadFeedback() {
 
       card.innerHTML = `
         <div class="feedback-card-header">
-          <span class="feedback-type-label feedback-type-${item.feedbackType}">${typeLabels[item.feedbackType] || item.feedbackType}</span>
+          <span class="feedback-type-label feedback-type-${escapeHtml(item.feedbackType)}">${typeLabels[item.feedbackType] || escapeHtml(item.feedbackType)}</span>
           <span class="feedback-category">${escapeHtml(item.category || "")}</span>
           ${item.isAI ? '<span class="feedback-ai-badge">AI Generated</span>' : ""}
           ${item.resolved ? '<span class="feedback-resolved-badge">Resolved</span>' : ""}
@@ -884,7 +884,7 @@ function renderAIQuestions() {
       ? `<div class="ai-q-feedback">${q.feedback.map((f) => {
           const typeLabels = { wrong_answer: "Wrong Answer", unclear: "Unclear", too_easy: "Too Easy", outdated: "Outdated", duplicate: "Duplicate", other: "Other" };
           return `<div class="ai-q-feedback-item${f.resolved ? " resolved" : ""}">
-            <span class="feedback-type-label feedback-type-${f.feedbackType}">${typeLabels[f.feedbackType] || f.feedbackType}</span>
+            <span class="feedback-type-label feedback-type-${escapeHtml(f.feedbackType)}">${typeLabels[f.feedbackType] || escapeHtml(f.feedbackType)}</span>
             ${f.suggestedAnswer ? `<span class="feedback-suggested-inline">Suggested answer: <strong>${escapeHtml(f.suggestedAnswer)}</strong></span>` : ""}
             ${f.suggestedQuestion ? `<span class="feedback-suggested-inline">Suggested question: <strong>${escapeHtml(f.suggestedQuestion)}</strong></span>` : ""}
             ${f.comment ? `<span class="feedback-comment-inline">${escapeHtml(f.comment)}</span>` : ""}
