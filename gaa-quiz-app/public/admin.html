@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - GAA Scor Quiz Prep</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header>
+    <h1>Scor Quiz Admin</h1>
+    <p class="subtitle">Manage questions, feedback &amp; AI suggestions</p>
+  </header>
+
+  <main>
+    <!-- LOGIN -->
+    <section id="login-screen" class="screen active">
+      <div class="login-box">
+        <h2>Admin Login</h2>
+        <form id="login-form" onsubmit="handleLogin(event)">
+          <input type="password" id="login-password" placeholder="Enter admin password" class="modal-input" required autofocus>
+          <p id="login-error" class="error-text hidden"></p>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.75rem;">Login</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ADMIN DASHBOARD -->
+    <section id="admin-dashboard" class="screen">
+      <!-- NAV TABS -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="stats" onclick="switchTab('stats')">Dashboard</button>
+        <button class="admin-tab" data-tab="feedback" onclick="switchTab('feedback')">Question Feedback</button>
+        <button class="admin-tab" data-tab="general-feedback" onclick="switchTab('general-feedback')">General Feedback</button>
+        <button class="admin-tab" data-tab="questions" onclick="switchTab('questions')">Question Bank</button>
+        <button class="admin-tab" data-tab="user-submissions" onclick="switchTab('user-submissions')">User Submissions</button>
+        <button class="admin-tab" data-tab="ai-questions" onclick="switchTab('ai-questions')">AI Questions</button>
+        <button class="admin-tab logout-tab" onclick="handleLogout()">Logout</button>
+      </div>
+
+      <!-- STATS TAB -->
+      <div id="tab-stats" class="tab-content active">
+        <h2>Dashboard</h2>
+        <div id="stats-grid" class="stats-grid"></div>
+      </div>
+
+      <!-- QUESTION FEEDBACK TAB -->
+      <div id="tab-feedback" class="tab-content">
+        <h2>Question Feedback</h2>
+        <p class="tab-description">Feedback users have left on individual questions during practice or quiz mode.</p>
+        <div class="filter-bar">
+          <select id="feedback-filter" onchange="loadFeedback()">
+            <option value="all">All</option>
+            <option value="unresolved">Unresolved</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+        <div id="admin-feedback-list" class="feedback-list"></div>
+      </div>
+
+      <!-- GENERAL FEEDBACK TAB -->
+      <div id="tab-general-feedback" class="tab-content">
+        <h2>General Feedback</h2>
+        <p class="tab-description">Messages submitted via the "Send Feedback" form on the homepage.</p>
+        <div id="admin-general-feedback-list" class="feedback-list"></div>
+      </div>
+
+      <!-- QUESTIONS TAB -->
+      <div id="tab-questions" class="tab-content">
+        <div class="tab-header">
+          <h2>Question Bank</h2>
+          <button class="btn btn-primary btn-sm" onclick="showAddQuestionForm()">Add Question</button>
+        </div>
+
+        <!-- ADD QUESTION FORM -->
+        <div id="add-question-form" class="admin-form hidden">
+          <h3>Add New Question</h3>
+          <label class="modal-label">Category</label>
+          <select id="add-q-category" class="modal-input"></select>
+          <label class="modal-label">Question</label>
+          <textarea id="add-q-question" class="modal-input modal-textarea" placeholder="Enter the question"></textarea>
+          <label class="modal-label">Answer</label>
+          <input type="text" id="add-q-answer" class="modal-input" placeholder="Enter the answer">
+          <label class="toggle-label" style="margin-top: 0.5rem;">
+            <input type="checkbox" id="add-q-irish">
+            <span>As Gaeilge (Irish language question)</span>
+          </label>
+          <div class="button-row" style="margin-top: 0.75rem;">
+            <button class="btn btn-secondary btn-sm" onclick="hideAddQuestionForm()">Cancel</button>
+            <button class="btn btn-primary btn-sm" onclick="addQuestion()">Add to Bank</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <select id="question-category-filter" onchange="loadQuestions()">
+            <option value="all">All Categories</option>
+          </select>
+          <input type="text" id="question-search" class="modal-input" placeholder="Search questions..." oninput="loadQuestions()" style="max-width: 300px;">
+        </div>
+        <div id="admin-questions-list"></div>
+      </div>
+
+      <!-- USER SUBMISSIONS TAB -->
+      <div id="tab-user-submissions" class="tab-content">
+        <h2>User Submissions</h2>
+        <p class="tab-description">Questions submitted by users via the "Submit a Question" form. Review and add the best ones to your question bank.</p>
+        <div id="admin-user-submissions-list" class="feedback-list"></div>
+      </div>
+
+      <!-- AI QUESTIONS TAB -->
+      <div id="tab-ai-questions" class="tab-content">
+        <div class="tab-header">
+          <h2>AI Questions</h2>
+          <button class="btn btn-primary btn-sm" onclick="toggleBulkImport()">Import Questions</button>
+        </div>
+        <p class="tab-description">AI-generated questions. Review and add the best ones to your question bank.</p>
+
+        <!-- BULK IMPORT FORM -->
+        <div id="bulk-import-form" class="admin-form hidden">
+          <h3>Bulk Import Questions</h3>
+          <p class="tab-description">Paste questions below. Use one of these formats:</p>
+          <div class="import-format-help">
+            <strong>Format 1 — Tab separated:</strong> Question[TAB]Answer<br>
+            <strong>Format 2 — Pipe separated:</strong> Question | Answer<br>
+            <strong>Format 3 — Numbered:</strong> 1. Question | Answer
+          </div>
+          <label class="modal-label">Category</label>
+          <select id="import-category" class="modal-input"></select>
+          <label class="modal-label">Questions</label>
+          <textarea id="import-textarea" class="modal-input" rows="12" placeholder="What county won the 2024 All-Ireland?&#10;Armagh&#10;&#10;Or use: Question | Answer (one per line)"></textarea>
+          <div class="import-preview hidden" id="import-preview">
+            <h4>Preview (<span id="import-count">0</span> questions)</h4>
+            <div id="import-preview-list"></div>
+          </div>
+          <div class="button-row" style="margin-top: 0.75rem;">
+            <button class="btn btn-secondary btn-sm" onclick="previewImport()">Preview</button>
+            <button class="btn btn-primary btn-sm" onclick="submitBulkImport()">Import All</button>
+            <button class="btn btn-secondary btn-sm" onclick="toggleBulkImport()">Cancel</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <select id="ai-filter" onchange="renderAIQuestions()">
+            <option value="not-added">Not in Bank</option>
+            <option value="has-feedback">Has Feedback</option>
+            <option value="added">Added to Bank</option>
+            <option value="all">All</option>
+          </select>
+          <select id="ai-category-filter" onchange="renderAIQuestions()">
+            <option value="all">All Categories</option>
+          </select>
+        </div>
+        <div id="admin-ai-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="admin.js?v=2"></script>
+</body>
+</html>

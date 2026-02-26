@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAA Scor Quiz Prep</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Scor Trath na gCeist</h1>
+    <p class="subtitle">Senior Quiz Preparation</p>
+  </header>
+
+  <main>
+    <!-- MODE SELECTION -->
+    <section id="mode-select" class="screen active">
+      <h2>Choose Your Mode</h2>
+      <div class="mode-cards">
+        <button class="mode-card" onclick="selectMode('practice')">
+          <div class="mode-icon">&#9889;</div>
+          <h3>Practice Mode</h3>
+          <p>Quick-fire flashcard questions. Pick categories, reveal answers one at a time. Great for solo drilling.</p>
+        </button>
+        <button class="mode-card" onclick="selectMode('quiz')">
+          <div class="mode-icon">&#127942;</div>
+          <h3>Quiz Mode</h3>
+          <p>Full Scor-style rounds. 8 questions per round, with the last question as Gaeilge.</p>
+        </button>
+      </div>
+      <div class="welcome-panel">
+        <p>This is a free community resource — everyone is welcome to use it. The question bank is a work in progress and some questions may contain errors. Please let us know what you think!</p>
+      </div>
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('upload-questions')">Submit a Question</button>
+        <button class="btn btn-flag btn-sm" onclick="showScreen('general-feedback')">Send Feedback</button>
+      </div>
+      <div style="margin-top: 0.75rem; text-align: center;">
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('about')">About</button>
+        <a href="/admin" class="btn btn-secondary btn-sm" style="text-decoration: none; font-size: 0.75rem;">Admin</a>
+      </div>
+    </section>
+
+    <!-- UPLOAD QUESTIONS -->
+    <section id="upload-questions" class="screen">
+      <h2>Submit a Question</h2>
+      <p class="tab-description">Have a good quiz question? Submit it here and we'll add the best ones to the quiz. Go raibh maith agat!</p>
+
+      <label class="modal-label">Category</label>
+      <select id="upload-category" class="modal-input"></select>
+
+      <label class="modal-label">Question</label>
+      <input type="text" id="upload-question" class="modal-input" placeholder="e.g. What county won the 2024 All-Ireland?">
+
+      <label class="modal-label">Answer</label>
+      <input type="text" id="upload-answer" class="modal-input" placeholder="e.g. Armagh">
+
+      <div class="button-row" style="margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+        <button class="btn btn-primary" onclick="submitSingleQuestion()">Submit</button>
+      </div>
+
+      <div class="bulk-toggle" style="margin-top: 1.5rem; text-align: center;">
+        <button class="btn btn-secondary btn-sm" onclick="showScreen('upload-bulk')">Submit multiple questions at once</button>
+      </div>
+    </section>
+
+    <!-- BULK UPLOAD -->
+    <section id="upload-bulk" class="screen">
+      <h2>Submit Multiple Questions</h2>
+      <p class="tab-description">Paste several questions at once. Go raibh maith agat!</p>
+
+      <label class="modal-label">Category</label>
+      <select id="upload-bulk-category" class="modal-input"></select>
+
+      <label class="modal-label">Questions</label>
+      <p class="upload-hint">Put each question and answer on one line, separated by a <code>|</code> symbol.</p>
+      <textarea id="upload-textarea" class="modal-input" rows="10" placeholder="What county won the 2024 All-Ireland? | Armagh&#10;Who captained Limerick to four All-Irelands in a row? | Declan Hannon&#10;What is the Lory Meagher Cup? | Fourth tier hurling competition"></textarea>
+
+      <div id="upload-preview" class="upload-preview hidden">
+        <h4>Preview (<span id="upload-count">0</span> questions found)</h4>
+        <div id="upload-preview-list"></div>
+      </div>
+
+      <div class="button-row" style="margin-top: 0.75rem;">
+        <button class="btn btn-secondary" onclick="showScreen('upload-questions')">Back</button>
+        <button class="btn btn-secondary" onclick="previewUpload()">Preview</button>
+        <button class="btn btn-primary" onclick="submitUpload()">Upload All</button>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="screen">
+      <h2>About</h2>
+      <div class="about-content">
+        <p>This app helps GAA clubs and individuals prepare for <strong>Scor Trath na gCeist</strong> (Senior Quiz) competitions at county, provincial and All-Ireland level.</p>
+        <p>You can practise solo with flashcards or run quiz rounds in the Scor format — 8 questions per round, with the last question as Gaeilge.</p>
+        <p>The question bank covers all the standard Scor categories and is updated regularly. If you have questions to contribute, use the <strong>Submit a Question</strong> option on the homescreen.</p>
+        <p>You can give feedback on individual questions and suggest edits by clicking on the <strong>Feedback</strong> button beside each question. Some of the questions might be too easy. Let us know!</p>
+        <p>You can give us general feedback by clicking on <strong>Send Feedback</strong> from the homepage. All thoughts and ideas welcome.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">This site has been started by Anne Marie Cunningham, of Atticall GAC on 21st February 2026.</p>
+        <p style="margin-top: 1rem; color: var(--gray-500); font-size: 0.85rem; font-style: italic;">Built for the love of Scor. Ádh mór oraibh!</p>
+      </div>
+      <div class="button-row" style="margin-top: 1.5rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+      </div>
+    </section>
+
+    <!-- GENERAL FEEDBACK -->
+    <section id="general-feedback" class="screen">
+      <h2>Send Feedback</h2>
+      <p class="tab-description">Suggestions, ideas, or anything else you'd like to tell us.</p>
+
+      <label class="modal-label">Your Name (optional)</label>
+      <input type="text" id="gf-name" class="modal-input" placeholder="e.g. Seamus">
+
+      <label class="modal-label">Your Email (optional)</label>
+      <input type="email" id="gf-email" class="modal-input" placeholder="In case we need to follow up">
+
+      <label class="modal-label">Message</label>
+      <textarea id="gf-message" class="modal-input" rows="5" placeholder="What's on your mind?"></textarea>
+
+      <p class="data-notice">We only use your name and email to follow up on feedback. Your data is stored securely and never shared with third parties. You can request deletion at any time by contacting us.</p>
+
+      <div class="button-row" style="margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+        <button class="btn btn-primary" onclick="submitGeneralFeedback()">Send</button>
+      </div>
+    </section>
+
+    <!-- CATEGORY SELECTION -->
+    <section id="category-select" class="screen">
+      <h2 id="category-heading">Select Categories</h2>
+      <p id="category-instructions"></p>
+      <div id="category-list" class="category-grid"></div>
+
+      <div id="practice-options" class="practice-options hidden">
+        <label for="question-count">Number of questions:</label>
+        <select id="question-count">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+        </select>
+      </div>
+
+      <div class="ai-toggle">
+        <label class="toggle-label">
+          <input type="checkbox" id="use-ai" />
+          <span>Use AI for fresh questions (slower, requires API key)</span>
+        </label>
+      </div>
+
+      <div class="button-row">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+        <button class="btn btn-primary" id="start-btn" onclick="startQuiz()">Start</button>
+      </div>
+    </section>
+
+    <!-- LOADING -->
+    <section id="loading" class="screen">
+      <div class="loader"></div>
+      <p class="loading-text">Generating your questions...</p>
+      <p class="loading-sub">This takes a moment as each question is freshly created</p>
+    </section>
+
+    <!-- PRACTICE MODE -->
+    <section id="practice-mode" class="screen">
+      <div class="practice-header">
+        <span id="practice-progress">Question 1 of 10</span>
+        <span id="practice-category-badge" class="category-badge"></span>
+      </div>
+
+      <div class="flashcard" onclick="flipCard()">
+        <div class="flashcard-inner" id="flashcard-inner">
+          <div class="flashcard-front">
+            <p id="practice-question" class="question-text"></p>
+            <span class="flip-hint">Tap to reveal answer</span>
+          </div>
+          <div class="flashcard-back">
+            <p class="answer-label">Answer</p>
+            <p id="practice-answer" class="answer-text"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="difficulty-row hidden" id="difficulty-row">
+        <span class="difficulty-prompt">How was this question?</span>
+        <button class="btn-difficulty btn-easy" onclick="rateDifficulty('easy')">Easy</button>
+        <button class="btn-difficulty btn-hard" onclick="rateDifficulty('hard')">Hard</button>
+      </div>
+
+      <div id="practice-irish-badge" class="irish-badge hidden">As Gaeilge</div>
+      <div id="practice-translation" class="translation-container hidden">
+        <button class="btn-translation" onclick="toggleTranslation()">Show Translation</button>
+        <p id="translation-text" class="translation-text hidden"></p>
+      </div>
+
+      <div class="practice-controls">
+        <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+        <button class="btn btn-flag" id="flag-btn" onclick="openFeedbackModal()">Feedback</button>
+        <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
+      </div>
+
+      <div class="button-row" style="margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">New Quiz</button>
+      </div>
+    </section>
+
+    <!-- QUIZ MODE -->
+    <section id="quiz-mode" class="screen">
+      <div class="quiz-header">
+        <div class="round-info">
+          <h2 id="round-title">Round 1</h2>
+          <span id="round-category" class="category-badge"></span>
+        </div>
+      </div>
+
+      <div id="quiz-questions" class="quiz-questions"></div>
+
+      <div class="quiz-controls">
+        <button class="btn btn-secondary" id="reveal-answers-btn" onclick="revealRoundAnswers()">Reveal Answers</button>
+        <button class="btn btn-primary" id="next-round-btn" onclick="nextRound()" class="hidden">Next Round</button>
+      </div>
+
+      <div class="button-row" style="margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">New Quiz</button>
+      </div>
+    </section>
+    <!-- FEEDBACK REVIEW -->
+    <section id="feedback-review" class="screen">
+      <h2>Question Feedback</h2>
+      <p id="feedback-count" style="margin-bottom: 1rem; color: var(--gray-500);"></p>
+      <div id="feedback-list" class="feedback-list"></div>
+      <div class="button-row" style="margin-top: 1.5rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- FEEDBACK MODAL -->
+  <div id="feedback-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>Flag This Question</h3>
+      <p id="modal-question-preview" class="modal-preview"></p>
+      <p id="modal-answer-preview" class="modal-preview modal-answer-preview"></p>
+
+      <label class="modal-label">What's the issue?</label>
+      <div class="feedback-type-btns">
+        <button class="feedback-type-btn" data-type="wrong_answer" onclick="selectFeedbackType(this)">Wrong Answer</button>
+        <button class="feedback-type-btn" data-type="unclear" onclick="selectFeedbackType(this)">Unclear Question</button>
+        <button class="feedback-type-btn" data-type="too_easy" onclick="selectFeedbackType(this)">Too Easy</button>
+        <button class="feedback-type-btn" data-type="outdated" onclick="selectFeedbackType(this)">Outdated</button>
+        <button class="feedback-type-btn" data-type="other" onclick="selectFeedbackType(this)">Other</button>
+      </div>
+
+      <label class="modal-label" for="suggested-answer">Suggested correct answer (optional)</label>
+      <input type="text" id="suggested-answer" class="modal-input" placeholder="What should the answer be?" autocomplete="off">
+
+      <label class="modal-label" for="suggested-question">Suggested question wording (optional)</label>
+      <input type="text" id="suggested-question" class="modal-input" placeholder="How would you word this question?" autocomplete="off">
+
+      <label class="modal-label" for="feedback-comment">Comment (optional)</label>
+      <textarea id="feedback-comment" class="modal-input modal-textarea" placeholder="Any extra detail..." autocomplete="off"></textarea>
+
+      <label class="modal-label" for="feedback-email">Your email (optional)</label>
+      <input type="email" id="feedback-email" class="modal-input" placeholder="In case we need to follow up" autocomplete="off">
+
+      <p class="data-notice">We only use your email to follow up on this feedback. It is stored securely and never shared. You can request deletion at any time.</p>
+
+      <div class="modal-actions" style="margin-top: 1rem;">
+        <div class="button-row">
+          <button class="btn btn-secondary" onclick="closeFeedbackModal()">Cancel</button>
+          <button class="btn btn-primary" id="submit-feedback-btn" onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=2"></script>
+</body>
+</html>
