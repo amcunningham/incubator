@@ -123,11 +123,21 @@ async function startQuiz() {
 
     if (currentMode === "practice") {
       questions = result.data;
+      if (!questions || questions.length === 0) {
+        alert("No questions found for the selected categories. Try adding questions to the bank first.");
+        showScreen("category-select");
+        return;
+      }
       currentIndex = 0;
       showPracticeQuestion();
       showScreen("practice-mode");
     } else {
-      rounds = result.data.rounds;
+      rounds = result.data?.rounds;
+      if (!rounds || rounds.length === 0) {
+        alert("No questions found for the selected categories. Try adding questions to the bank first.");
+        showScreen("category-select");
+        return;
+      }
       currentRound = 0;
       showRound();
       showScreen("quiz-mode");
