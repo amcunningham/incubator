@@ -191,7 +191,7 @@ app.get("/api/categories", async (req, res) => {
   }
 });
 
-app.post("/api/generate", async (req, res) => {
+app.post("/api/generate", publicPostLimiter, async (req, res) => {
   const { categories, mode, count } = req.body;
 
   if (!categories || !categories.length) {
@@ -298,14 +298,19 @@ app.post("/api/feedback", publicPostLimiter, async (req, res) => {
 
   console.log("Feedback received:", JSON.stringify({ question, feedbackType, comment, suggestedAnswer, suggestedQuestion, email }));
 
+  const allowedFeedbackTypes = ["wrong_answer", "unclear", "too_easy", "outdated", "duplicate", "other"];
   if (!question || !feedbackType) {
     return res
       .status(400)
       .json({ error: "Question and feedback type are required" });
   }
+  if (!allowedFeedbackTypes.includes(feedbackType)) {
+    return res
+      .status(400)
+      .json({ error: "Invalid feedback type" });
+  }
 
-  const id =
-    Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const id = crypto.randomUUID();
 
   try {
     await pool.query(
