@@ -8,10 +8,16 @@ const { pool, initDB, seedFromJSON } = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "scor2024";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+  console.error("FATAL: ADMIN_PASSWORD environment variable is required. Exiting.");
+  process.exit(1);
+}
 
-if (!process.env.ADMIN_PASSWORD) {
-  console.warn("WARNING: ADMIN_PASSWORD not set — using insecure default. Set ADMIN_PASSWORD env var in production.");
+// Strip HTML tags from user input to prevent stored XSS
+function sanitizeText(str) {
+  if (typeof str !== "string") return "";
+  return str.replace(/<[^>]*>/g, "").trim();
 }
 
 // Security headers
@@ -318,14 +324,14 @@ app.post("/api/feedback", publicPostLimiter, async (req, res) => {
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
       [
         id,
-        question,
-        answer || "",
-        category || "",
+        sanitizeText(question),
+        sanitizeText(answer || ""),
+        sanitizeText(category || ""),
         feedbackType,
-        comment || "",
-        suggestedAnswer || "",
-        suggestedQuestion || "",
-        email || "",
+        sanitizeText(comment || ""),
+        sanitizeText(suggestedAnswer || ""),
+        sanitizeText(suggestedQuestion || ""),
+        sanitizeText(email || ""),
         !!isAI,
       ]
     );
@@ -972,28 +978,38 @@ app.delete("/api/admin/ai-questions/:id", requireAdmin, async (req, res) => {
 // PUBLIC QUESTION UPLOAD
 // ==================
 
-app.post("/api/upload-questions", publicPostLimiter, async (req, res) => {
+const uploadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10, // 10 submissions per 15 minutes per IP
+  message: { error: "Too many submissions. Please try again later." },
+});
+
+app.post("/api/upload-questions", uploadLimiter, async (req, res) => {
   const { questions } = req.body;
   if (!Array.isArray(questions) || questions.length === 0) {
     return res.status(400).json({ error: "No questions provided" });
   }
-  if (questions.length > 100) {
-    return res.status(400).json({ error: "Maximum 100 questions per upload" });
+  if (questions.length > 5) {
+    return res.status(400).json({ error: "Maximum 5 questions per submission" });
   }
   try {
     let imported = 0;
     let skipped = 0;
     for (const q of questions) {
       if (!q.question || !q.answer || !q.category) { skipped++; continue; }
+      const cleanQuestion = sanitizeText(q.question);
+      const cleanAnswer = sanitizeText(q.answer);
+      const cleanCategory = sanitizeText(q.category);
+      if (!cleanQuestion || !cleanAnswer || !cleanCategory) { skipped++; continue; }
       // Skip duplicates
       const { rows } = await pool.query(
         "SELECT id FROM ai_questions WHERE question = $1 LIMIT 1",
-        [q.question]
+        [cleanQuestion]
       );
       if (rows.length > 0) { skipped++; continue; }
       await pool.query(
         "INSERT INTO ai_questions (category, question, answer, is_irish, rating, source) VALUES ($1, $2, $3, $4, 0, 'user')",
-        [q.category, q.question, q.answer, !!q.is_irish]
+        [cleanCategory, cleanQuestion, cleanAnswer, !!q.is_irish]
       );
       imported++;
     }
@@ -1016,7 +1032,7 @@ app.post("/api/general-feedback", publicPostLimiter, async (req, res) => {
   try {
     await pool.query(
       "INSERT INTO general_feedback (name, email, message) VALUES ($1, $2, $3)",
-      [name || "", email || "", message.trim()]
+      [sanitizeText(name || ""), sanitizeText(email || ""), sanitizeText(message)]
     );
     res.json({ success: true });
   } catch (err) {
@@ -1053,6 +1069,15 @@ app.get("/admin", (req, res) => {
 // Fallback: serve index.html for any unmatched route
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ==================
+// ERROR HANDLER
+// ==================
+
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err.message);
+  res.status(err.status || 500).json({ error: "Something went wrong" });
 });
 
 // ==================
