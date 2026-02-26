@@ -8,6 +8,17 @@ const { pool, initDB, seedFromJSON } = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Trust Render's reverse proxy so we can read X-Forwarded-Proto
+app.set("trust proxy", 1);
+
+// Force HTTPS redirect in production
+app.use((req, res, next) => {
+  if (req.headers["x-forwarded-proto"] === "http") {
+    return res.redirect(301, `https://${req.hostname}${req.url}`);
+  }
+  next();
+});
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 if (!ADMIN_PASSWORD) {
   console.error("FATAL: ADMIN_PASSWORD environment variable is required. Exiting.");
