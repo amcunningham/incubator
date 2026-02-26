@@ -82,7 +82,12 @@ async function requireAdmin(req, res, next) {
 
 app.post("/api/admin/login", loginLimiter, async (req, res) => {
   const { password } = req.body;
-  if (password !== ADMIN_PASSWORD) {
+  const passwordBuffer = Buffer.from(String(password || ""));
+  const adminBuffer = Buffer.from(String(ADMIN_PASSWORD));
+  const isMatch =
+    passwordBuffer.length === adminBuffer.length &&
+    crypto.timingSafeEqual(passwordBuffer, adminBuffer);
+  if (!isMatch) {
     return res.status(401).json({ error: "Incorrect password" });
   }
   const token = crypto.randomBytes(32).toString("hex");
