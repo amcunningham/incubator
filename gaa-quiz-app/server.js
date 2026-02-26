@@ -2,13 +2,52 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const { pool, initDB, seedFromJSON } = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "scor2024";
 
-app.use(express.json());
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      frameAncestors: ["'none'"],
+    },
+  },
+}));
+
+// Request body size limit
+app.use(express.json({ limit: "100kb" }));
+
+// Rate limiting
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later" },
+});
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many login attempts, please try again later" },
+});
+
+app.use("/api/", apiLimiter);
+
 app.use(express.static(path.join(__dirname, "public"), {
   setHeaders: (res, filePath) => {
     if (filePath.endsWith(".js") || filePath.endsWith(".css")) {
@@ -44,9 +83,17 @@ async function requireAdmin(req, res, next) {
 // AUTH ROUTES
 // ==================
 
-app.post("/api/admin/login", async (req, res) => {
+app.post("/api/admin/login", loginLimiter, async (req, res) => {
   const { password } = req.body;
-  if (password !== ADMIN_PASSWORD) {
+  if (typeof password !== "string" || password.length > 256) {
+    return res.status(401).json({ error: "Incorrect password" });
+  }
+  // Timing-safe comparison to prevent timing attacks
+  const passwordBuffer = Buffer.from(password);
+  const adminBuffer = Buffer.from(ADMIN_PASSWORD);
+  const isValid = passwordBuffer.length === adminBuffer.length &&
+    crypto.timingSafeEqual(passwordBuffer, adminBuffer);
+  if (!isValid) {
     return res.status(401).json({ error: "Incorrect password" });
   }
   const token = crypto.randomBytes(32).toString("hex");
@@ -255,16 +302,26 @@ app.post("/api/feedback", async (req, res) => {
     isAI,
   } = req.body;
 
-  console.log("Feedback received:", JSON.stringify({ question, feedbackType, comment, suggestedAnswer, suggestedQuestion, email }));
-
   if (!question || !feedbackType) {
     return res
       .status(400)
       .json({ error: "Question and feedback type are required" });
   }
 
-  const id =
-    Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  // Input length validation
+  const MAX_LEN = 2000;
+  if (question.length > MAX_LEN || (comment && comment.length > MAX_LEN) ||
+      (suggestedAnswer && suggestedAnswer.length > MAX_LEN) ||
+      (suggestedQuestion && suggestedQuestion.length > MAX_LEN)) {
+    return res.status(400).json({ error: "Input too long (max 2000 characters)" });
+  }
+
+  const VALID_FEEDBACK_TYPES = ["wrong_answer", "unclear", "too_easy", "outdated", "other"];
+  if (!VALID_FEEDBACK_TYPES.includes(feedbackType)) {
+    return res.status(400).json({ error: "Invalid feedback type" });
+  }
+
+  const id = crypto.randomUUID();
 
   try {
     await pool.query(
@@ -283,7 +340,7 @@ app.post("/api/feedback", async (req, res) => {
         !!isAI,
       ]
     );
-    res.json({ success: true, id, received: { comment, suggestedAnswer, suggestedQuestion, email } });
+    res.json({ success: true, id });
   } catch (err) {
     console.error("Feedback error:", err);
     res.status(500).json({ error: "Failed to save feedback" });
@@ -939,6 +996,8 @@ app.post("/api/upload-questions", async (req, res) => {
     let skipped = 0;
     for (const q of questions) {
       if (!q.question || !q.answer || !q.category) { skipped++; continue; }
+      if (typeof q.question !== "string" || typeof q.answer !== "string" || typeof q.category !== "string") { skipped++; continue; }
+      if (q.question.length > 2000 || q.answer.length > 1000 || q.category.length > 200) { skipped++; continue; }
       // Skip duplicates
       const { rows } = await pool.query(
         "SELECT id FROM ai_questions WHERE question = $1 LIMIT 1",
@@ -966,6 +1025,15 @@ app.post("/api/general-feedback", async (req, res) => {
   const { name, email, message } = req.body;
   if (!message || !message.trim()) {
     return res.status(400).json({ error: "Message is required" });
+  }
+  if (message.length > 5000) {
+    return res.status(400).json({ error: "Message too long (max 5000 characters)" });
+  }
+  if (name && name.length > 200) {
+    return res.status(400).json({ error: "Name too long (max 200 characters)" });
+  }
+  if (email && email.length > 320) {
+    return res.status(400).json({ error: "Email too long" });
   }
   try {
     await pool.query(
@@ -1004,7 +1072,12 @@ app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// Fallback: serve index.html for any unmatched route
+// Return 404 for unmatched API routes instead of serving index.html
+app.all("/api/*", (req, res) => {
+  res.status(404).json({ error: "Not found" });
+});
+
+// Fallback: serve index.html for client-side routes only
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -1102,6 +1175,10 @@ async function start() {
       console.error("Failed to sync added_to_bank flags:", err);
     }
 
+    if (!process.env.ADMIN_PASSWORD) {
+      console.warn("WARNING: Using default admin password. Set ADMIN_PASSWORD environment variable for production.");
+    }
+
     app.listen(PORT, () => {
       console.log(`GAA Scór Quiz Prep running at http://localhost:${PORT}`);
       console.log(`Admin panel: http://localhost:${PORT}/admin`);
@@ -1112,4 +1189,9 @@ async function start() {
   }
 }
 
-start();
+// Export for testing; start only when run directly
+module.exports = { app, start };
+
+if (require.main === module) {
+  start();
+}

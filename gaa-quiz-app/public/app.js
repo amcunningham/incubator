@@ -1,3 +1,10 @@
+// XSS protection
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 // State
 let currentMode = null;
 let selectedCategories = [];
@@ -256,18 +263,18 @@ function showRound() {
     row.className = "quiz-question-row" + (q.is_irish ? " irish" : "");
 
     const translationHtml = q.is_irish && q.translation
-      ? `<div class="q-translation"><button class="btn-translation-small" onclick="toggleQuizTranslation(this)">Show Translation</button><span class="q-translation-text hidden">${q.translation}</span></div>`
+      ? `<div class="q-translation"><button class="btn-translation-small" onclick="toggleQuizTranslation(this)">Show Translation</button><span class="q-translation-text hidden">${escapeHtml(q.translation)}</span></div>`
       : "";
 
     row.innerHTML = `
-      <span class="q-number">${q.number}</span>
+      <span class="q-number">${parseInt(q.number, 10)}</span>
       <div class="q-content">
-        <div class="q-text">${q.question}</div>
+        <div class="q-text">${escapeHtml(q.question)}</div>
         ${translationHtml}
-        <div class="q-answer" id="answer-${currentRound}-${q.number}">${q.answer}</div>
+        <div class="q-answer" id="answer-${parseInt(currentRound, 10)}-${parseInt(q.number, 10)}">${escapeHtml(q.answer)}</div>
       </div>
       <div class="q-actions">
-        <button class="btn-flag-small" title="Give feedback on this question" onclick="flagQuizQuestion(${currentRound}, ${q.number})">Feedback</button>
+        <button class="btn-flag-small" title="Give feedback on this question" onclick="flagQuizQuestion(${parseInt(currentRound, 10)}, ${parseInt(q.number, 10)})">Feedback</button>
       </div>
     `;
 
@@ -485,16 +492,16 @@ async function showFeedbackReview() {
 
       card.innerHTML = `
         <div class="feedback-card-header">
-          <span class="feedback-type-label feedback-type-${item.feedbackType}">${typeLabels[item.feedbackType] || item.feedbackType}</span>
-          <span class="feedback-category">${item.category || ""}</span>
+          <span class="feedback-type-label feedback-type-${escapeHtml(item.feedbackType)}">${escapeHtml(typeLabels[item.feedbackType] || item.feedbackType)}</span>
+          <span class="feedback-category">${escapeHtml(item.category || "")}</span>
           ${item.isAI ? '<span class="feedback-ai-badge">AI Generated</span>' : ""}
           ${item.resolved ? '<span class="feedback-resolved-badge">Resolved</span>' : ""}
         </div>
-        <div class="feedback-question">${item.question}</div>
-        <div class="feedback-current-answer">Current answer: ${item.answer}</div>
-        ${item.suggestedAnswer ? '<div class="feedback-suggested">Suggested answer: <strong>' + item.suggestedAnswer + "</strong></div>" : ""}
-        ${item.suggestedQuestion ? '<div class="feedback-suggested">Suggested question: <strong>' + item.suggestedQuestion + "</strong></div>" : ""}
-        ${item.comment ? '<div class="feedback-comment-text">' + item.comment + "</div>" : ""}
+        <div class="feedback-question">${escapeHtml(item.question)}</div>
+        <div class="feedback-current-answer">Current answer: ${escapeHtml(item.answer)}</div>
+        ${item.suggestedAnswer ? '<div class="feedback-suggested">Suggested answer: <strong>' + escapeHtml(item.suggestedAnswer) + "</strong></div>" : ""}
+        ${item.suggestedQuestion ? '<div class="feedback-suggested">Suggested question: <strong>' + escapeHtml(item.suggestedQuestion) + "</strong></div>" : ""}
+        ${item.comment ? '<div class="feedback-comment-text">' + escapeHtml(item.comment) + "</div>" : ""}
       `;
 
       list.appendChild(card);
@@ -634,7 +641,7 @@ function previewUpload() {
   questions.forEach((q, i) => {
     const item = document.createElement("div");
     item.className = "upload-preview-item";
-    item.innerHTML = `<strong>${i + 1}.</strong> ${q.question}<br><span class="upload-preview-answer">${q.answer}</span>`;
+    item.innerHTML = `<strong>${i + 1}.</strong> ${escapeHtml(q.question)}<br><span class="upload-preview-answer">${escapeHtml(q.answer)}</span>`;
     list.appendChild(item);
   });
   preview.classList.remove("hidden");
