@@ -1,10 +1,9 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 const crypto = require("crypto");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-const { pool, initDB, seedFromJSON } = require("./db");
+const { pool, initDB } = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -1099,91 +1098,6 @@ app.use((err, req, res, next) => {
 async function start() {
   try {
     await initDB();
-
-    // Seed from JSON file if database is empty
-    const questionBankPath = path.join(__dirname, "question-bank.json");
-    if (fs.existsSync(questionBankPath)) {
-      const questionBank = JSON.parse(
-        fs.readFileSync(questionBankPath, "utf-8")
-      );
-      await seedFromJSON(questionBank);
-    }
-
-    // Merge split/misnamed categories across all tables
-    try {
-      const categoryMerges = {
-        "World History": "World History and World Geography",
-        "World Geography": "World History and World Geography",
-        "General GAA": "General G.A.A.",
-      };
-      for (const [oldName, mergedName] of Object.entries(categoryMerges)) {
-        // Merge in ai_questions
-        const { rowCount: aiCount } = await pool.query(
-          "UPDATE ai_questions SET category = $1 WHERE category = $2",
-          [mergedName, oldName]
-        );
-        if (aiCount > 0) console.log(`Merged ${aiCount} ai_questions from "${oldName}" into "${mergedName}"`);
-        // Merge in feedback
-        await pool.query(
-          "UPDATE feedback SET category = $1 WHERE category = $2",
-          [mergedName, oldName]
-        );
-        // Merge in categories table (move questions, then delete old category)
-        const oldCat = await pool.query("SELECT id FROM categories WHERE name = $1", [oldName]);
-        const mergedCat = await pool.query("SELECT id FROM categories WHERE name = $1", [mergedName]);
-        if (oldCat.rows.length > 0 && mergedCat.rows.length > 0) {
-          await pool.query(
-            "UPDATE questions SET category_id = $1 WHERE category_id = $2",
-            [mergedCat.rows[0].id, oldCat.rows[0].id]
-          );
-          await pool.query("DELETE FROM categories WHERE id = $1", [oldCat.rows[0].id]);
-          console.log(`Merged category "${oldName}" into "${mergedName}" in categories table`);
-        } else if (oldCat.rows.length > 0 && mergedCat.rows.length === 0) {
-          // Just rename the old category
-          await pool.query("UPDATE categories SET name = $1 WHERE id = $2", [mergedName, oldCat.rows[0].id]);
-          console.log(`Renamed category "${oldName}" to "${mergedName}"`);
-        }
-      }
-    } catch (err) {
-      console.error("Category merge error:", err);
-    }
-
-    // Seed Scór revision questions into ai_questions
-    const scorQuestionsPath = path.join(__dirname, "scor-questions.json");
-    if (fs.existsSync(scorQuestionsPath)) {
-      try {
-        const scorQuestions = JSON.parse(fs.readFileSync(scorQuestionsPath, "utf-8"));
-        let imported = 0;
-        for (const q of scorQuestions) {
-          const { rows } = await pool.query(
-            "SELECT id FROM ai_questions WHERE question = $1 LIMIT 1",
-            [q.question]
-          );
-          if (rows.length === 0) {
-            await pool.query(
-              "INSERT INTO ai_questions (category, question, answer, is_irish, rating) VALUES ($1, $2, $3, $4, $5)",
-              [q.category, q.question, q.answer, !!q.is_irish, q.rating || 5]
-            );
-            imported++;
-          }
-        }
-        if (imported > 0) console.log(`Imported ${imported} Scór revision questions`);
-      } catch (err) {
-        console.error("Failed to import Scór questions:", err);
-      }
-    }
-
-    // Sync added_to_bank flag: mark AI questions that already exist in the question bank
-    try {
-      const { rowCount } = await pool.query(`
-        UPDATE ai_questions SET added_to_bank = true
-        WHERE added_to_bank = false
-          AND question IN (SELECT question FROM questions)
-      `);
-      if (rowCount > 0) console.log(`Marked ${rowCount} AI questions as already in bank`);
-    } catch (err) {
-      console.error("Failed to sync added_to_bank flags:", err);
-    }
 
     app.listen(PORT, () => {
       console.log(`GAA Scór Quiz Prep running at http://localhost:${PORT}`);
