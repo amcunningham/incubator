@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GP Appraisal Learning Log</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>GP Appraisal Learning Log</h1>
+      <nav>
+        <button id="btn-new" class="nav-btn active">New Entry</button>
+        <button id="btn-records" class="nav-btn">Saved Records <span id="record-count" class="badge">0</span></button>
+      </nav>
+    </header>
+
+    <!-- FORM VIEW -->
+    <section id="form-view">
+      <form id="learning-log-form" novalidate>
+
+        <!-- Row 1: Date + Length -->
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="activity-date">Date of Activity <span class="required">*</span></label>
+            <input type="date" id="activity-date" name="activityDate" required>
+          </div>
+          <div class="form-group">
+            <label for="session-length">Length of Session (in hours) <span class="required">*</span></label>
+            <input type="number" id="session-length" name="sessionLength" min="0" step="0.25" placeholder="e.g. 1.5" required>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div class="form-group">
+          <label for="session-title">Title of Session <span class="required">*</span></label>
+          <input type="text" id="session-title" name="sessionTitle" placeholder="Enter session title" required>
+        </div>
+
+        <!-- Session Type (radio) -->
+        <fieldset class="form-group">
+          <legend>This session was: <span class="required">*</span></legend>
+          <div class="radio-grid">
+            <label class="radio-label">
+              <input type="radio" name="sessionType" value="Podcast"> Podcast
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="sessionType" value="Online talk"> Online talk
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="sessionType" value="Face-to-face meeting"> Face-to-face meeting
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="sessionType" value="Practice-based discussion"> Practice-based discussion
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="sessionType" value="Journal article or other reading material"> Journal article or other reading material
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="sessionType" value="Other"> Other
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Domains of Good Medical Practice (checkboxes) -->
+        <fieldset class="form-group">
+          <legend>Domains of Good Medical Practice</legend>
+          <div class="checkbox-grid">
+            <label class="checkbox-label">
+              <input type="checkbox" name="domains" value="Knowledge, skills and development">
+              Knowledge, skills and development
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="domains" value="Patients partnership and communication">
+              Patients partnership and communication
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="domains" value="Colleagues, culture and safety">
+              Colleagues, culture and safety
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="domains" value="Trust and professionalism">
+              Trust and professionalism
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Sub-domains of Good Medical Practice (checkboxes) -->
+        <fieldset class="form-group">
+          <legend>Sub-domain of Good Medical Practice</legend>
+          <div class="checkbox-list">
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Being competent and providing good clinical care">
+              Being competent and providing good clinical care
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Maintaining, developing and improving your performance">
+              Maintaining, developing and improving your performance
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Managing resources effectively and sustainably">
+              Managing resources effectively and sustainably
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Helping in emergencies">
+              Helping in emergencies
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Treating patients fairly with kindness and courtesy and respecting their rights">
+              Treating patients fairly with kindness and courtesy and respecting their rights
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Supporting patients holistically to make decisions about treatment and care. Sharing information with patients and those close to them.">
+              Supporting patients holistically to make decisions about treatment and care. Sharing information with patients and those close to them.
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Safeguarding children and adults who are at risk of harm">
+              Safeguarding children and adults who are at risk of harm
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Treating colleagues with kindness, courtesy and respect">
+              Treating colleagues with kindness, courtesy and respect
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Contributing to a positive and inclusive environment, demonstrating leadership and delegating appropriately">
+              Contributing to a positive and inclusive environment, demonstrating leadership and delegating appropriately
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Contributing to continuity of care">
+              Contributing to continuity of care
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Delegating safely and appropriately, recording your work clearly accurately and legibly">
+              Delegating safely and appropriately, recording your work clearly accurately and legibly
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Acting with honesty and integrity">
+              Acting with honesty and integrity
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Maintaining professional boundaries and communicating as a professional">
+              Maintaining professional boundaries and communicating as a professional
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="subDomains" value="Keeping patients safe, responding to safety risks, managing risks posed by your health">
+              Keeping patients safe, responding to safety risks, managing risks posed by your health
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Learning description -->
+        <div class="form-group">
+          <label for="learning-description">Describe learning from the session and how you will apply what you have learned <span class="required">*</span></label>
+          <textarea id="learning-description" name="learningDescription" rows="6" placeholder="Describe what you learned and how you plan to apply it..." required></textarea>
+        </div>
+
+        <!-- Form actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" id="btn-save">Save Entry</button>
+          <button type="button" class="btn-secondary" id="btn-clear">Clear Form</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- RECORDS VIEW -->
+    <section id="records-view" class="hidden">
+      <div class="records-toolbar">
+        <input type="text" id="search-input" placeholder="Search records...">
+        <button id="btn-export" class="btn-secondary">Export CSV</button>
+      </div>
+      <div id="records-list"></div>
+      <p id="no-records" class="hidden">No records found. Start by adding a new entry.</p>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
