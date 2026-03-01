@@ -140,11 +140,20 @@ In every pattern above, the LLM drafts and the human reviews. This matters becau
 
 ## Getting started
 
-You don't need any special tools. If you have access to any LLM (Claude, ChatGPT, Copilot, Gemini — whatever), you can do all of the above by copying and pasting.
+You don't need any special tools to start. If you have access to any LLM, you can do all of the above by copying and pasting. The habit matters more than the tooling.
 
-If you want to get fancier later:
-- Discourse has an AI plugin that can summarise threads directly in the forum
-- You could set up a simple automation (Zapier, Make, n8n) that takes a voice memo, transcribes it, runs it through an LLM, and posts the weeknote to Discourse
+But there's a better option: **Discourse has AI features built into its core** that can do thread summarisation, chat digests, and composition help directly in the forum — no copy-pasting needed. And these can be powered by a **local, self-hosted model** so no data leaves your server.
+
+See the [local LLM setup guide](../discourse/local-llm-setup.md) for how to configure this.
+
+**What this looks like in practice:**
+- Thread summaries appear automatically at the top of long discussions
+- Chat channels get weekly digests
+- When writing a weeknote, the composer helper can structure rough notes, suggest titles, and proofread
+- All powered by a local model (Llama 3, Mistral, etc.) running alongside Discourse
+
+**If you want to go further:**
+- A simple automation (Zapier, Make, n8n) could take a voice memo, transcribe it, run it through the local model, and post the weeknote to Discourse
 - The Discourse API makes it easy to pull thread content and post summaries programmatically
 
-But start with copy-paste. The habit matters more than the tooling.
+The key principle: **community-owned forum + community-owned AI**. No data goes to Big Tech at any point in the stack.

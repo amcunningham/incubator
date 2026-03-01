@@ -21,7 +21,8 @@ This project provides a replicable, forkable toolkit so any neighbourhood or pra
 2. **Discourse setup template** — category structure, permissions, and settings for a health/neighbourhood community
 3. **Weeknotes & learning-in-the-open guide** — conventions for documenting what you're doing, what's working, and what isn't
 4. **Using LLMs for weeknotes** — practical patterns for using AI to reduce the friction of writing up weeknotes, summaries, and public outputs
-5. **Moderation and onboarding playbook** — how to welcome non-technical users and keep the space safe
+5. **Local LLM setup** — how to run Discourse's built-in AI features with a self-hosted model so no data leaves your server
+6. **Moderation and onboarding playbook** — how to welcome non-technical users and keep the space safe
 
 ### Key design decisions
 
