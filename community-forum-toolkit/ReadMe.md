@@ -20,7 +20,8 @@ This project provides a replicable, forkable toolkit so any neighbourhood or pra
 1. **Platform comparison** — research on forum options (Discourse, Flarum, Zulip, etc.)
 2. **Discourse setup template** — category structure, permissions, and settings for a health/neighbourhood community
 3. **Weeknotes & learning-in-the-open guide** — conventions for documenting what you're doing, what's working, and what isn't
-4. **Moderation and onboarding playbook** — how to welcome non-technical users and keep the space safe
+4. **Using LLMs for weeknotes** — practical patterns for using AI to reduce the friction of writing up weeknotes, summaries, and public outputs
+5. **Moderation and onboarding playbook** — how to welcome non-technical users and keep the space safe
 
 ### Key design decisions
 
