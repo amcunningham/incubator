@@ -1,16 +1,14 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const { generateDates, DAY_NAMES, REF_DAY_PREFIX, addDays } = require("./generate-dates");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Load data
+// Load postcode-to-zone mapping
 const zonesData = JSON.parse(
   fs.readFileSync(path.join(__dirname, "data", "zones.json"), "utf8")
-);
-const schedulesData = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "data", "schedules.json"), "utf8")
 );
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -34,39 +32,38 @@ app.get("/api/lookup", (req, res) => {
     });
   }
 
-  const scheduleKey = `${zoneInfo.day}-${zoneInfo.zone}`;
-  const schedule = schedulesData.schedules[scheduleKey];
-  if (!schedule) {
-    return res.status(404).json({
-      error: "Schedule not found",
-      message: `No schedule data for ${scheduleKey} yet`,
-    });
-  }
-
-  // Find next collection dates from today
   const today = new Date().toISOString().split("T")[0];
-  const nextCollections = getNextCollections(schedule, today);
+  // Generate dates for the next 12 weeks (4 cycles of each bin)
+  const endDate = addDays(today, 84);
+  const dates = generateDates(zoneInfo.day, today, endDate);
+
+  const nextCollections = getNextCollections(dates, today);
 
   res.json({
     postcode,
-    day: schedule.day,
-    zone: schedule.zone,
-    ref: schedule.ref,
+    day: DAY_NAMES[zoneInfo.day],
+    zone: zoneInfo.zone,
+    ref: `${REF_DAY_PREFIX[zoneInfo.day]} ${zoneInfo.zone}`,
     nextCollections,
   });
 });
 
 // List all known schedule keys (for debugging/admin)
 app.get("/api/schedules", (_req, res) => {
+  // Derive unique day-zone combos from the postcode mappings
+  const seen = new Set();
+  for (const info of Object.values(zonesData.postcodes)) {
+    seen.add(`${info.day}-${info.zone}`);
+  }
+
   res.json({
-    schedules: Object.keys(schedulesData.schedules),
+    schedules: [...seen].sort(),
     postcodeAreas: zonesData._postcodeAreas,
     totalPostcodes: Object.keys(zonesData.postcodes).length,
   });
 });
 
-function getNextCollections(schedule, today) {
-  const collections = [];
+function getNextCollections(dates, today) {
   const binTypes = [
     {
       key: "blue",
@@ -88,26 +85,19 @@ function getNextCollections(schedule, today) {
     },
   ];
 
-  for (const bin of binTypes) {
-    const binData = schedule[bin.key];
-    if (binData && binData.dates) {
-      const nextDate = binData.dates.find((d) => d >= today);
-      if (nextDate) {
-        // Check if this is a public holiday adjusted date
-        const phNote = schedule.publicHolidays
-          ? schedule.publicHolidays[nextDate]
-          : null;
+  const collections = [];
 
-        collections.push({
-          binType: bin.key,
-          binColour: bin.colour,
-          label: bin.label,
-          description: bin.description,
-          frequency: binData.frequency,
-          nextDate,
-          publicHolidayNote: phNote,
-        });
-      }
+  for (const bin of binTypes) {
+    const nextDate = dates[bin.key][0]; // already starts from today
+    if (nextDate) {
+      collections.push({
+        binType: bin.key,
+        binColour: bin.colour,
+        label: bin.label,
+        description: bin.description,
+        frequency: "every 3 weeks",
+        nextDate,
+      });
     }
   }
 
@@ -120,8 +110,5 @@ app.listen(PORT, () => {
   console.log(`Bin collection lookup running at http://localhost:${PORT}`);
   console.log(
     `Postcodes loaded: ${Object.keys(zonesData.postcodes).length}`
-  );
-  console.log(
-    `Schedules loaded: ${Object.keys(schedulesData.schedules).length}`
   );
 });
