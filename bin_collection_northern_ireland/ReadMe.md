@@ -43,7 +43,7 @@ _(don't add nice-to-haves to this list!)_
 | Lisburn & Castlereagh | lisburncastlereagh.gov.uk | Online lookup |
 | Mid & East Antrim | midandeastantrim.gov.uk | Online lookup |
 | Mid Ulster | midulstercouncil.org | Online lookup |
-| Newry, Mourne & Down | newrymournedown.org | Postcode-based checker |
+| Newry, Mourne & Down | newrymournedown.org | Postcode-based checker - **proof-of-concept built** |
 
 ### Tech spec basics
 _(platforms, programming languages, infrastructure)_
@@ -75,11 +75,34 @@ _useful as a sanity check for your minimum viable implementation_
 - BinDay
 - Which Bin NI
 
+### Proof of concept - Newry, Mourne & Down
+
+A working proof-of-concept app is in `scrapers/newry_mourne_down/`. It includes:
+
+- Express.js server with a `/api/lookup?postcode=` endpoint
+- Mobile-first HTML frontend with colour-coded bin cards
+- JSON data model for postcode-to-zone mapping and schedules
+- Guide for capturing data from the council website using browser devtools
+
+**Key findings from investigating this council:**
+- PDFs at predictable URLs: `newrymournedown.org/bin-collections/{DAY}-Z{N}.pdf`
+- 3 bin types: Black (general), Blue (recycling), Brown (food waste)
+- Brown collected weekly, Black and Blue alternate fortnightly
+- Postcode areas: BT23, BT24, BT25, BT27, BT30, BT31, BT33, BT34, BT39
+- Site blocks automated requests (403) - need browser devtools to discover the internal API
+- Existing open source project [UKBinCollectionData](https://github.com/robbrad/UKBinCollectionData) does not yet support this council
+
+To run: `cd scrapers/newry_mourne_down && npm install && npm start`
+
+**Next step:** someone in the NMD area needs to use browser devtools on the council's lookup page to capture the postcode-to-zone mapping and the actual API endpoint. See `scrapers/newry_mourne_down/CAPTURE_GUIDE.md`.
+
 ### TODO list of next-steps
 - technical
-  - survey all 11 council websites and document their lookup mechanisms (forms, APIs, calendar downloads)
+  - ~~build a proof-of-concept for one council~~ done - Newry, Mourne & Down
+  - capture postcode-to-zone data for NMD using browser devtools (needs someone in the area)
+  - extract schedule dates from NMD PDF calendars
+  - survey remaining 10 council websites and document their lookup mechanisms
   - identify which councils share backend providers (reduces integration work)
-  - build a proof-of-concept scraper for one council (Belfast or Antrim & Newtownabbey look simplest)
   - check for existing open data on opendatani.gov.uk
 - user research
   - talk to people in NI about how they currently find out their bin day

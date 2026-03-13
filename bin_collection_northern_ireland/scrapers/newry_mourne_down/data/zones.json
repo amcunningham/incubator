@@ -1,0 +1,9 @@
+{
+  "_description": "Maps postcodes to their collection day and zone. Populate by using browser devtools on newrymournedown.org/weekly-bin-collection-and-calendar - see CAPTURE_GUIDE.md",
+  "_format": "postcode -> { day: MON|TUE|WED|THU|FRI, zone: Z1|Z2|Z3|... }",
+  "_postcodeAreas": ["BT23", "BT24", "BT25", "BT27", "BT30", "BT31", "BT33", "BT34", "BT39"],
+  "_example": {
+    "BT34 1AB": { "day": "FRI", "zone": "Z1" }
+  },
+  "postcodes": {}
+}
