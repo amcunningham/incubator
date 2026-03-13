@@ -85,16 +85,20 @@ A working proof-of-concept app is in `scrapers/newry_mourne_down/`. It includes:
 - Guide for capturing data from the council website using browser devtools
 
 **Key findings from investigating this council:**
-- PDFs at predictable URLs: `newrymournedown.org/bin-collections/{DAY}-Z{N}.pdf`
-- 3 bin types: Black (general), Blue (recycling), Brown (food waste)
-- Brown collected weekly, Black and Blue alternate fortnightly
+- **3-week rotation**: Blue (recycling) -> Brown (food/garden) -> Black (general). NOT weekly/fortnightly as initially assumed.
+- Zone naming varies by day: "Z" prefix for Wednesday zones, "V" prefix for Thursday zones (e.g. WED Z2, THURS V2)
+- PDFs at predictable URLs: `newrymournedown.org/bin-collections/{DAY}-{ZONE}.pdf`
+- Postcode lookup returns a list of individual addresses with "View Schedule" links to PDFs
 - Postcode areas: BT23, BT24, BT25, BT27, BT30, BT31, BT33, BT34, BT39
-- Site blocks automated requests (403) - need browser devtools to discover the internal API
+- Bins must be out by 6:00am
+- Site blocks automated requests (403) but PDFs and the lookup page work fine in a browser
 - Existing open source project [UKBinCollectionData](https://github.com/robbrad/UKBinCollectionData) does not yet support this council
+
+**Currently working with real data for 2 postcodes** (BT34 4HS = WED Z2, BT34 4HP = THURS V2).
 
 To run: `cd scrapers/newry_mourne_down && npm install && npm start`
 
-**Next step:** someone in the NMD area needs to use browser devtools on the council's lookup page to capture the postcode-to-zone mapping and the actual API endpoint. See `scrapers/newry_mourne_down/CAPTURE_GUIDE.md`.
+**To add more postcodes:** look up the postcode on the council website, note the REF code from the PDF (e.g. "WED Z2"), and add it to `data/zones.json`. If the schedule for that ref doesn't exist yet in `data/schedules.json`, extract the dates from the PDF.
 
 ### TODO list of next-steps
 - technical

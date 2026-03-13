@@ -51,6 +51,7 @@ app.get("/api/lookup", (req, res) => {
     postcode,
     day: schedule.day,
     zone: schedule.zone,
+    ref: schedule.ref,
     nextCollections,
   });
 });
@@ -66,66 +67,53 @@ app.get("/api/schedules", (_req, res) => {
 
 function getNextCollections(schedule, today) {
   const collections = [];
+  const binTypes = [
+    {
+      key: "blue",
+      colour: "#2196F3",
+      label: "Blue bin (recycling)",
+      description: "Clean, dry recyclables including glass",
+    },
+    {
+      key: "brown",
+      colour: "#8B4513",
+      label: "Brown bin (food & garden waste)",
+      description: "All food waste, small garden waste",
+    },
+    {
+      key: "black",
+      colour: "#333333",
+      label: "Black bin (general waste)",
+      description: "Non-recyclable household waste, no food",
+    },
+  ];
 
-  // Brown bin - weekly on collection day
-  collections.push({
-    binType: "brown",
-    binColour: "#8B4513",
-    label: "Brown bin (food waste)",
-    frequency: "Weekly",
-    nextDate: getNextWeekday(today, schedule.day),
-  });
+  for (const bin of binTypes) {
+    const binData = schedule[bin.key];
+    if (binData && binData.dates) {
+      const nextDate = binData.dates.find((d) => d >= today);
+      if (nextDate) {
+        // Check if this is a public holiday adjusted date
+        const phNote = schedule.publicHolidays
+          ? schedule.publicHolidays[nextDate]
+          : null;
 
-  // Black bin - find next date from list
-  if (schedule.black && schedule.black.dates) {
-    const nextBlack = schedule.black.dates.find((d) => d >= today);
-    if (nextBlack) {
-      collections.push({
-        binType: "black",
-        binColour: "#333333",
-        label: "Black bin (general waste)",
-        frequency: "Fortnightly",
-        nextDate: nextBlack,
-      });
-    }
-  }
-
-  // Blue bin - find next date from list
-  if (schedule.blue && schedule.blue.dates) {
-    const nextBlue = schedule.blue.dates.find((d) => d >= today);
-    if (nextBlue) {
-      collections.push({
-        binType: "blue",
-        binColour: "#2196F3",
-        label: "Blue bin (recycling)",
-        frequency: "Fortnightly",
-        nextDate: nextBlue,
-      });
+        collections.push({
+          binType: bin.key,
+          binColour: bin.colour,
+          label: bin.label,
+          description: bin.description,
+          frequency: binData.frequency,
+          nextDate,
+          publicHolidayNote: phNote,
+        });
+      }
     }
   }
 
   // Sort by next date
   collections.sort((a, b) => a.nextDate.localeCompare(b.nextDate));
   return collections;
-}
-
-function getNextWeekday(today, dayName) {
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const targetDay = days.indexOf(dayName);
-  const date = new Date(today + "T00:00:00");
-  const currentDay = date.getDay();
-  let daysUntil = targetDay - currentDay;
-  if (daysUntil <= 0) daysUntil += 7;
-  date.setDate(date.getDate() + daysUntil);
-  return date.toISOString().split("T")[0];
 }
 
 app.listen(PORT, () => {

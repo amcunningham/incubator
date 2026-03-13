@@ -1,44 +1,144 @@
 {
-  "_description": "Bin collection schedules by day-zone combination. Each entry lists the dates for each bin type. Populate from council PDF calendars at newrymournedown.org/bin-collections/{DAY}-{ZONE}.pdf",
+  "_description": "Bin collection schedules by day-zone combination, extracted from council PDF calendars.",
   "_binTypes": {
-    "black": "General household waste (no food waste)",
+    "black": "Non-recycling general household waste (no food waste)",
     "blue": "Clean dry recyclables including glass bottles and jars",
-    "brown": "Food waste only"
+    "brown": "Food and garden waste"
   },
-  "_note": "Brown bins are collected weekly. Black and blue bins alternate fortnightly.",
+  "_pattern": "3-week rotation: Blue -> Brown -> Black. All bins out by 6:00am.",
   "schedules": {
-    "FRI-Z1": {
-      "day": "Friday",
-      "zone": "Z1",
+    "WED-Z2": {
+      "day": "Wednesday",
+      "zone": "Z2",
+      "ref": "WED Z2",
+      "blue": {
+        "frequency": "every 3 weeks",
+        "dates": [
+          "2025-04-02", "2025-04-23",
+          "2025-05-14",
+          "2025-06-04", "2025-06-25",
+          "2025-07-16",
+          "2025-08-06", "2025-08-27",
+          "2025-09-17",
+          "2025-10-08", "2025-10-29",
+          "2025-11-19",
+          "2025-12-10",
+          "2026-01-07",
+          "2026-02-04", "2026-02-25",
+          "2026-03-18",
+          "2026-04-08"
+        ]
+      },
       "brown": {
-        "frequency": "weekly",
-        "note": "Collected every Friday"
+        "frequency": "every 3 weeks",
+        "dates": [
+          "2025-04-09", "2025-04-30",
+          "2025-05-21",
+          "2025-06-11",
+          "2025-07-02", "2025-07-23",
+          "2025-08-13",
+          "2025-09-03", "2025-09-24",
+          "2025-10-15",
+          "2025-11-05", "2025-11-26",
+          "2025-12-17",
+          "2026-01-14",
+          "2026-02-11",
+          "2026-03-04", "2026-03-25",
+          "2026-04-15"
+        ]
       },
       "black": {
-        "frequency": "fortnightly",
+        "frequency": "every 3 weeks",
         "dates": [
-          "2025-04-04", "2025-04-18", "2025-05-02", "2025-05-16",
-          "2025-05-30", "2025-06-13", "2025-06-27", "2025-07-11",
-          "2025-07-25", "2025-08-08", "2025-08-22", "2025-09-05",
-          "2025-09-19", "2025-10-03", "2025-10-17", "2025-10-31",
-          "2025-11-14", "2025-11-28", "2025-12-12", "2025-12-26",
-          "2026-01-09", "2026-01-23", "2026-02-06", "2026-02-20",
-          "2026-03-06", "2026-03-20"
-        ],
-        "_note": "PLACEHOLDER dates - replace with actual dates from PDF calendar"
+          "2025-04-16",
+          "2025-05-07", "2025-05-28",
+          "2025-06-18",
+          "2025-07-09", "2025-07-30",
+          "2025-08-20",
+          "2025-09-10",
+          "2025-10-01", "2025-10-22",
+          "2025-11-12",
+          "2025-12-03", "2025-12-24",
+          "2026-01-21",
+          "2026-02-18",
+          "2026-03-11",
+          "2026-04-01", "2026-04-22"
+        ]
       },
+      "publicHolidays": {
+        "2025-04-23": "normal collection",
+        "2025-04-30": "normal collection",
+        "2025-07-30": "normal collection",
+        "2025-10-29": "normal collection",
+        "2025-12-24": "alternative collection",
+        "2025-12-31": "normal collection"
+      }
+    },
+    "THU-V2": {
+      "day": "Thursday",
+      "zone": "V2",
+      "ref": "THURS V2",
       "blue": {
-        "frequency": "fortnightly",
+        "frequency": "every 3 weeks",
         "dates": [
-          "2025-04-11", "2025-04-25", "2025-05-09", "2025-05-23",
-          "2025-06-06", "2025-06-20", "2025-07-04", "2025-07-18",
-          "2025-08-01", "2025-08-15", "2025-08-29", "2025-09-12",
-          "2025-09-26", "2025-10-10", "2025-10-24", "2025-11-07",
-          "2025-11-21", "2025-12-05", "2025-12-19", "2026-01-02",
-          "2026-01-16", "2026-01-30", "2026-02-13", "2026-02-27",
-          "2026-03-13", "2026-03-27"
-        ],
-        "_note": "PLACEHOLDER dates - replace with actual dates from PDF calendar"
+          "2025-04-03", "2025-04-24",
+          "2025-05-15",
+          "2025-06-05", "2025-06-26",
+          "2025-07-17",
+          "2025-08-07", "2025-08-28",
+          "2025-09-18",
+          "2025-10-09", "2025-10-30",
+          "2025-11-20",
+          "2025-12-11",
+          "2026-01-08",
+          "2026-02-05", "2026-02-26",
+          "2026-03-19",
+          "2026-04-09"
+        ]
+      },
+      "brown": {
+        "frequency": "every 3 weeks",
+        "dates": [
+          "2025-04-10",
+          "2025-05-01", "2025-05-22",
+          "2025-06-12",
+          "2025-07-03", "2025-07-24",
+          "2025-08-14",
+          "2025-09-04", "2025-09-25",
+          "2025-10-16",
+          "2025-11-06", "2025-11-27",
+          "2025-12-18",
+          "2026-01-15",
+          "2026-02-12",
+          "2026-03-05", "2026-03-26",
+          "2026-04-16"
+        ]
+      },
+      "black": {
+        "frequency": "every 3 weeks",
+        "dates": [
+          "2025-04-17",
+          "2025-05-08", "2025-05-29",
+          "2025-06-19",
+          "2025-07-10", "2025-07-31",
+          "2025-08-21",
+          "2025-09-11",
+          "2025-10-02", "2025-10-23",
+          "2025-11-13",
+          "2025-12-04", "2025-12-20",
+          "2026-01-22", "2026-01-29",
+          "2026-02-19",
+          "2026-03-12",
+          "2026-04-02", "2026-04-23"
+        ]
+      },
+      "publicHolidays": {
+        "2025-05-29": "normal collection",
+        "2025-07-31": "normal collection",
+        "2025-10-30": "normal collection",
+        "2025-12-20": "alternative collection",
+        "2026-01-03": "alternative collection",
+        "2026-01-29": "normal collection"
       }
     }
   }

@@ -1,9 +1,10 @@
 {
-  "_description": "Maps postcodes to their collection day and zone. Populate by using browser devtools on newrymournedown.org/weekly-bin-collection-and-calendar - see CAPTURE_GUIDE.md",
-  "_format": "postcode -> { day: MON|TUE|WED|THU|FRI, zone: Z1|Z2|Z3|... }",
+  "_description": "Maps postcodes to their collection day and zone. Add more by looking up postcodes on newrymournedown.org/weekly-bin-collection-and-calendar",
+  "_format": "postcode -> { day: MON|TUE|WED|THU|FRI, zone: string }",
   "_postcodeAreas": ["BT23", "BT24", "BT25", "BT27", "BT30", "BT31", "BT33", "BT34", "BT39"],
-  "_example": {
-    "BT34 1AB": { "day": "FRI", "zone": "Z1" }
-  },
-  "postcodes": {}
+  "_zoneNaming": "Zones use different letter prefixes per day: Z for Wednesday, V for Thursday, possibly others. The ref code on the PDF tells you (e.g. WED Z2, THURS V2).",
+  "postcodes": {
+    "BT34 4HS": { "day": "WED", "zone": "Z2", "ref": "WED Z2" },
+    "BT34 4HP": { "day": "THU", "zone": "V2", "ref": "THURS V2" }
+  }
 }

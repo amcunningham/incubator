@@ -252,7 +252,8 @@
         let html = `
           <div class="collection-day">
             <h2>Your collection day</h2>
-            <div class="day-name">${data.day}</div>
+            <div class="day-name">${data.day}s</div>
+            <div style="font-size:0.85em;color:#95a5a6;margin-top:4px">Out by 6:00am &middot; 3-week rotation &middot; Ref: ${data.ref || ''}</div>
           </div>
         `;
 
@@ -262,6 +263,9 @@
             ? `<span class="urgency ${urgency.class}">${urgency.label}</span>`
             : '';
           const cardClass = urgency ? ` ${urgency.class}` : '';
+          const phHtml = col.publicHolidayNote
+            ? `<div style="font-size:0.8em;color:#E65100;margin-top:2px">⚠ Public holiday: ${col.publicHolidayNote}</div>`
+            : '';
 
           html += `
             <div class="bin-card${cardClass}">
@@ -271,6 +275,7 @@
                 <div class="bin-date">${formatDate(col.nextDate)}</div>
                 <div class="bin-freq">${col.frequency}</div>
                 ${urgencyHtml}
+                ${phHtml}
               </div>
             </div>
           `;
