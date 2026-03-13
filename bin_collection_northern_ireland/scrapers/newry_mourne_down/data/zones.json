@@ -6,6 +6,7 @@
   "postcodes": {
     "BT34 4HS": { "day": "WED", "zone": "Z2", "ref": "WED Z2" },
     "BT34 4HP": { "day": "THU", "zone": "V2", "ref": "THURS V2" },
-    "BT34 4RZ": { "day": "TUE", "zone": "Z2", "ref": "TUES Z2" }
+    "BT34 4RZ": { "day": "TUE", "zone": "Z2", "ref": "TUES Z2" },
+    "BT34 4RT": { "day": "WED", "zone": "Z2", "ref": "WED Z2" }
   }
 }
