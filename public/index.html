@@ -103,6 +103,25 @@
       margin-bottom: 15px;
     }
 
+    .error.hint-error {
+      background: #FFF8E1;
+      border-color: #FFE082;
+      color: #F57F17;
+    }
+
+    .error.hint-error a {
+      color: #E65100;
+    }
+
+    .day-picker-highlight {
+      animation: pulse-border 1.5s ease-in-out 2;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+      50% { box-shadow: 0 2px 16px rgba(44,62,80,0.3); }
+    }
+
     .collection-day {
       background: white;
       border-radius: 12px;
@@ -282,8 +301,17 @@
         const data = await res.json();
 
         if (!res.ok) {
-          results.innerHTML = `<div class="error">${data.message || data.error}</div>`;
-          document.getElementById('day-picker').style.display = 'block';
+          const errorClass = data.validArea ? 'error hint-error' : 'error';
+          const councilLink = data.validArea
+            ? `<br><br><a href="https://www.newrymournedown.org/weekly-bin-collection-and-calendar" target="_blank">Look up your day on the council website</a>`
+            : '';
+          results.innerHTML = `<div class="${errorClass}">${data.message || data.error}${councilLink}</div>`;
+          const picker = document.getElementById('day-picker');
+          picker.style.display = 'block';
+          if (data.validArea) {
+            picker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            picker.querySelector('.search-box').classList.add('day-picker-highlight');
+          }
           return;
         }
 
