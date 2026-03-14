@@ -24,11 +24,16 @@ app.get("/api/lookup", (req, res) => {
   // Find the zone for this postcode
   const zoneInfo = zonesData.postcodes[postcode];
   if (!zoneInfo) {
+    // Check if the prefix is in a supported area
+    const prefix = postcode.split(" ")[0];
+    const isValidArea = zonesData._postcodeAreas.includes(prefix);
+
     return res.status(404).json({
       error: "Postcode not found",
-      message:
-        "This postcode is not in our database yet. Newry, Mourne and Down postcodes start with: " +
-        zonesData._postcodeAreas.join(", "),
+      validArea: isValidArea,
+      message: isValidArea
+        ? `We don't have ${postcode} mapped yet, but it's in the Newry, Mourne & Down area. Select your collection day below — check the sticker on your bin or look it up on the council website.`
+        : `This postcode isn't in the Newry, Mourne & Down area. Supported postcodes start with: ${zonesData._postcodeAreas.join(", ")}`,
     });
   }
 

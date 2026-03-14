@@ -24,13 +24,20 @@ const path = require("path");
 
 const DATA_DIR = path.join(__dirname, "data");
 
-// BT prefixes covered by NMD council
-// Updated from the council's own dropdown (discovered 2026-03-14)
-const NMD_PREFIXES = [
-  "BT23", "BT24", "BT25", "BT27",
-  "BT30", "BT31", "BT32", "BT33",
-  "BT34", "BT35", "BT60",
-];
+// BT prefixes and sectors covered by NMD council
+// Sourced from findthatpostcode.uk/doogal.co.uk for district N09000010
+// Only sectors that fall within NMD are listed for partial-overlap areas
+const NMD_PREFIXES_AND_SECTORS = {
+  "BT24": [7, 8],
+  "BT25": [2],
+  "BT30": [6, 7, 8, 9],
+  "BT31": [9],
+  "BT32": [5],
+  "BT33": [0],
+  "BT34": [1, 2, 3, 4, 5],
+  "BT35": [0, 6, 7, 8, 9],
+};
+const NMD_PREFIXES = Object.keys(NMD_PREFIXES_AND_SECTORS);
 
 function get(urlStr) {
   return new Promise((resolve, reject) => {
@@ -60,9 +67,10 @@ async function fetchPostcodesForPrefix(prefix) {
   console.log(`\n=== Fetching postcodes for ${prefix} ===`);
 
   // Strategy 1: Autocomplete with every possible start
-  // BT34 0-9, then BT34 0A-9Z
-  console.log("  Strategy 1: Autocomplete...");
-  for (let digit = 0; digit <= 9; digit++) {
+  // Only search sectors that fall within NMD
+  const sectors = NMD_PREFIXES_AND_SECTORS[prefix];
+  console.log(`  Strategy 1: Autocomplete (sectors ${sectors.join(", ")})...`);
+  for (const digit of sectors) {
     const partial = `${prefix} ${digit}`;
     try {
       const res = await get(
