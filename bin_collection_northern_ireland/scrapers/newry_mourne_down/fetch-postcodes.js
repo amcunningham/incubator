@@ -25,9 +25,11 @@ const path = require("path");
 const DATA_DIR = path.join(__dirname, "data");
 
 // BT prefixes covered by NMD council
+// Updated from the council's own dropdown (discovered 2026-03-14)
 const NMD_PREFIXES = [
   "BT23", "BT24", "BT25", "BT27",
-  "BT30", "BT31", "BT33", "BT34", "BT39",
+  "BT30", "BT31", "BT32", "BT33",
+  "BT34", "BT35", "BT60",
 ];
 
 function get(urlStr) {
