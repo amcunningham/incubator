@@ -129,7 +129,7 @@ function getNextCollections(dates, today) {
   return collections;
 }
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Bin collection lookup running at http://localhost:${PORT}`);
   console.log(
     `Postcodes loaded: ${Object.keys(zonesData.postcodes).length}`
