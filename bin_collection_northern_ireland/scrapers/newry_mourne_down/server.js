@@ -48,6 +48,29 @@ app.get("/api/lookup", (req, res) => {
   });
 });
 
+// Lookup by collection day (when postcode isn't in the database)
+app.get("/api/day", (req, res) => {
+  const day = (req.query.day || "").trim().toUpperCase();
+
+  if (!DAY_NAMES[day]) {
+    return res.status(400).json({
+      error: "Invalid day",
+      message: "Must be one of: MON, TUE, WED, THU, FRI",
+    });
+  }
+
+  const today = new Date().toISOString().split("T")[0];
+  const endDate = addDays(today, 84);
+  const dates = generateDates(day, today, endDate);
+  const nextCollections = getNextCollections(dates, today);
+
+  res.json({
+    day: DAY_NAMES[day],
+    ref: `${REF_DAY_PREFIX[day]}`,
+    nextCollections,
+  });
+});
+
 // List all known schedule keys (for debugging/admin)
 app.get("/api/schedules", (_req, res) => {
   // Derive unique day-zone combos from the postcode mappings

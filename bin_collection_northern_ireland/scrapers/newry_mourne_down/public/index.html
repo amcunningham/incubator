@@ -197,6 +197,29 @@
     }
 
     footer a { color: #95a5a6; }
+
+    .day-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .day-buttons button {
+      flex: 1;
+      min-width: 80px;
+      padding: 10px 8px;
+      background: #ecf0f1;
+      color: #2c3e50;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      font-size: 0.9em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day-buttons button:hover { background: #d5dbdb; }
+    .day-buttons button.active { border-color: #2c3e50; background: #2c3e50; color: white; }
   </style>
 </head>
 <body>
@@ -213,7 +236,21 @@
                autocomplete="postal-code" autocorrect="off" autocapitalize="characters">
         <button onclick="lookup()">Go</button>
       </div>
-      <p class="hint">Postcodes: BT23, BT24, BT25, BT27, BT30, BT31, BT33, BT34, BT39</p>
+      <p class="hint">Postcodes: BT23, BT24, BT25, BT27, BT30&ndash;BT35, BT60</p>
+    </div>
+
+    <div id="day-picker">
+      <div class="search-box">
+        <label>Or just select your collection day</label>
+        <p class="hint" style="margin-bottom:10px">Check your collection day on the <a href="https://www.newrymournedown.org/weekly-bin-collection-and-calendar" target="_blank">council website</a>, or look at the sticker on your bin.</p>
+        <div class="day-buttons">
+          <button onclick="lookupDay('MON')">Monday</button>
+          <button onclick="lookupDay('TUE')">Tuesday</button>
+          <button onclick="lookupDay('WED')">Wednesday</button>
+          <button onclick="lookupDay('THU')">Thursday</button>
+          <button onclick="lookupDay('FRI')">Friday</button>
+        </div>
+      </div>
     </div>
 
     <div id="results"></div>
@@ -246,8 +283,11 @@
 
         if (!res.ok) {
           results.innerHTML = `<div class="error">${data.message || data.error}</div>`;
+          document.getElementById('day-picker').style.display = 'block';
           return;
         }
+
+        document.getElementById('day-picker').style.display = 'none';
 
         let html = `
           <div class="collection-day">
@@ -276,6 +316,57 @@
                 <div class="bin-freq">${col.frequency}</div>
                 ${urgencyHtml}
                 ${phHtml}
+              </div>
+            </div>
+          `;
+        }
+
+        results.innerHTML = html;
+      } catch (err) {
+        results.innerHTML = '<div class="error">Something went wrong. Please try again.</div>';
+      }
+    }
+
+    async function lookupDay(day) {
+      const results = document.getElementById('results');
+      // Highlight selected button
+      document.querySelectorAll('.day-buttons button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      results.innerHTML = '<p style="text-align:center;color:#95a5a6;padding:20px;">Looking up...</p>';
+
+      try {
+        const res = await fetch(`/api/day?day=${day}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          results.innerHTML = `<div class="error">${data.message || data.error}</div>`;
+          return;
+        }
+
+        let html = `
+          <div class="collection-day">
+            <h2>Your collection day</h2>
+            <div class="day-name">${data.day}s</div>
+            <div style="font-size:0.85em;color:#95a5a6;margin-top:4px">Out by 6:00am &middot; 3-week rotation</div>
+          </div>
+        `;
+
+        for (const col of data.nextCollections) {
+          const urgency = getUrgency(col.nextDate);
+          const urgencyHtml = urgency
+            ? `<span class="urgency ${urgency.class}">${urgency.label}</span>`
+            : '';
+          const cardClass = urgency ? ` ${urgency.class}` : '';
+
+          html += `
+            <div class="bin-card${cardClass}">
+              <div class="bin-icon" style="background: ${col.binColour}"></div>
+              <div class="bin-details">
+                <div class="bin-label">${col.label}</div>
+                <div class="bin-date">${formatDate(col.nextDate)}</div>
+                <div class="bin-freq">${col.frequency}</div>
+                ${urgencyHtml}
               </div>
             </div>
           `;

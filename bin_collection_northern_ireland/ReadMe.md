@@ -94,7 +94,7 @@ A working proof-of-concept app is in `scrapers/newry_mourne_down/`. It includes:
 - Site blocks automated requests (403) but PDFs and the lookup page work fine in a browser
 - Existing open source project [UKBinCollectionData](https://github.com/robbrad/UKBinCollectionData) does not yet support this council
 
-**Currently working with real data for 2 postcodes** (BT34 4HS = WED Z2, BT34 4HP = THURS V2).
+**Currently working with real data for 7 postcodes** and a manual day-selector fallback that works for all NMD residents.
 
 To run: `cd scrapers/newry_mourne_down && npm install && npm start`
 
