@@ -1,0 +1,14 @@
+{
+  "name": "gaa-scor-quiz-prep",
+  "version": "1.0.0",
+  "description": "GAA Scor Senior Quiz Preparation App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.52.0",
+    "express": "^4.21.0"
+  }
+}

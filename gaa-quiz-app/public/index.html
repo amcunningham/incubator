@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAA Scor Quiz Prep</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Scor Trath na gCeist</h1>
+    <p class="subtitle">Senior Quiz Preparation</p>
+  </header>
+
+  <main>
+    <!-- MODE SELECTION -->
+    <section id="mode-select" class="screen active">
+      <h2>Choose Your Mode</h2>
+      <div class="mode-cards">
+        <button class="mode-card" onclick="selectMode('practice')">
+          <div class="mode-icon">&#9889;</div>
+          <h3>Practice Mode</h3>
+          <p>Quick-fire flashcard questions. Pick categories, reveal answers one at a time. Great for solo drilling.</p>
+        </button>
+        <button class="mode-card" onclick="selectMode('quiz')">
+          <div class="mode-icon">&#127942;</div>
+          <h3>Quiz Mode</h3>
+          <p>Full Scor-style timed rounds. 10 questions per round, timed like the real competition.</p>
+        </button>
+      </div>
+      <div class="button-row" style="margin-top: 0.5rem;">
+        <button class="btn btn-secondary" onclick="showFeedbackReview()">View Feedback</button>
+      </div>
+    </section>
+
+    <!-- CATEGORY SELECTION -->
+    <section id="category-select" class="screen">
+      <h2 id="category-heading">Select Categories</h2>
+      <p id="category-instructions"></p>
+      <div id="category-list" class="category-grid"></div>
+
+      <div id="practice-options" class="practice-options hidden">
+        <label for="question-count">Number of questions:</label>
+        <select id="question-count">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+        </select>
+      </div>
+
+      <div class="ai-toggle">
+        <label class="toggle-label">
+          <input type="checkbox" id="use-ai" />
+          <span>Use AI for fresh questions (slower, requires API key)</span>
+        </label>
+      </div>
+
+      <div class="button-row">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+        <button class="btn btn-primary" id="start-btn" onclick="startQuiz()">Start</button>
+      </div>
+    </section>
+
+    <!-- LOADING -->
+    <section id="loading" class="screen">
+      <div class="loader"></div>
+      <p class="loading-text">Generating your questions...</p>
+      <p class="loading-sub">This takes a moment as each question is freshly created</p>
+    </section>
+
+    <!-- PRACTICE MODE -->
+    <section id="practice-mode" class="screen">
+      <div class="practice-header">
+        <span id="practice-progress">Question 1 of 10</span>
+        <span id="practice-category-badge" class="category-badge"></span>
+      </div>
+
+      <div class="flashcard" onclick="flipCard()">
+        <div class="flashcard-inner" id="flashcard-inner">
+          <div class="flashcard-front">
+            <p id="practice-question" class="question-text"></p>
+            <span class="flip-hint">Tap to reveal answer</span>
+          </div>
+          <div class="flashcard-back">
+            <p class="answer-label">Answer</p>
+            <p id="practice-answer" class="answer-text"></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="practice-irish-badge" class="irish-badge hidden">As Gaeilge</div>
+
+      <div class="practice-controls">
+        <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+        <button class="btn btn-flag" id="flag-btn" onclick="openFeedbackModal()">Flag</button>
+        <button class="btn btn-danger btn-sm" onclick="removeQuestion()">Remove</button>
+        <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
+      </div>
+
+      <div class="button-row" style="margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">New Quiz</button>
+      </div>
+    </section>
+
+    <!-- QUIZ MODE -->
+    <section id="quiz-mode" class="screen">
+      <div class="quiz-header">
+        <div class="round-info">
+          <h2 id="round-title">Round 1</h2>
+          <span id="round-category" class="category-badge"></span>
+        </div>
+        <div id="timer" class="timer">3:00</div>
+      </div>
+
+      <div id="quiz-questions" class="quiz-questions"></div>
+
+      <div class="quiz-controls">
+        <button class="btn btn-secondary" id="reveal-answers-btn" onclick="revealRoundAnswers()">Reveal Answers</button>
+        <button class="btn btn-primary" id="next-round-btn" onclick="nextRound()" class="hidden">Next Round</button>
+      </div>
+
+      <div class="button-row" style="margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">New Quiz</button>
+      </div>
+    </section>
+    <!-- FEEDBACK REVIEW -->
+    <section id="feedback-review" class="screen">
+      <h2>Question Feedback</h2>
+      <p id="feedback-count" style="margin-bottom: 1rem; color: var(--gray-500);"></p>
+      <div id="feedback-list" class="feedback-list"></div>
+      <div class="button-row" style="margin-top: 1.5rem;">
+        <button class="btn btn-secondary" onclick="goBack('mode-select')">Back</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- FEEDBACK MODAL -->
+  <div id="feedback-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>Flag This Question</h3>
+      <p id="modal-question-preview" class="modal-preview"></p>
+      <p id="modal-answer-preview" class="modal-preview modal-answer-preview"></p>
+
+      <label class="modal-label">What's the issue?</label>
+      <div class="feedback-type-btns">
+        <button class="feedback-type-btn" data-type="wrong_answer" onclick="selectFeedbackType(this)">Wrong Answer</button>
+        <button class="feedback-type-btn" data-type="unclear" onclick="selectFeedbackType(this)">Unclear Question</button>
+        <button class="feedback-type-btn" data-type="outdated" onclick="selectFeedbackType(this)">Outdated</button>
+        <button class="feedback-type-btn" data-type="other" onclick="selectFeedbackType(this)">Other</button>
+      </div>
+
+      <label class="modal-label" for="suggested-answer">Suggested correct answer (optional)</label>
+      <input type="text" id="suggested-answer" class="modal-input" placeholder="What should the answer be?">
+
+      <label class="modal-label" for="feedback-comment">Comment (optional)</label>
+      <textarea id="feedback-comment" class="modal-input modal-textarea" placeholder="Any extra detail..."></textarea>
+
+      <div class="modal-actions" style="margin-top: 1rem;">
+        <div class="button-row">
+          <button class="btn btn-secondary" onclick="closeFeedbackModal()">Cancel</button>
+          <button class="btn btn-primary" id="submit-feedback-btn" onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+        <div class="button-row" style="margin-top: 0.5rem;">
+          <button class="btn btn-danger" onclick="removeFromModal()">Remove from Bank</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
